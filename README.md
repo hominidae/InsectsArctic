@@ -17,3 +17,12 @@ However, I suggest that you download the archive here instead because the public
 Note: I chose to download the metadata and sequencing data separately and using R to match BIN numbers to RecordID's.
 
 Since the sequencing data has been download as FASTA format files, the use of the R library "phylotools" to read the FASTA format, selecting the data required and exporting as TSV was used.
+
+## Process DNA sequencing data
+Run 001_LoadSequencingData.R to process the sequencing data and save them as tsv files.
+
+The active columns are "seq.data","seq.text","process.id","taxon","sample.id","bin.uri"
+However, we're only really interested in the bin.uri and sample.id
+
+## Load collection data, taxonomy, and sequencing data
+Run 002_LoadBOLDData.R to change "sample.id" in the sequencing data to "Sample ID" and perform an inner join with the other datasets.
