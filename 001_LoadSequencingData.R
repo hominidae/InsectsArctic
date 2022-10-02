@@ -1,74 +1,139 @@
 # Process data from projects in Cambridge Bay
 # OBJECTIVE:
-#  - Load sequencing data in FASTA format
+#  1 Load sequencing data in the FASTA format
+#  2 Save sequencing data as a tsv file for use later
+#  3 Repeat as needed for new datasets 
 
-# Load package
-install.packages("phylotools")
+# Load Libraries ----------------------------------------------------------
 library(phylotools)
-install.packages("tidyverse")
 library(tidyverse)
-install.packages("stringr")
 library(stringr)
 
-# Load sequencing data using read.fasta
-cchar_sequencedata <- read.fasta(file = "D:/R/InsectsArctic/Data/CCHAR/SequenceData.fas")
-
-# Now that it's loaded, we have an interesting problem.
-# We need to separate out the data into their own fields.
-# To do that, we're going to use str_extract.
-
 # We need to separate out the following into their own columns.
-# Here is what the data inside the first column of dataset looks like:
 # ACHAR1776-18|Psammitis deichmanni|CHARS00069-C01|BOLD:AAB7094
 # ACHAR1776-18
 # Psammitis deichmanni
 # CHARS500069-C01
 # BOLD:AAB7094
 
+# Process BCHAR ---------------------------------------------------------------
+# Load sequencing data using read.fasta
+bchar_sequencedata <- read.fasta(file = "D:/R/InsectsArctic/Data/BCHAR/SequenceData.fas")
+
 # First, copy the seq.name column to x temporarily
-x <- cchar_sequencedata$seq.name
+x <- bchar_sequencedata$seq.name
 
 # Next, let's use str_split to take the x list and split it by the | character
 y <- x %>%
   str_split("\\|")
 
 # Now that we have that, let's use a simple solution to turn the data from being wide to being tall instead when we turn it into a data frame
-cchar_splitdata <- data.frame(Reduce(rbind, y))
+bchar_splitdata <- data.frame(Reduce(rbind, y))
 
-cchar_expanded <- data.frame(cchar_sequencedata$seq.text,cchar_sequencedata$seq.name,cchar_splitdata$X1,cchar_splitdata$X2,cchar_splitdata$X3,cchar_splitdata$X4)
+bchar_expanded <- data.frame(bchar_sequencedata$seq.text,bchar_sequencedata$seq.name,bchar_splitdata$X1,bchar_splitdata$X2,bchar_splitdata$X3,bchar_splitdata$X4)
 
 # Great! Now that that's done, let's rename all the columns
-names(cchar_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
+names(bchar_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
 
 # Next up, we need replace blank entries for BIN URI's with NA's
 # Why? Because we're classy like that.
-cchar_expanded_na <- cchar_expanded %>%
+bchar_expanded_na <- bchar_expanded %>%
   mutate_all(na_if,"")
 
 # Fabulous. Now that we have the sequencing data sorted let's do some cool shit.
 # That's it for this script. But before we go, let's save our work.
-write_tsv(x = cchar_expanded_na, "D:/R/InsectsArctic/Data/CCHAR/cchar-sequencedata.tsv")
+write_tsv(x = bchar_expanded_na, "D:/R/InsectsArctic/Data/BCHAR/bchar-sequencedata.tsv")
 
 # Let's clean up our workspace.
-rm(x,y,cchar_sequencedata,cchar_splitdata,cchar_expanded,cchar_expanded_na)
+rm(x,y,bchar_sequencedata,bchar_splitdata,bchar_expanded,bchar_expanded_na)
 
-# We'll do the same for FCHAR
-fchar_sequencedata <- read.fasta(file = "D:/R/InsectsArctic/Data/FCHAR/SequenceData.fas")
-
-x <- fchar_sequencedata$seq.name
-
+# Process CCHAR ---------------------------------------------------------------
+cchar_sequencedata <- read.fasta(file = "D:/R/InsectsArctic/Data/CCHAR/SequenceData.fas")
+x <- cchar_sequencedata$seq.name
 y <- x %>%
   str_split("\\|")
+cchar_splitdata <- data.frame(Reduce(rbind, y))
+cchar_expanded <- data.frame(cchar_sequencedata$seq.text,cchar_sequencedata$seq.name,cchar_splitdata$X1,cchar_splitdata$X2,cchar_splitdata$X3,cchar_splitdata$X4)
+names(cchar_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
+cchar_expanded_na <- cchar_expanded %>%
+  mutate_all(na_if,"")
+write_tsv(x = cchar_expanded_na, "D:/R/InsectsArctic/Data/CCHAR/cchar-sequencedata.tsv")
+rm(x,y,cchar_sequencedata,cchar_splitdata,cchar_expanded,cchar_expanded_na)
 
+# Process DCHAR ---------------------------------------------------------------
+dchar_sequencedata <- read.fasta(file = "D:/R/InsectsArctic/Data/DCHAR/SequenceData.fas")
+x <- dchar_sequencedata$seq.name
+y <- x %>%
+  str_split("\\|")
+dchar_splitdata <- data.frame(Reduce(rbind, y))
+dchar_expanded <- data.frame(dchar_sequencedata$seq.text,dchar_sequencedata$seq.name,dchar_splitdata$X1,dchar_splitdata$X2,dchar_splitdata$X3,dchar_splitdata$X4)
+names(dchar_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
+dchar_expanded_na <- dchar_expanded %>%
+  mutate_all(na_if,"")
+write_tsv(x = dchar_expanded_na, "D:/R/InsectsArctic/Data/DCHAR/dchar-sequencedata.tsv")
+rm(x,y,dchar_sequencedata,dchar_splitdata,dchar_expanded,dchar_expanded_na)
+
+# Process ECHAR ---------------------------------------------------------------
+echar_sequencedata <- read.fasta(file = "D:/R/InsectsArctic/Data/ECHAR/SequenceData.fas")
+x <- echar_sequencedata$seq.name
+y <- x %>%
+  str_split("\\|")
+echar_splitdata <- data.frame(Reduce(rbind, y))
+echar_expanded <- data.frame(echar_sequencedata$seq.text,echar_sequencedata$seq.name,echar_splitdata$X1,echar_splitdata$X2,echar_splitdata$X3,echar_splitdata$X4)
+names(echar_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
+echar_expanded_na <- echar_expanded %>%
+  mutate_all(na_if,"")
+write_tsv(x = echar_expanded_na, "D:/R/InsectsArctic/Data/ECHAR/echar-sequencedata.tsv")
+rm(x,y,echar_sequencedata,echar_splitdata,echar_expanded,echar_expanded_na)
+
+# Process FCHAR ---------------------------------------------------------------
+fchar_sequencedata <- read.fasta(file = "D:/R/InsectsArctic/Data/FCHAR/SequenceData.fas")
+x <- fchar_sequencedata$seq.name
+y <- x %>%
+  str_split("\\|")
 fchar_splitdata <- data.frame(Reduce(rbind, y))
-
 fchar_expanded <- data.frame(fchar_sequencedata$seq.text,fchar_sequencedata$seq.name,fchar_splitdata$X1,fchar_splitdata$X2,fchar_splitdata$X3,fchar_splitdata$X4)
-
 names(fchar_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
-
 fchar_expanded_na <- fchar_expanded %>%
   mutate_all(na_if,"")
-
 write_tsv(x = fchar_expanded_na, "D:/R/InsectsArctic/Data/FCHAR/fchar-sequencedata.tsv")
-
 rm(x,y,fchar_sequencedata,fchar_splitdata,fchar_expanded,fchar_expanded_na)
+
+# Process CBAY ---------------------------------------------------------------
+cbay_sequencedata <- read.fasta(file = "D:/R/InsectsArctic/Data/CBAY/SequenceData.fas")
+x <- cbay_sequencedata$seq.name
+y <- x %>%
+  str_split("\\|")
+cbay_splitdata <- data.frame(Reduce(rbind, y))
+cbay_expanded <- data.frame(cbay_sequencedata$seq.text,cbay_sequencedata$seq.name,cbay_splitdata$X1,cbay_splitdata$X2,cbay_splitdata$X3,cbay_splitdata$X4)
+names(cbay_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
+cbay_expanded_na <- cbay_expanded %>%
+  mutate_all(na_if,"")
+write_tsv(x = cbay_expanded_na, "D:/R/InsectsArctic/Data/CBAY/cbay-sequencedata.tsv")
+rm(x,y,cbay_sequencedata,cbay_splitdata,cbay_expanded,cbay_expanded_na)
+
+# Process KUGA ---------------------------------------------------------------
+kuga_sequencedata <- read.fasta(file = "D:/R/InsectsArctic/Data/KUGA/SequenceData.fas")
+x <- kuga_sequencedata$seq.name
+y <- x %>%
+  str_split("\\|")
+kuga_splitdata <- data.frame(Reduce(rbind, y))
+kuga_expanded <- data.frame(kuga_sequencedata$seq.text,kuga_sequencedata$seq.name,kuga_splitdata$X1,kuga_splitdata$X2,kuga_splitdata$X3,kuga_splitdata$X4)
+names(kuga_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
+kuga_expanded_na <- kuga_expanded %>%
+  mutate_all(na_if,"")
+write_tsv(x = kuga_expanded_na, "D:/R/InsectsArctic/Data/KUGA/kuga-sequencedata.tsv")
+rm(x,y,kuga_sequencedata,kuga_splitdata,kuga_expanded,kuga_expanded_na)
+
+# Process KUGA ---------------------------------------------------------------
+gjoa_sequencedata <- read.fasta(file = "D:/R/InsectsArctic/Data/GJOA/SequenceData.fas")
+x <- gjoa_sequencedata$seq.name
+y <- x %>%
+  str_split("\\|")
+gjoa_splitdata <- data.frame(Reduce(rbind, y))
+gjoa_expanded <- data.frame(gjoa_sequencedata$seq.text,gjoa_sequencedata$seq.name,gjoa_splitdata$X1,gjoa_splitdata$X2,gjoa_splitdata$X3,gjoa_splitdata$X4)
+names(gjoa_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
+gjoa_expanded_na <- gjoa_expanded %>%
+  mutate_all(na_if,"")
+write_tsv(x = gjoa_expanded_na, "D:/R/InsectsArctic/Data/GJOA/gjoa-sequencedata.tsv")
+rm(x,y,gjoa_sequencedata,gjoa_splitdata,gjoa_expanded,gjoa_expanded_na)
