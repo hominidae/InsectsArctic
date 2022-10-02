@@ -1,5 +1,9 @@
 # InsectsArctic
 
+This is the Git reposity for taking DNA barcoding data from BOLD and generating various diagrams, maps, charts, etc.
+
+## Data
+
 First, you will need to download the data. I've used 7Zip to compress the data I and others at Polar Knowledge Canada, the University of Guelph, and ARCBIO collected in the communities of Cambridge Bay, Kugluktuk, Gjoa Haven, and Kugaaruk.
 
 It is attached to this repository as a 7Zip archive titled "Data.7z". However, since all of these data have relied on public funds the data is generally considered to be open source.
