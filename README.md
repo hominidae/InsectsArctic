@@ -26,3 +26,13 @@ However, we're only really interested in the bin.uri and sample.id
 
 ## Load collection data, taxonomy, and sequencing data
 Run 002_LoadBOLDData.R to change "sample.id" in the sequencing data to "Sample ID" and perform an inner join with the other datasets.
+
+Then script then saves that all as "working_dataset.tsv" which is the combined sequencing data and other data in one file.
+
+## Process BOLD data
+003_ProcessBOLDData.R is not done yet, but we'll leave it as is for now. Essentially, it will take the data and generate various graphs and figures.
+
+Currently, it's not functional unless you download the BOLD public data for Nunavut. I haven't uploaded the script for turning BOLD public data into something useful yet. But it will occur later once I'm done working with the BOLD data I've helped contribute to. That's the Data.7z file, which contains sanitized data that is expected to be high quality, and free of many common errors.
+
+## Process the combined Data.7z data
+
