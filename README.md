@@ -30,11 +30,9 @@ Run 002_LoadBOLDData.R to change "sample.id" in the sequencing data to "Sample I
 Then script then saves that all as "working_dataset.tsv" which is the combined sequencing data and other data in one file.
 
 ## Process BOLD data
-003_ProcessBOLDData.R is not done yet, but we'll leave it as is for now. Essentially, it will take the data and generate various graphs and figures.
+003_ProcessBOLDData.R is not done yet, but we'll leave it as is for now. Essentially, it will take the BOLD Public data from just Cambridge Bay and Kugluktuk and generate various graphs and figures.
 
-Currently, it's not functional unless you download the BOLD public data for Nunavut. I haven't uploaded the script for turning BOLD public data into something useful yet. But it will occur later once I'm done working with the BOLD data I've helped contribute to. That's the Data.7z file, which contains sanitized data that is expected to be high quality, and free of many common errors.
-
-Before that happens though, I need to perform a unit test on the VennDiagram data to confirm it's actually doing what I intended it to.
+Before that happens though, I need to perform a unit test on the ggVennDiagram code to confirm it's actually doing what I intended it to.
 
 ## Process the combined Data.7z data
 004_OwnDataOnly.R processes the data from Data.7z
