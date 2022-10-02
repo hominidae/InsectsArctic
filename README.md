@@ -45,4 +45,6 @@ The previous 003_ProcessBOLDData.R script is intended to form a comparison again
 
 I am starting with Springtails, also known as Collembola. As per this paper: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0230827
 
-From that paper, I will be looking at differentiating species of Poduromorpha, Symphypleona, Entomobryomorpha, Neelipleona between Cambridge Bay, Kugluktuk, Gjoa Haven, and Kugaaruk.
+From that paper, I will be looking at differentiating the community composition of various species of Springtails: Poduromorpha, Symphypleona, Entomobryomorpha between the communities of Cambridge Bay, Kugluktuk, Gjoa Haven, and Kugaaruk.
+
+After Springtails, I will perform the same rudimentary comparative analysis for several other insect species in the collected sample sets.
