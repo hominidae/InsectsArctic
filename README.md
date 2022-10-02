@@ -48,3 +48,10 @@ I am starting with Springtails, also known as Collembola. As per this paper: htt
 From that paper, I will be looking at differentiating the community composition of various species of Springtails: Poduromorpha, Symphypleona, Entomobryomorpha between the communities of Cambridge Bay, Kugluktuk, Gjoa Haven, and Kugaaruk.
 
 After Springtails, I will perform the same rudimentary comparative analysis for several other insect species in the collected sample sets.
+
+## Mapping
+Along with the charts/figures/diagrams generated in the two previous scripts, I will also utilize GIS mapping features within R to generate maps like these.
+
+https://imgur.com/gallery/p87EEdo
+
+Long term, I'd like this to be a website that is interactive but for now generating static image pointmaps will have to suffice.
