@@ -42,3 +42,7 @@ So far the code doesn't do much. Will update as I go. But essentially, I'll be c
 The intent is to answer questions like "What species are present in only one location?" and "What species are shared between communities in the Kitikmeot?" are intended to be answered.
 
 The previous 003_ProcessBOLDData.R script is intended to form a comparison against both the NWT and the rest of Nunavut. However that data will need to be sterilized of various error types.
+
+I am starting with Springtails, also known as Collembola. As per this paper: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0230827
+
+From that paper, I will be looking at differentiating species of Poduromorpha, Symphypleona, Entomobryomorpha, Neelipleona between Cambridge Bay, Kugluktuk, Gjoa Haven, and Kugaaruk.
