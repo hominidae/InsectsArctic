@@ -35,4 +35,10 @@ Then script then saves that all as "working_dataset.tsv" which is the combined s
 Currently, it's not functional unless you download the BOLD public data for Nunavut. I haven't uploaded the script for turning BOLD public data into something useful yet. But it will occur later once I'm done working with the BOLD data I've helped contribute to. That's the Data.7z file, which contains sanitized data that is expected to be high quality, and free of many common errors.
 
 ## Process the combined Data.7z data
+004_OwnDataOnly.R processes the data from Data.7z
 
+So far the code doesn't do much. Will update as I go. But essentially, I'll be creating several community composition diagrams linking communities by shared their shared BIN's.
+
+The intent is to answer questions like "What species are present in only one location?" and "What species are shared between communities in the Kitikmeot?" are intended to be answered.
+
+The previous 003_ProcessBOLDData.R script is intended to form a comparison against both the NWT and the rest of Nunavut. However that data will need to be sterilized of various error types.
