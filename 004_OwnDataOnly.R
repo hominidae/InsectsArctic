@@ -1,5 +1,6 @@
 # Process own data from Cambridge Bay
 # Objective:
+#  Take the working datasets and produce an analysis of the data
 
 # BCHAR - Malaise Trap Samples 2018
 #  Cambridge Bay
@@ -100,7 +101,7 @@ insecta_thysanoptera <- work_insecta %>%
 # Let's create a bar chart using ggplot. We want the chart to communicate the number of samples by location.
 library(ggplot2)
 
-# Okay, let's try something weird. Let's plot three things.
+# Let's create a graph showing what we've got.
 ggplot(work_arthropoda, aes(y = Sector)) +
   geom_bar(aes(fill = Order), position = position_stack(reverse = TRUE)) +
   labs(x = "# of Specimens", y = "Community") +
