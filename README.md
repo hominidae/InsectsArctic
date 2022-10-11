@@ -2,6 +2,9 @@
 
 This is the Git reposity for taking DNA barcoding data from BOLD and generating various diagrams, maps, charts, etc.
 
+### Notes:
+Code is currently undergoing reorganization. Updates will continue this week from October 10th 2022 to October 14th 2022.
+
 ## Data
 
 First, you will need to download the data. I've used 7Zip to compress the data I and others at Polar Knowledge Canada, the University of Guelph, and ARCBIO collected in the communities of Cambridge Bay, Kugluktuk, Gjoa Haven, and Kugaaruk.
