@@ -107,4 +107,4 @@ ggplot(work_arthropoda, aes(y = Sector)) +
   geom_bar(aes(fill = Order), position = position_stack(reverse = TRUE)) +
   labs(x = "# of Specimens", y = "Community") +
   theme(legend.position = "top") +
-  geom_text(stat='count', aes(label=..count..), vjust=-1)
+  geom_text(stat='count', aes(label=..count..))
