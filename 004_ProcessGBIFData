@@ -1,0 +1,14 @@
+# Process data from GBIF
+# OBJECTIVE:
+#  - Prepare GBIF data and prepare it for comparison against own data
+
+# Load libraries
+library(tidyverse)
+
+# Load the GBIF data set containing only human observations from iNaturalist
+gbif_data <- read_csv("D:/R/sort_data/canada_gbif_data_june.csv")
+
+# Let's look at that too before we proceed further
+table(gbif_data$stateProvince)
+
+# Great. A lot of bullshit. Let's get to replacing bullshit with useful names.
