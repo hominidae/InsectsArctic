@@ -8,6 +8,10 @@ library(tidyverse)
 # Load the data set containing publicly available BOLD data
 canada_data <- read_csv("D:/R/sort_data/canada_data_june.csv")
 
+# This data was stitched together from across Canada using code from my other code base
+# It's available here. It involves downloading BOLD data from various provinces and stitching it all back together.
+# https://github.com/hominidae/ProcessBOLDPublicData
+
 # Have a quick peek to see how easy this will be.
 # We can get by with just deleting anything that isn't right.
 table(canada_data$province_state)
@@ -56,10 +60,9 @@ rm(canada_data_alberta,canada_data_bc,canada_data_manitoba,canada_data_nb,canada
 write_tsv(x = canada_data, "D:/R/sort_data/Canada_data_clean.tsv")
 
 # But we're not done. We still need to characterize the data in a graph.
-# Let's filter down to arthropods first though.
+# Let's filter down to just arthropods
 canada_data_arthropoda <- canada_data %>%
   filter(phylum_name == "Arthropoda")
-# Bit of garbage cleaning too
 rm(canada_data)
 
 # Load ggplot2
