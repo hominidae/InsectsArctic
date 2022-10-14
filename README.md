@@ -5,19 +5,22 @@ This is the Git reposity for taking DNA barcoding data from BOLD and generating 
 ## Data sources
 
 ### Data from the Kitikmeot region of Nunavut
-First, you will need to download the data. I've used 7Zip to compress the data I and others at Polar Knowledge Canada, the University of Guelph, and ARCBIO collected in the communities of Cambridge Bay, Kugluktuk, Gjoa Haven, and Kugaaruk.
 
-It is attached to this repository as a 7Zip archive titled "Data.7z". However, since all of these data have relied on public funds the data is generally considered to be open source.
+The data.7z file included in this repository are from specimens that I and others at Polar Knowledge Canada, the University of Guelph, ARCBIO, and other participants collected in the communities of Cambridge Bay, Kugluktuk, Gjoa Haven, and Kugaaruk.
 
-Note: I chose to download the data and sequencing data separately and using R to match BIN numbers to RecordID's.
+It is attached to this repository as a 7Zip archive titled "Data.7z". However, since all of these data have relied on public funds the data is generally considered to be open source. You can also download these data from BOLD directly and it will be part of any search there too.
+
+Note: I chose to download the data and sequencing data separately and used R to match the BIN numbers to the Sample ID's.
 
 Since the sequencing data has been downloaded as FASTA format files, the use of the R library "phylotools" to read the FASTA format, selecting the data required and exporting as TSV was used.
 
 ### Public BOLD data
 
-You can also download data from BOLD via the public data portal by selecting terms like "Nunavut" and other provinces as a search term and filtering from there within R. Here is the public data portal:
+You can also download data from BOLD via the public data portal by selecting terms like "Nunavut" or other provinces/territories as a search term and filtering from there within R. Here is the public data portal:
 
 https://boldsystems.org/index.php/Public_BINSearch?searchtype=records
+
+You simply need to download as a TSV file. I would suggest downloading 
 
 ### Global Biodiversity Information Facility data
 
@@ -25,22 +28,28 @@ In addition, human observation data from GBIF is used as well. You can perform a
 https://www.gbif.org/occurrence/search
 
 ## Process DNA sequencing data
-Run 001_LoadSequencingData.R to process the sequencing data and save them as tsv files.
+Run 001_LoadSequencingData.R to process the available sequencing data and save them as tsv files.
+
+This is necessary because the BOLD public data for specimens does not contain the unique BIN numbers for each processed specimen.
 
 The active columns are "seq.data","seq.text","process.id","taxon","sample.id","bin.uri"
-However, we're only really interested in the bin.uri and sample.id
+
+However, we're only really interested in the bin.uri and sample.id so if you'd like you can simply attach those only.
 
 ## Load collection data, taxonomy, and sequencing data
+
 Run 002_LoadBOLDData.R to change "sample.id" in the sequencing data to "Sample ID" and perform an inner join with the other datasets.
 
 Then script then saves that all as "working_dataset.tsv" which is the combined sequencing data and other data in one file.
 
 ## Process BOLD data
+
 003_ProcessBOLDData.R is not done yet, but we'll leave it as is for now. Essentially, it will take the BOLD Public data from just Cambridge Bay and Kugluktuk and generate various graphs and figures.
 
 Before that happens though, I need to perform a unit test on the ggVennDiagram code to confirm it's actually doing what I intended it to.
 
 ## Process the combined Data.7z data
+
 004_OwnDataOnly.R processes the data from Data.7z
 
 So far the code doesn't do much. Will update as I go. But essentially, I'll be creating several community composition diagrams linking communities by shared their shared BIN's.
