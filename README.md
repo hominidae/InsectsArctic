@@ -2,24 +2,27 @@
 
 This is the Git reposity for taking DNA barcoding data from BOLD and generating various diagrams, maps, charts, etc.
 
-### Notes:
-Code is currently undergoing reorganization. Updates will continue this week from October 10th 2022 to October 14th 2022.
+## Data sources
 
-## Data
-
+### Data from the Kitikmeot region of Nunavut
 First, you will need to download the data. I've used 7Zip to compress the data I and others at Polar Knowledge Canada, the University of Guelph, and ARCBIO collected in the communities of Cambridge Bay, Kugluktuk, Gjoa Haven, and Kugaaruk.
 
 It is attached to this repository as a 7Zip archive titled "Data.7z". However, since all of these data have relied on public funds the data is generally considered to be open source.
 
-As a result, you can also download this data from BOLD via the public data portal by selecting "Nunavut" as a search term and filtering from there.
+Note: I chose to download the data and sequencing data separately and using R to match BIN numbers to RecordID's.
+
+Since the sequencing data has been downloaded as FASTA format files, the use of the R library "phylotools" to read the FASTA format, selecting the data required and exporting as TSV was used.
+
+### Public BOLD data
+
+You can also download data from BOLD via the public data portal by selecting terms like "Nunavut" and other provinces as a search term and filtering from there within R. Here is the public data portal:
 
 https://boldsystems.org/index.php/Public_BINSearch?searchtype=records
 
-However, I suggest that you download the archive here instead because the public data available from BOLD is not sanitized. The introduction of errors as a result of data entry issues, poor field notes, errors in GPS coordinates, etc does result in problems during processing the data.
+### Global Biodiversity Information Facility data
 
-Note: I chose to download the metadata and sequencing data separately and using R to match BIN numbers to RecordID's.
-
-Since the sequencing data has been download as FASTA format files, the use of the R library "phylotools" to read the FASTA format, selecting the data required and exporting as TSV was used.
+In addition, human observation data from GBIF is used as well. You can perform a search an occurance search on GBIF here:
+https://www.gbif.org/occurrence/search
 
 ## Process DNA sequencing data
 Run 001_LoadSequencingData.R to process the sequencing data and save them as tsv files.
