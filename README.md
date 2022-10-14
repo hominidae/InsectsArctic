@@ -6,13 +6,15 @@ This is the Git reposity for taking DNA barcoding data from BOLD and generating 
 
 ### Data from the Kitikmeot region of Nunavut
 
-The data.7z file included in this repository are from specimens that I and others at Polar Knowledge Canada, the University of Guelph, ARCBIO, and other participants collected in the communities of Cambridge Bay, Kugluktuk, Gjoa Haven, and Kugaaruk.
+The data included in this repository are from specimens that I and others at Polar Knowledge Canada, the University of Guelph, ARCBIO, and other participants collected in the communities of Cambridge Bay, Kugluktuk, Gjoa Haven, and Kugaaruk.
 
 It is attached to this repository as a 7Zip archive titled "Data.7z". However, since all of these data have relied on public funds the data is generally considered to be open source. You can also download these data from BOLD directly and it will be part of any search there too.
 
-Note: I chose to download the data and sequencing data separately and used R to match the BIN numbers to the Sample ID's.
-
 Since the sequencing data has been downloaded as FASTA format files, the use of the R library "phylotools" to read the FASTA format, selecting the data required and exporting as TSV was used.
+
+Note: I chose to download the specimen data and sequencing data separately and used R to match the BIN numbers to the Sample ID's.
+
+Since I can vouch for the collection and overall accuracy of this data set, it's the primary data set used. The other data sets are to be used for comparison only.
 
 ### Public BOLD data
 
@@ -20,7 +22,7 @@ You can also download data from BOLD via the public data portal by selecting ter
 
 https://boldsystems.org/index.php/Public_BINSearch?searchtype=records
 
-You simply need to download as a TSV file. I would suggest downloading 
+You simply need to download as a TSV file. I would suggest downloading in the combined specimen and sequencing TSV format for this part.
 
 ### Global Biodiversity Information Facility data
 
@@ -28,13 +30,13 @@ In addition, human observation data from GBIF is used as well. You can perform a
 https://www.gbif.org/occurrence/search
 
 ## Process DNA sequencing data
-Run 001_LoadSequencingData.R to process the available sequencing data and save them as tsv files.
+Run 001_LoadSequencingData.R to process the available sequencing data from "Data.7z" and save as a tsv file.
 
-This is necessary because the BOLD public data for specimens does not contain the unique BIN numbers for each processed specimen.
+This is necessary because the BOLD specimen data alone does not contain the unique BIN numbers for each processed specimen when downloading through the BOLD Data Console.
 
 The active columns are "seq.data","seq.text","process.id","taxon","sample.id","bin.uri"
 
-However, we're only really interested in the bin.uri and sample.id so if you'd like you can simply attach those only.
+However, we're only really interested in the "bin.uri" and "sample.id"
 
 ## Load collection data, taxonomy, and sequencing data
 
