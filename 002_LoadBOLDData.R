@@ -1,6 +1,7 @@
 # Process data from projects in Cambridge Bay
 # OBJECTIVE:
-#  - Recombine bchar, cchar, dchar, fchar, tsv files into a singular tsv file
+#  - Recombine bchar, cchar, dchar, fchar, gchar, hchar, cbay, kuga, gjoa, kugl into a singular tsv file
+#  - Seperated by two types, everything and a tsv with just arthropoda
 
 # Load Libraries ####
 library(tidyverse)
@@ -23,6 +24,14 @@ dchar7 <- read_tsv("D:/R/InsectsArctic/Data/DCHAR/dchar-sequencedata.tsv")
 fchar1 <- read_tsv("D:/R/InsectsArctic/Data/FCHAR/collection_data.tsv")
 fchar5 <- read_tsv("D:/R/InsectsArctic/Data/FCHAR/taxonomy.tsv")
 fchar7 <- read_tsv("D:/R/InsectsArctic/Data/FCHAR/fchar-sequencedata.tsv")
+# GCHAR Biodiversity Survey 2019 - Freshwater Aquatic Collection
+gchar1 <- read_tsv("D:/R/InsectsArctic/Data/GCHAR/collection_data.tsv")
+gchar5 <- read_tsv("D:/R/InsectsArctic/Data/GCHAR/taxonomy.tsv")
+gchar7 <- read_tsv("D:/R/InsectsArctic/Data/GCHAR/gchar-sequencedata.tsv")
+# HCHAR Biodiversity Survey 2019 - Marine Aquatic Collection 2019 (Likely not the target, but will need to see)
+hchar1 <- read_tsv("D:/R/InsectsArctic/Data/HCHAR/collection_data.tsv")
+hchar5 <- read_tsv("D:/R/InsectsArctic/Data/HCHAR/taxonomy.tsv")
+hchar7 <- read_tsv("D:/R/InsectsArctic/Data/HCHAR/hchar-sequencedata.tsv")
 # CBAY ARCBIO 2021 - Cambridge Bay, Nunavut - Malaise and general collection
 cbay1 <- read_tsv("D:/R/InsectsArctic/Data/CBAY/collection_data.tsv")
 cbay5 <- read_tsv("D:/R/InsectsArctic/Data/CBAY/taxonomy.tsv")
@@ -35,6 +44,10 @@ kuga7 <- read_tsv("D:/R/InsectsArctic/Data/KUGA/kuga-sequencedata.tsv")
 gjoa1 <- read_tsv("D:/R/InsectsArctic/Data/GJOA/collection_data.tsv")
 gjoa5 <- read_tsv("D:/R/InsectsArctic/Data/GJOA/taxonomy.tsv")
 gjoa7 <- read_tsv("D:/R/InsectsArctic/Data/GJOA/gjoa-sequencedata.tsv")
+# KUGL ARCBIO 2021 - Malaise and general collection 2021
+kugl1 <- read_tsv("D:/R/InsectsArctic/Data/KUGL/collection_data.tsv")
+kugl5 <- read_tsv("D:/R/InsectsArctic/Data/KUGL/taxonomy.tsv")
+kugl7 <- read_tsv("D:/R/InsectsArctic/Data/KUGL/kugl-sequencedata.tsv")
 
 # Let's separate out all arthropods
 bchar_arth <- bchar5 %>%
@@ -45,11 +58,17 @@ dchar_arth <- dchar5 %>%
   filter(Phylum == "Arthropoda")
 fchar_arth <- fchar5 %>%
   filter(Phylum == "Arthropoda")
+gchar_arth <- gchar5 %>%
+  filter(Phylum == "Arthropoda")
+hchar_arth <- hchar5 %>%
+  filter(Phylum == "Arthropoda")
 cbay_arth <- cbay5 %>%
   filter(Phylum == "Arthropoda")
 kuga_arth <- kuga5 %>%
   filter(Phylum == "Arthropoda")
 gjoa_arth <- gjoa5 %>%
+  filter(Phylum == "Arthropoda")
+kugl_arth <- kugl5 %>%
   filter(Phylum == "Arthropoda")
 
 # Rename/Join columns ####
@@ -101,6 +120,30 @@ fchar_final <- test1
 fchar_arth <- test2
 rm(test,test1,test2)
 
+########## GCHAR
+names(gchar7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
+test <- inner_join(gchar5, gchar7, by="Sample ID")
+test1 <- inner_join(test, gchar1, by="Sample ID")
+temp <- data.frame(gchar_arth$'Sample ID')
+names(temp) <- c("Sample ID")
+test2 <- inner_join(test1, temp, by="Sample ID")
+
+gchar_final <- test1
+gchar_arth <- test2
+rm(test,test1,test2)
+
+########## HCHAR
+names(hchar7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
+test <- inner_join(hchar5, hchar7, by="Sample ID")
+test1 <- inner_join(test, hchar1, by="Sample ID")
+temp <- data.frame(hchar_arth$'Sample ID')
+names(temp) <- c("Sample ID")
+test2 <- inner_join(test1, temp, by="Sample ID")
+
+hchar_final <- test1
+hchar_arth <- test2
+rm(test,test1,test2)
+
 ########## CBAY
 names(cbay7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
 test <- inner_join(cbay5, cbay7, by="Sample ID")
@@ -137,25 +180,43 @@ gjoa_final <- test1
 gjoa_arth <- test2
 rm(test,test1,test2)
 
+########## KUGL
+names(kugl7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
+test <- inner_join(kugl5, kugl7, by="Sample ID")
+test1 <- inner_join(test, kugl1, by="Sample ID")
+temp <- data.frame(kugl_arth$"Sample ID")
+names(temp) <- c("Sample ID")
+test2 <- inner_join(test1, temp, by="Sample ID")
+
+kugl_final <- test1
+kugl_arth <- test2
+rm(test,test1,test2)
+
 # Combine all the finals together ####
 test <- rbind(bchar_final,cchar_final)
 test1 <- rbind(test,dchar_final)
 test2 <- rbind(test1,fchar_final)
-test3 <- rbind(test2,cbay_final)
-test4 <- rbind(test3,kuga_final)
-test5 <- rbind(test4,gjoa_final)
+test3 <- rbind(test2,ghcar_final)
+test4 <- rbind(test3,hchar_final)
+test5 <- rbind(test4,cbay_final)
+test6 <- rbind(test5,kuga_final)
+test7 <- rbind(test6,gjoa_final)
+test8 <- rbind(test7,kugl_final)
 final_final <- test5
-rm(test,test1,test2,test3,test4,test5)
+rm(test,test1,test2,test3,test4,test5,test6,test7,test8)
 
 # Combine arthropods together
 test <- rbind(bchar_arth,cchar_arth)
 test1 <- rbind(test,dchar_arth)
 test2 <- rbind(test1,fchar_arth)
-test3 <- rbind(test2,cbay_arth)
-test4 <- rbind(test3,kuga_final)
-test5 <- rbind(test4,gjoa_arth)
-final_arth <- test5
-rm(test,test1,test2,test3,test4,test5)
+test3 <- rbind(test2,gchar_arth)
+test4 <- rbind(test3,hchar_arth)
+test5 <- rbind(test4,cbay_arth)
+test6 <- rbind(test5,kuga_final)
+test7 <- rbind(test6,gjoa_arth)
+test8 <- rbind(test7,kugl_arth)
+final_arth <- test8
+rm(test,test1,test2,test3,test4,test5,test6,test7,test8)
 
 # Write out our tsv file
 write_tsv(x = final_final, "D:/R/InsectsArctic/Data/kitikmeot_data.tsv")
