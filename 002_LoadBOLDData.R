@@ -1,7 +1,6 @@
 # Process data from projects in Cambridge Bay
 # OBJECTIVE:
-#  - Recombine bchar, cchar, dchar, fchar, gchar, hchar, cbay, kuga, gjoa, kugl into a singular tsv file
-#  - Seperated by two types, everything and a tsv with just arthropoda
+#  - Recombine bchar, cchar, dchar, fchar, tsv files into a singular tsv file
 
 # Load Libraries ####
 library(tidyverse)
@@ -82,7 +81,8 @@ test2 <- inner_join(test1, temp, by="Sample ID")
 
 bchar_final <- test1
 bchar_arth <- test2
-rm(test,test1,test2)
+rm(temp,test,test1,test2)
+rm(bchar1,bchar5,bchar7)
 
 ########## CCHAR
 names(cchar7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
@@ -94,7 +94,8 @@ test2 <- inner_join(test1, temp, by="Sample ID")
 
 cchar_final <- test1
 cchar_arth <- test2
-rm(test,test1,test2)
+rm(temp,test,test1,test2)
+rm(cchar1,cchar5,cchar7)
 
 ########## DCHAR
 names(dchar7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
@@ -106,7 +107,8 @@ test2 <- inner_join(test1, temp, by="Sample ID")
 
 dchar_final <- test1
 dchar_arth <- test2
-rm(test,test1,test2)
+rm(temp,test,test1,test2)
+rm(dchar1,dchar5,dchar7)
 
 ########## FCHAR
 names(fchar7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
@@ -118,7 +120,8 @@ test2 <- inner_join(test1, temp, by="Sample ID")
 
 fchar_final <- test1
 fchar_arth <- test2
-rm(test,test1,test2)
+rm(temp,test,test1,test2)
+rm(fchar1,fchar5,fchar7)
 
 ########## GCHAR
 names(gchar7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
@@ -130,7 +133,8 @@ test2 <- inner_join(test1, temp, by="Sample ID")
 
 gchar_final <- test1
 gchar_arth <- test2
-rm(test,test1,test2)
+rm(temp,test,test1,test2)
+rm(gchar1,gchar5,gchar7)
 
 ########## HCHAR
 names(hchar7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
@@ -142,7 +146,8 @@ test2 <- inner_join(test1, temp, by="Sample ID")
 
 hchar_final <- test1
 hchar_arth <- test2
-rm(test,test1,test2)
+rm(temp,test,test1,test2)
+rm(hchar1,hchar5,hchar7)
 
 ########## CBAY
 names(cbay7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
@@ -154,7 +159,8 @@ test2 <- inner_join(test1, temp, by="Sample ID")
 
 cbay_final <- test1
 cbay_arth <- test2
-rm(test,test1,test2)
+rm(temp,test,test1,test2)
+rm(cbay1,cbay5,cba7)
 
 ########## KUGA
 names(kuga7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
@@ -166,7 +172,8 @@ test2 <- inner_join(test1, temp, by="Sample ID")
 
 kuga_final <- test1
 kuga_arth <- test2
-rm(test,test1,test2)
+rm(temp,test,test1,test2)
+rm(kuga1,kuga5,kuga7)
 
 ########## GJOA
 names(gjoa7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
@@ -178,7 +185,8 @@ test2 <- inner_join(test1, temp, by="Sample ID")
 
 gjoa_final <- test1
 gjoa_arth <- test2
-rm(test,test1,test2)
+rm(temp,test,test1,test2)
+rm(gjoa1,gjoa5,gjoa7)
 
 ########## KUGL
 names(kugl7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
@@ -190,13 +198,14 @@ test2 <- inner_join(test1, temp, by="Sample ID")
 
 kugl_final <- test1
 kugl_arth <- test2
-rm(test,test1,test2)
+rm(temp,test,test1,test2)
+rm(kugl1,kugl5,kugl7)
 
 # Combine all the finals together ####
 test <- rbind(bchar_final,cchar_final)
 test1 <- rbind(test,dchar_final)
 test2 <- rbind(test1,fchar_final)
-test3 <- rbind(test2,ghcar_final)
+test3 <- rbind(test2,gchar_final)
 test4 <- rbind(test3,hchar_final)
 test5 <- rbind(test4,cbay_final)
 test6 <- rbind(test5,kuga_final)
