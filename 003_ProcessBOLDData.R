@@ -1,20 +1,23 @@
 # Process data from public BOLD data
 # OBJECTIVE:
 #  - Take public BOLD data and prepare it for comparison against own collected data
+# Note:
+#  This code takes advantage of code from ProcessBOLDPublicData code from this github link:
+#  https://github.com/hominidae/ProcessBOLDPublicData
+#  "canada_data_october.csv" is that data
 
 # Load libraries
 library(tidyverse)
+library(dplyr)
 
-# Load the data set containing publicly available BOLD data
-canada_data <- read_csv("D:/R/sort_data/canada_data_june.csv")
-
-# This data was stitched together from across Canada using code from my other code base
-# It's available here. It involves downloading BOLD data from various provinces and stitching it all back together.
-# https://github.com/hominidae/ProcessBOLDPublicData
+# Load the data set containing publicly available BOLD data, warning uses about 4.61GB of memory
+# This data was stitched together from across Canada using code from my other ProcessBOLDPublicData code
+# It involves downloading BOLD data from various provinces and stitching it all back together.
+canada_data <- read_tsv("D:/R/InsectsArctic/data/canada_data_october.tsv")
 
 # Have a quick peek to see how easy this will be.
-# We can get by with just deleting anything that isn't right.
 table(canada_data$province_state)
+# Easy peasy. We just need to remove the isolated items from odd places.
 
 canada_data_alberta <- canada_data %>%
   filter(province_state == "Alberta")
@@ -57,9 +60,11 @@ rm(can1,can2,can3,can4,can5,can6,can7,can8,can9,can10)
 rm(canada_data_alberta,canada_data_bc,canada_data_manitoba,canada_data_nb,canada_data_nf,canada_data_ns,canada_data_nt,canada_data_nwt,canada_data_on,canada_data_qc,canada_data_yk)
 
 # Righteous. Clean data. Let's save it before it gets lost.
-write_tsv(x = canada_data, "D:/R/sort_data/Canada_data_clean.tsv")
+write_tsv(x = canada_data, "D:/R/InsectsArctic/data/Canada_data_clean_october.tsv")
 
-# But we're not done. We still need to characterize the data in a graph.
+# Reload here if necessary.
+#canada_data <- read_tsv("D:/R/InsectsArctic/data/Canada_data_october.tsv")
+
 # Let's filter down to just arthropods
 canada_data_arthropoda <- canada_data %>%
   filter(phylum_name == "Arthropoda")
