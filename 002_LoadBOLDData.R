@@ -160,7 +160,7 @@ test2 <- inner_join(test1, temp, by="Sample ID")
 cbay_final <- test1
 cbay_arth <- test2
 rm(temp,test,test1,test2)
-rm(cbay1,cbay5,cba7)
+rm(cbay1,cbay5,cbay7)
 
 ########## KUGA
 names(kuga7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
@@ -229,6 +229,8 @@ rm(test,test1,test2,test3,test4,test5,test6,test7,test8)
 
 # Write out our tsv file
 write_tsv(x = final_final, "D:/R/InsectsArctic/Data/kitikmeot_data.tsv")
+rm(bchar_final,cchar_final,dchar_final,fchar_final,gchar_final,hchar_final,cbay_final,kuga_final,gjoa_final,kugl_final,final_final)
 
 # Write out another tsv containing just the arthropods
 write_tsv(x = final_arth, "D:/R/InsectsArctic/Data/kitikmeot_data_arth.tsv")
+rm(bchar_arth,cchar_arth,dchar_arth,fchar_arth,gchar_arth,hchar_arth,cbay_arth,kuga_arth,gjoa_arth,kugl_arth,final_arth)
