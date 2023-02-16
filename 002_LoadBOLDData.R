@@ -1,6 +1,7 @@
-# Process data from projects in Cambridge Bay
+# Process data from collection efforts in Cambridge Bay
+
 # OBJECTIVE:
-#  - Recombine bchar, cchar, dchar, fchar, tsv files into a singular tsv file
+#  - Recombine tsv files into singular tsv files
 
 # Load Libraries ####
 library(tidyverse)
@@ -8,47 +9,47 @@ library(dplyr)
 
 # Load Data ####
 # BCHAR Biodiversity Survey - Malaise Trap Samples 2018
-bchar1 <- read_tsv("D:/R/InsectsArctic/Data/BCHAR/collection_data.tsv")
-bchar5 <- read_tsv("D:/R/InsectsArctic/Data/BCHAR/taxonomy.tsv")
-bchar7 <- read_tsv("D:/R/InsectsArctic/Data/BCHAR/bchar-sequencedata.tsv")
+bchar1 <- read_tsv("C:/R/InsectsArctic/Data/BCHAR/collection_data.tsv")
+bchar5 <- read_tsv("C:/R/InsectsArctic/Data/BCHAR/taxonomy.tsv")
+bchar7 <- read_tsv("C:/R/InsectsArctic/Data/BCHAR/bchar-sequencedata.tsv")
 # CCHAR Biodiversity Survey - Standardized Sampling - Intensive Monitoring Area Site 2018
-cchar1 <- read_tsv("D:/R/InsectsArctic/Data/CCHAR/collection_data.tsv")
-cchar5 <- read_tsv("D:/R/InsectsArctic/Data/CCHAR/taxonomy.tsv")
-cchar7 <- read_tsv("D:/R/InsectsArctic/Data/CCHAR/cchar-sequencedata.tsv")
+cchar1 <- read_tsv("C:/R/InsectsArctic/Data/CCHAR/collection_data.tsv")
+cchar5 <- read_tsv("C:/R/InsectsArctic/Data/CCHAR/taxonomy.tsv")
+cchar7 <- read_tsv("C:/R/InsectsArctic/Data/CCHAR/cchar-sequencedata.tsv")
 # DCHAR Biodiversity Survey - Standardized Sampling - Water Lake Site 2018
-dchar1 <- read_tsv("D:/R/InsectsArctic/Data/DCHAR/collection_data.tsv")
-dchar5 <- read_tsv("D:/R/InsectsArctic/Data/DCHAR/taxonomy.tsv")
-dchar7 <- read_tsv("D:/R/InsectsArctic/Data/DCHAR/dchar-sequencedata.tsv")
+dchar1 <- read_tsv("C:/R/InsectsArctic/Data/DCHAR/collection_data.tsv")
+dchar5 <- read_tsv("C:/R/InsectsArctic/Data/DCHAR/taxonomy.tsv")
+dchar7 <- read_tsv("C:/R/InsectsArctic/Data/DCHAR/dchar-sequencedata.tsv")
 # FCHAR Biodiversity Survey 2019 - General Terrestrial Collection (Cambridge Bay & Kugluktuk)
-fchar1 <- read_tsv("D:/R/InsectsArctic/Data/FCHAR/collection_data.tsv")
-fchar5 <- read_tsv("D:/R/InsectsArctic/Data/FCHAR/taxonomy.tsv")
-fchar7 <- read_tsv("D:/R/InsectsArctic/Data/FCHAR/fchar-sequencedata.tsv")
+fchar1 <- read_tsv("C:/R/InsectsArctic/Data/FCHAR/collection_data.tsv")
+fchar5 <- read_tsv("C:/R/InsectsArctic/Data/FCHAR/taxonomy.tsv")
+fchar7 <- read_tsv("C:/R/InsectsArctic/Data/FCHAR/fchar-sequencedata.tsv")
 # GCHAR Biodiversity Survey 2019 - Freshwater Aquatic Collection
-gchar1 <- read_tsv("D:/R/InsectsArctic/Data/GCHAR/collection_data.tsv")
-gchar5 <- read_tsv("D:/R/InsectsArctic/Data/GCHAR/taxonomy.tsv")
-gchar7 <- read_tsv("D:/R/InsectsArctic/Data/GCHAR/gchar-sequencedata.tsv")
+gchar1 <- read_tsv("C:/R/InsectsArctic/Data/GCHAR/collection_data.tsv")
+gchar5 <- read_tsv("C:/R/InsectsArctic/Data/GCHAR/taxonomy.tsv")
+gchar7 <- read_tsv("C:/R/InsectsArctic/Data/GCHAR/gchar-sequencedata.tsv")
 # HCHAR Biodiversity Survey 2019 - Marine Aquatic Collection 2019 (Likely not the target, but will need to see)
-hchar1 <- read_tsv("D:/R/InsectsArctic/Data/HCHAR/collection_data.tsv")
-hchar5 <- read_tsv("D:/R/InsectsArctic/Data/HCHAR/taxonomy.tsv")
-hchar7 <- read_tsv("D:/R/InsectsArctic/Data/HCHAR/hchar-sequencedata.tsv")
+hchar1 <- read_tsv("C:/R/InsectsArctic/Data/HCHAR/collection_data.tsv")
+hchar5 <- read_tsv("C:/R/InsectsArctic/Data/HCHAR/taxonomy.tsv")
+hchar7 <- read_tsv("C:/R/InsectsArctic/Data/HCHAR/hchar-sequencedata.tsv")
 # CBAY ARCBIO 2021 - Cambridge Bay, Nunavut - Malaise and general collection
-cbay1 <- read_tsv("D:/R/InsectsArctic/Data/CBAY/collection_data.tsv")
-cbay5 <- read_tsv("D:/R/InsectsArctic/Data/CBAY/taxonomy.tsv")
-cbay7 <- read_tsv("D:/R/InsectsArctic/Data/CBAY/cbay-sequencedata.tsv")
+cbay1 <- read_tsv("C:/R/InsectsArctic/Data/CBAY/collection_data.tsv")
+cbay5 <- read_tsv("C:/R/InsectsArctic/Data/CBAY/taxonomy.tsv")
+cbay7 <- read_tsv("C:/R/InsectsArctic/Data/CBAY/cbay-sequencedata.tsv")
 # KUGA ARCBIO 2021 - Kugaaruk, Nunavut - Malaise and general collection
-kuga1 <- read_tsv("D:/R/InsectsArctic/Data/KUGA/collection_data.tsv")
-kuga5 <- read_tsv("D:/R/InsectsArctic/Data/KUGA/taxonomy.tsv")
-kuga7 <- read_tsv("D:/R/InsectsArctic/Data/KUGA/kuga-sequencedata.tsv")
+kuga1 <- read_tsv("C:/R/InsectsArctic/Data/KUGA/collection_data.tsv")
+kuga5 <- read_tsv("C:/R/InsectsArctic/Data/KUGA/taxonomy.tsv")
+kuga7 <- read_tsv("C:/R/InsectsArctic/Data/KUGA/kuga-sequencedata.tsv")
 # GJOA ARCBIO 2021 - Gjoa Haven, Nunavut - Malaise and general collection
-gjoa1 <- read_tsv("D:/R/InsectsArctic/Data/GJOA/collection_data.tsv")
-gjoa5 <- read_tsv("D:/R/InsectsArctic/Data/GJOA/taxonomy.tsv")
-gjoa7 <- read_tsv("D:/R/InsectsArctic/Data/GJOA/gjoa-sequencedata.tsv")
+gjoa1 <- read_tsv("C:/R/InsectsArctic/Data/GJOA/collection_data.tsv")
+gjoa5 <- read_tsv("C:/R/InsectsArctic/Data/GJOA/taxonomy.tsv")
+gjoa7 <- read_tsv("C:/R/InsectsArctic/Data/GJOA/gjoa-sequencedata.tsv")
 # KUGL ARCBIO 2021 - Malaise and general collection 2021
-kugl1 <- read_tsv("D:/R/InsectsArctic/Data/KUGL/collection_data.tsv")
-kugl5 <- read_tsv("D:/R/InsectsArctic/Data/KUGL/taxonomy.tsv")
-kugl7 <- read_tsv("D:/R/InsectsArctic/Data/KUGL/kugl-sequencedata.tsv")
+kugl1 <- read_tsv("C:/R/InsectsArctic/Data/KUGL/collection_data.tsv")
+kugl5 <- read_tsv("C:/R/InsectsArctic/Data/KUGL/taxonomy.tsv")
+kugl7 <- read_tsv("C:/R/InsectsArctic/Data/KUGL/kugl-sequencedata.tsv")
 
-# Let's separate out all arthropods
+# Let's separate out all arthropods.
 bchar_arth <- bchar5 %>%
   filter(Phylum == "Arthropoda")
 cchar_arth <- cchar5 %>%
@@ -228,9 +229,9 @@ final_arth <- test8
 rm(test,test1,test2,test3,test4,test5,test6,test7,test8)
 
 # Write out our tsv file
-write_tsv(x = final_final, "D:/R/InsectsArctic/Data/kitikmeot_data.tsv")
+write_tsv(x = final_final, "C:/R/InsectsArctic/Data/kitikmeot_data.tsv")
 rm(bchar_final,cchar_final,dchar_final,fchar_final,gchar_final,hchar_final,cbay_final,kuga_final,gjoa_final,kugl_final,final_final)
 
 # Write out another tsv containing just the arthropods
-write_tsv(x = final_arth, "D:/R/InsectsArctic/Data/kitikmeot_data_arth.tsv")
+write_tsv(x = final_arth, "C:/R/InsectsArctic/Data/kitikmeot_data_arth.tsv")
 rm(bchar_arth,cchar_arth,dchar_arth,fchar_arth,gchar_arth,hchar_arth,cbay_arth,kuga_arth,gjoa_arth,kugl_arth,final_arth)
