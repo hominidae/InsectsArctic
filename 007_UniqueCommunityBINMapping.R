@@ -216,7 +216,7 @@ kitikmeot_bins <- bind_rows(cbay_sharedbins,kugl_sharedbins,kuga_sharedbins,gjoa
 write_tsv(x = kitikmeot_bins, "C:/R/InsectsArctic/data/kitikmeot_sharedBOLDbins.tsv")
 
 # Register Goggle Maps API
-register_google(key = "AIzaSyDf-95SnHdFmDLMSdtKOhD-GSxp4E7CllU")
+register_google(key = "YOUR-API-KEY-HERE")
 
 # Setup ggmap
 map_bold <- get_map(
