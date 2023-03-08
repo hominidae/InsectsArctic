@@ -1,4 +1,4 @@
-
+# 
 
 # Load libraries
 library(tidyverse)
@@ -63,6 +63,53 @@ gjoa_sharedbins <- gjoa_target %>%
 # Kugaaruk to other locations
 kuga_sharedbins <- kuga_target %>%
   filter(bin_uri %in% kuga_bins[,1])
+
+# Let's make a data frame containing the BINs that are present in all four communities
+list_kitikmeot = list(cbay_bins,kugl_bins,gjoa_bins,kuga_bins)
+kitikmeot_bins <- list_kitikmeot %>%
+  reduce(inner_join, by="bin_uri")
+
+# Take that list of BINs that are present in all four communities and produce a new target
+kitikmeot_sharedbins <- kitikmeot_bold %>%
+  filter(bin_uri %in% kitikmeot_bins[,1])
+
+# Let's perform a count of those BINs from the kitikmeot
+kitikmeot_count <- as.data.frame(table(kitikmeot_sharedbins$bin_uri))
+names(kitikmeot_count)[names(kitikmeot_count) == "Var1"] <- "bin_uri"
+write_csv(x = kitikmeot_count, "C:/R/InsectsArctic/data/kitikmeot_count.csv")
+
+# We need to make a combination of records for the land bound communitites, Kugluktuk and Kugaaruk
+land_target <- rbind(kugluktuk,kugaaruk)
+
+# Let's do the same but shared BINs between the land bound locations (Kugluktuk, Kugaaruk)
+list_land = list(kugl_bins,kuga_bins)
+land_bins <- list_land %>%
+  reduce(inner_join, by="bin_uri")
+# Filter BINs for land bound communities
+land_sharedbins <- land_target %>%
+  filter(bin_uri %in% land_bins[,1])
+# Let's perform a count and save
+land_count <- as.data.frame(table(land_sharedbins$bin_uri))
+names(land_count)[names(land_count) == "Var1"] <- "bin_uri"
+write_csv(x = land_count, "C:/R/InsectsArctic/data/land_count.csv")
+
+# We also want to make a combination of records for the island communities, Cambridge Bay and GJoa Haven
+island_target <- rbind(cambridgebay,gjoahaven)
+
+# Let's do the same but shared BINs between the island locations (Cambridge Bay, Gjoa Haven)
+list_island = list(cbay_bins,gjoa_bins)
+island_bins <- list_island %>%
+  reduce(inner_join, by="bin_uri")
+# Filter BINs for island communities
+island_sharedbins <- island_target %>%
+  filter(bin_uri %in% island_bins[,1])
+# Let's do a count and save
+island_count <- as.data.frame(table(island_sharedbins$bin_uri))
+names(island_count)[names(island_count) == "Var1"] <- "bin_uri"
+write_csv(x = island_count, "C:/R/InsectsArctic/data/island_count.csv")
+
+# You'll need to enter a Google Maps API key
+register_google(key = "YOURKEYHERE")
 
 # Create a data frame containing our lat's and lon's for the center of each communitiy
 communities <- data.frame(
@@ -148,24 +195,134 @@ kuga2kitikmeot_mp <- mp+
        title="Exact BIN matches between Kugaaruk and other communities")
 kuga2kitikmeot_mp
 
-# Because generating a map with lines pointing to each community is kinda boring, let's try a different approach.
-# Basically, we want a box plot per community.
-# The boxplot should show unique bin's and the count of those bin's per community.
+# Right, so drawing lines from communities doesn't really accomplish the same thing it does when the GPS coordinates are more disparate.
+# Let's switch tacks and try something else instead.
 
-# Let's make some hasty counts, we want a count of the number of BIN's
-cbay_count <- as.data.frame(table(cambridgebay$bin_uri))
-names(cbay_count)[names(cbay_count) == "Var1"] <- "bin_uri"
-# Next, do Kugluktuk
-kugl_count <- as.data.frame(table(kugluktuk$bin_uri))
-names(kugl_count)[names(kugl_count) == "Var1"] <- "bin_uri"
-# Next, do Gjoa Haven
-gjoa_count <- as.data.frame(table(gjoahaven$bin_uri))
-names(gjoa_count)[names(gjoa_count) == "Var1"] <- "bin_uri"
-# Last, do Kugaaruk
-kuga_count <- as.data.frame(table(kugaaruk$bin_uri))
-names(kuga_count)[names(kuga_count) == "Var1"] <- "bin_uri"
+# To do that, we need to separate kitikmeot_bold into communities, select our BINs then go from there
+# Let's do all of the Kitikmeot once
+kitikmeot_diptera <- kitikmeot_bold %>%
+  filter(order_name == "Diptera")
+kitikmeot_hemiptera <- kitikmeot_bold %>%
+  filter(order_name == "Hemiptera")
+kitikmeot_hymenoptera <- kitikmeot_bold %>%
+  filter(order_name == "Hymenoptera")
+kitikmeot_lepidoptera <- kitikmeot_bold %>%
+  filter(order_name == "Lepidoptera")
+kitikmeot_thysanoptera <- kitikmeot_bold %>%
+  filter(order_name == "Thysanoptera")
+kitikmeot_neuroptera <- kitikmeot_bold %>%
+  filter(order_name == "Neuroptera")
+kitikmeot_orthoptera <- kitikmeot_bold %>%
+  filter(order_name == "Orthoptera")
+kitikmeot_flying <- rbind(kitikmeot_diptera,kitikmeot_hemiptera,kitikmeot_hymenoptera,kitikmeot_lepidoptera,kitikmeot_thysanoptera,kitikmeot_neuroptera,kitikmeot_orthoptera)
+rm(kitikmeot_diptera,kitikmeot_hemiptera,kitikmeot_hymenoptera,kitikmeot_lepidoptera,kitikmeot_thysanoptera,kitikmeot_neuroptera,kitikmeot_orthoptera)
 
-# Test with an inner join, Cambridge Bay and Kugluktuk
-comparecbay2kugl <- inner_join(cbay_count,kugl_count)
-comparecbay2gjoa <- inner_join(cbay_count,gjoa_count)
-comparecbay2kuga <- inner_join(cbay_count,kuga_count)
+# Next, make a non-flying list too
+kitikmeot_araneae <- kitikmeot_bold %>%
+  filter(order_name == "Araneae")
+kitikmeot_coleoptera <- kitikmeot_bold %>%
+  filter(order_name == "Coleoptera")
+kitikmeot_entomobryomorpha <- kitikmeot_bold %>%
+  filter(order_name == "Entomobryomorpha")
+kitikmeot_poduromorpha <- kitikmeot_bold %>%
+  filter(order_name == "Poduromorpha")
+kitikmeot_symphypleona <- kitikmeot_bold %>%
+  filter(order_name == "Symphypleona")
+kitikmeot_sarcoptiformes <- kitikmeot_bold %>%
+  filter(order_name == "Sarcoptiformes")
+kitikmeot_trombidiformes <- kitikmeot_bold %>%
+  filter(order_name == "Trombidiformes")
+kitikmeot_mesostigmata <- kitikmeot_bold %>%
+  filter(order_name == "Mesostigmata")
+kitikmeot_nonflying <- rbind(kitikmeot_araneae,kitikmeot_coleoptera,kitikmeot_entomobryomorpha,kitikmeot_poduromorpha,kitikmeot_symphypleona,kitikmeot_sarcoptiformes,kitikmeot_trombidiformes,kitikmeot_mesostigmata)
+rm(kitikmeot_araneae,kitikmeot_coleoptera,kitikmeot_entomobryomorpha,kitikmeot_poduromorpha,kitikmeot_symphypleona,kitikmeot_sarcoptiformes,kitikmeot_trombidiformes,kitikmeot_mesostigmata)
+
+# Before we move on though, let's save our data as kitikmeot_flying.csv and kitikmeot_nonflying.csv
+write_csv(x = kitikmeot_flying, "C:/R/InsectsArctic/data/kitikmeot_flying.csv")
+write_csv(x = kitikmeot_nonflying, "C:/R/InsectsArctic/data/kitikmeot_nonflying.csv")
+
+# Install ggVennDiagram
+install.packages("ggVennDiagram")
+
+# Load ggVennDiagram
+library(ggVennDiagram)
+
+# First things first, we have cambridgebay, kugluktuk, gjoahaven, and kugaaruk
+# These were parsed out from kitikmeot_bold
+# Assign our variables to a vector list variable x
+x <- kitikmeot_bold %>%
+  select(sector,bin_uri) %>%
+  drop_na() %>%
+  group_by(sector) %>%
+  nest() %>%
+  pull() %>%
+  map(unique) %>%
+  map(pull)
+
+# Generate a simple colour blind friendly Venn Diagram
+p <- ggVennDiagram(x, category.names = c("Cambridge Bay","Gjoa Haven","Kugaaruk","Kugluktuk"),
+              label_alpha = 0) +
+  guides(fill = guide_legend(title = "# of Unique BINs")) +
+  theme(legend.title = element_text(color = "black"),
+        legend.position = "right") +
+  scale_fill_distiller(palette = "RdBu") +
+  labs(title = "Unique matching BINs per community")
+  
+ 
+# Don't just take ggVennDiagram at it's word though, double-check that against our total unique BIN counts performed earlier
+# Cambridge Bay: 971 Unique BINs
+#  620+17+15+159+32+23+16+89=971
+# Gjoa Haven: 240 Unique BINs
+#  71+89+16+23+32+6+3=240
+# Kugaaruk: 105 Unique BINs
+#  21+10+3+16+23+17+15=105
+# Kugluktuk: 1074 Unique BINs
+#  829+6+32+159+15+23+10=1074
+
+# Let's go ahead and create two more and put 'em side by side. One for flying, one for non-flying
+# To do that, we need to combine the four flying together
+kitikmeot_flying <- read_csv("C:/R/InsectsArctic/data/kitikmeot_flying.csv")
+kitikmeot_nonflying <- read_csv("C:/R/InsectsArctic/data/kitikmeot_nonflying.csv")
+
+# Let's do the same thing again, but this time let's stitch 'em together side by side.
+# First, let's load gridExtra to do that
+library(gridExtra)
+
+# Let's create a plot for matching flying arthropod BINs
+fly <- kitikmeot_flying  %>%
+  select(sector,bin_uri) %>%
+  drop_na() %>%
+  group_by(sector) %>%
+  nest() %>%
+  pull() %>%
+  map(unique) %>%
+  map(pull)
+
+flyp <- ggVennDiagram(fly, category.names = c("Cambridge Bay","Gjoa Haven","Kugaaruk","Kugluktuk"),
+                         label_alpha = 0) +
+  guides(fill = guide_legend(title = "# of Unique BINs")) +
+  theme(legend.title = element_text(color = "black"),
+        legend.position = "right") +
+  scale_fill_distiller(palette = "RdBu") +
+  labs(title = "Unique matching flying BINs per community")
+
+# Let's do non-flying next
+nofly <- kitikmeot_nonflying  %>%
+  select(sector,bin_uri) %>%
+  drop_na() %>%
+  group_by(sector) %>%
+  nest() %>%
+  pull() %>%
+  map(unique) %>%
+  map(pull)
+
+noflyp <- ggVennDiagram(nofly, category.names = c("Cambridge Bay","Gjoa Haven","Kugaaruk","Kugluktuk"),
+                      label_alpha = 0) +
+  guides(fill = guide_legend(title = "# of Unique BINs")) +
+  theme(legend.title = element_text(color = "black"),
+        legend.position = "right") +
+  scale_fill_distiller(palette = "RdBu") +
+  labs(title = "Unique matching non-flying BINs per community")
+
+# Alright, let's plot 'em together
+grid.arrange(p, arrangeGrob(flyp, noflyp), ncol = 2)
