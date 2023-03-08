@@ -214,9 +214,13 @@ kitikmeot_bins <- bind_rows(cbay_sharedbins,kugl_sharedbins,kuga_sharedbins,gjoa
 
 # Save this as a file so we can use it later. Specifically for a phylogenetic tree analysis
 write_tsv(x = kitikmeot_bins, "C:/R/InsectsArctic/data/kitikmeot_sharedBOLDbins.tsv")
+write_tsv(x = cbay_sharedbins, "C:/R/InsectsArctic/data/cbay_sharedBOLDbins.tsv")
+write_tsv(x = kugl_sharedbins, "C:/R/InsectsArctic/data/kugl_sharedBOLDbins.tsv")
+write_tsv(x = gjoa_sharedbins, "C:/R/InsectsArctic/data/gjoa_sharedBOLDbins.tsv")
+write_tsv(x = kuga_sharedbins, "C:/R/InsectsArctic/data/kuga_sharedBOLDbins.tsv")
 
 # Register Goggle Maps API
-register_google(key = "YOUR-API-KEY-HERE")
+register_google(key = "YOURKEYHERE")
 
 # Setup ggmap
 map_bold <- get_map(
@@ -261,6 +265,7 @@ kugl_links <- data.frame(
   lon = c(-139.1209)
 )
 
+# Draw for Gjoa Haven
 gjoa_links <- data.frame(
   community = c("Qikiqtarjuaq","Kuururjuaq National Park","Pond Inlet"),
   lat = c(67.5738,58.6638,72.7097),
@@ -630,3 +635,5 @@ rm(kitikmeotorder_mp,kitikmeotflying_mp,kitikmeotnonflying_mp,kitikmeot_bins)
 rm(gjoaorder_mp,gjoa_sharedbins,gjoa_nonflying,gjoa_flying,gjoa_bins)
 rm(cbayorder_mp,cbay_sharedbins,cbay_nonflying,cbay_flying,cbay_bins)
 rm(canada_bold,canada_bold_bins)
+
+# Let's perform a different kind of map.
