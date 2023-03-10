@@ -5,8 +5,8 @@ library(tidyverse)
 library(ggmap)
 
 # Load the data
-kitikmeot_bold <- read_tsv("C:/R/InsectsArctic/data/kitikmeot_bold.tsv")
-canada_bold <- read_tsv("C:/R/InsectsArctic/data/Canada_data_clean_december.tsv")
+kitikmeot_bold <- read_tsv("data/kitikmeot_bold.tsv")
+canada_bold <- read_tsv("data/Canada_data_clean_december.tsv")
 
 # We need to remove aquatic invertabrates and aquatic insects since that's not really what we're looking for.
 kitikmeot_arachnida <- kitikmeot_bold %>%
@@ -138,10 +138,10 @@ rm(kitikmeot_arachnida,kitikmeot_collembola,kitikmeot_insecta)
 names(kitikmeot_bold)[names(kitikmeot_bold) == "bin.uri"] <- "bin_uri"
 
 # Before we proceed further though, let's save our modified target data.
-write_tsv(x = kitikmeot_bold, "C:/R/InsectsArctic/data/kitikmeot_bold_target.tsv")
+write_tsv(x = kitikmeot_bold, "data/kitikmeot_bold_target.tsv")
 
 # Reload in case it's needed
-#kitikmeot_bold <- read_tsv("C:/R/InsectsArctic/data/kitikmeot_bold_target.tsv")
+#kitikmeot_bold <- read_tsv("data/kitikmeot_bold_target.tsv")
 
 # Separate out the communities
 cambridgebay <- kitikmeot_bold %>%
@@ -194,7 +194,7 @@ canada_bold <- canada_bold %>%
   filter(!region == "Kitikmeot Region")
 
 # Let's save that too. Remember, "Kitikmeot" and "Kitikmeot Region" have been removed.
-write_tsv(x = canada_bold, "C:/R/InsectsArctic/data/Canada_data_clean_december_gps.tsv")
+write_tsv(x = canada_bold, "data/Canada_data_clean_december_gps.tsv")
 
 # Reload in case that's needed
 #canada_bold <- read_tsv("D:/R/InsectsArctic/data/Canada_data_clean_october_gps.tsv")
@@ -213,14 +213,14 @@ gjoa_sharedbins <- canada_bold %>%
 kitikmeot_bins <- bind_rows(cbay_sharedbins,kugl_sharedbins,kuga_sharedbins,gjoa_sharedbins)
 
 # Save this as a file so we can use it later. Specifically for a phylogenetic tree analysis
-write_tsv(x = kitikmeot_bins, "C:/R/InsectsArctic/data/kitikmeot_sharedBOLDbins.tsv")
-write_tsv(x = cbay_sharedbins, "C:/R/InsectsArctic/data/cbay_sharedBOLDbins.tsv")
-write_tsv(x = kugl_sharedbins, "C:/R/InsectsArctic/data/kugl_sharedBOLDbins.tsv")
-write_tsv(x = gjoa_sharedbins, "C:/R/InsectsArctic/data/gjoa_sharedBOLDbins.tsv")
-write_tsv(x = kuga_sharedbins, "C:/R/InsectsArctic/data/kuga_sharedBOLDbins.tsv")
+write_tsv(x = kitikmeot_bins, "data/kitikmeot_sharedBOLDbins.tsv")
+write_tsv(x = cbay_sharedbins, "data/cbay_sharedBOLDbins.tsv")
+write_tsv(x = kugl_sharedbins, "data/kugl_sharedBOLDbins.tsv")
+write_tsv(x = gjoa_sharedbins, "data/gjoa_sharedBOLDbins.tsv")
+write_tsv(x = kuga_sharedbins, "data/kuga_sharedBOLDbins.tsv")
 
 # Register Goggle Maps API
-register_google(key = "YOURKEYHERE")
+register_google(key = "AIzaSyAN1NbGpO6bZqJKx8EAqek_wK-Rg2C7geo")
 
 # Setup ggmap
 map_bold <- get_map(
@@ -288,11 +288,11 @@ community_map <- mp
 # However, we also want the colour of the lines to match the specimen order.
 # To do that, We're matching community names vs the GPS coordinates
 cbayorder_mp <- mp+ geom_segment(data = cbay_sharedbins,
-                                      aes(x = lon, y = lat,
-                                          color=order_name,
-                                          xend = communities$lon[1],
-                                          yend = communities$lat[1],
-                                          )) +
+                                 aes(x = lon, y = lat,
+                                     color=order_name,
+                                     xend = communities$lon[1],
+                                     yend = communities$lat[1],
+                                 )) +
   geom_point(data = cbay_sharedbins,
              aes(x = lon, y = lat,
                  color=order_name), size=3) +
@@ -543,7 +543,7 @@ kitikmeotflying_mp <- mp+
                    color=order_name,
                    xend = communities$lon[1],
                    yend = communities$lat[1]
-                   )) +
+               )) +
   geom_point(data = cbay_flying,
              aes(x = lon, y = lat,
                  color=order_name), size=1) +
@@ -635,5 +635,3 @@ rm(kitikmeotorder_mp,kitikmeotflying_mp,kitikmeotnonflying_mp,kitikmeot_bins)
 rm(gjoaorder_mp,gjoa_sharedbins,gjoa_nonflying,gjoa_flying,gjoa_bins)
 rm(cbayorder_mp,cbay_sharedbins,cbay_nonflying,cbay_flying,cbay_bins)
 rm(canada_bold,canada_bold_bins)
-
-# Let's perform a different kind of map.
