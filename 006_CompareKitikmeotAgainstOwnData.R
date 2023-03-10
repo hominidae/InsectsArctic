@@ -5,8 +5,8 @@ library(tidyverse)
 library(ggplot2)
 
 # Read Canada BOLD data
-canada_data <- read_tsv("C:/R/InsectsArctic/data/Canada_data_clean_december.tsv")
-kitikmeot_bold <- read_tsv("C:/R/InsectsArctic/data/workingdata_2022_12_20.tsv")
+canada_data <- read_tsv("data/Canada_data_clean_december.tsv")
+kitikmeot_bold <- read_tsv("data/workingdata_2022_12_20.tsv")
 
 # Filter out Arthropoda
 canada_data_arthropoda <- canada_data %>%
@@ -71,5 +71,5 @@ table(kitikmeot_public$sector)
 table(kitikmeot_bold$sector)
 
 # Let's save our data so we can use it again in the next script
-write_tsv(x = kitikmeot_public, "C:/R/InsectsArctic/data/kitikmeot_public.tsv")
-write_tsv(x = kitikmeot_bold, "C:/R/InsectsArctic/data/kitikmeot_bold.tsv")
+write_tsv(x = kitikmeot_public, "data/kitikmeot_public.tsv")
+write_tsv(x = kitikmeot_bold, "data/kitikmeot_bold.tsv")
