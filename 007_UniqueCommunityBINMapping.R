@@ -635,3 +635,5 @@ rm(kitikmeotorder_mp,kitikmeotflying_mp,kitikmeotnonflying_mp,kitikmeot_bins)
 rm(gjoaorder_mp,gjoa_sharedbins,gjoa_nonflying,gjoa_flying,gjoa_bins)
 rm(cbayorder_mp,cbay_sharedbins,cbay_nonflying,cbay_flying,cbay_bins)
 rm(canada_bold,canada_bold_bins)
+
+# Let's perform a different kind of map.
