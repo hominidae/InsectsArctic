@@ -29,7 +29,7 @@ library(dplyr)
 library(scales)
 
 # Load our working data set
-workingdata <- read_tsv("Data/kitikmeot_data_arth.tsv")
+workingdata <- read_tsv("data/kitikmeot_data_arth.tsv")
 
 # Remove any NA's from bin.uri in workingdata
 workingdata <- workingdata %>%
