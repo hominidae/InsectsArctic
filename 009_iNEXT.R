@@ -1,4 +1,5 @@
 # Generate a species accumulation curve using iNEXT
+# The species accumulation curves indicate based on the available abundance data how well sampling is going relative to community sample size
 
 # Load libraries
 library(tidyverse)
@@ -8,8 +9,8 @@ library(gridExtra)
 library(grid)
 
 # Load the data
-kitikmeot_flying <- read_csv("C:/R/InsectsArctic/data/kitikmeot_flying.csv")
-kitikmeot_nonflying <- read_csv("C:/R/InsectsArctic/data/kitikmeot_nonflying.csv")
+kitikmeot_flying <- read_csv("data/kitikmeot_flying.csv")
+kitikmeot_nonflying <- read_csv("data/kitikmeot_nonflying.csv")
 
 # Let's create a S by N abundance matrix, S is number of species, N is the number of sites
 out <- kitikmeot_flying %>%
@@ -41,4 +42,4 @@ p2 <- ggiNEXT(outnfc, type=1)
 # Setup side by side
 grid.arrange(arrangeGrob(p1,top=textGrob("Flying species accumulation curve"),ncol=1),
              arrangeGrob(p2, top=textGrob("Non-flying species accumulation curve"),ncol=1),
-                         ncol=2)
+             ncol=2)
