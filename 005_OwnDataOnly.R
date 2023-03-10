@@ -29,7 +29,7 @@ library(dplyr)
 library(scales)
 
 # Load our working data set
-workingdata <- read_tsv("C:/R/InsectsArctic/Data/kitikmeot_data_arth.tsv")
+workingdata <- read_tsv("Data/kitikmeot_data_arth.tsv")
 
 # Remove any NA's from bin.uri in workingdata
 workingdata <- workingdata %>%
@@ -80,4 +80,4 @@ ggplot(workingdata, aes(y = Sector)) +
   geom_text(stat='count', aes(label=..count..))
 
 # Save our state
-write_tsv(x = workingdata, "C:/R/InsectsArctic/data/workingdata_2022_12_20.tsv")
+write_tsv(x = workingdata, "data/workingdata_2022_12_20.tsv")
