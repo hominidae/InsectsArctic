@@ -22,9 +22,9 @@ You can also download data from BOLD via the public data portal by selecting ter
 
 https://boldsystems.org/index.php/Public_BINSearch?searchtype=records
 
-Once the individual province/territory Barcode data is downloaded, use the repository here to stitch it all together into a single TSV file: https://github.com/hominidae/ProcessBOLDPublicData
+For the provinces/territories, you simply need to download the data for each province/territory as TSV files. I would suggest downloading in the combined specimen and sequencing TSV format. This data is time consuming as the downloads may fail and will take some time to download.
 
-For the provinces/territories, you simply need to download the data as TSV files. I would suggest downloading in the combined specimen and sequencing TSV format for this part.
+Once the individual province/territory Barcode data is downloaded, use the repository here to stitch it all together into a single TSV file: https://github.com/hominidae/ProcessBOLDPublicData
 
 Alternatively, here is Google Drive link to the data:
 https://drive.google.com/file/d/17Hsf81Qq95XPkpZpbaJrfSDK0hQ5D13x/view?usp=share_link
