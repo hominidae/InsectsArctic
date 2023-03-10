@@ -110,7 +110,7 @@ names(island_count)[names(island_count) == "Var1"] <- "bin_uri"
 write_csv(x = island_count, "data/island_count.csv")
 
 # You'll need to enter a Google Maps API key
-register_google(key = "AIzaSyAN1NbGpO6bZqJKx8EAqek_wK-Rg2C7geo")
+register_google(key = "YOURKEYHERE")
 
 # Create a data frame containing our lat's and lon's for the center of each communitiy
 communities <- data.frame(
