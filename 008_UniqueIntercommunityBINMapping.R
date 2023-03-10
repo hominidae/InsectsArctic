@@ -1,4 +1,5 @@
-# 
+# Map intercommunity links
+# Switch from map to intercommunity Venn Diagram instead
 
 # Load libraries
 library(tidyverse)
@@ -7,7 +8,7 @@ library(gridExtra)
 
 # Great. Now we need to work on community level links within the Kitikmeot to each other.
 # Let's load the data set we created earlier.
-kitikmeot_bold <- read_tsv("C:/R/InsectsArctic/data/kitikmeot_bold_target.tsv")
+kitikmeot_bold <- read_tsv("data/kitikmeot_bold_target.tsv")
 
 # Fix naming issues
 names(kitikmeot_bold)[names(kitikmeot_bold) == "Order"] <- "order_name"
@@ -76,7 +77,7 @@ kitikmeot_sharedbins <- kitikmeot_bold %>%
 # Let's perform a count of those BINs from the kitikmeot
 kitikmeot_count <- as.data.frame(table(kitikmeot_sharedbins$bin_uri))
 names(kitikmeot_count)[names(kitikmeot_count) == "Var1"] <- "bin_uri"
-write_csv(x = kitikmeot_count, "C:/R/InsectsArctic/data/kitikmeot_count.csv")
+write_csv(x = kitikmeot_count, "data/kitikmeot_count.csv")
 
 # We need to make a combination of records for the land bound communitites, Kugluktuk and Kugaaruk
 land_target <- rbind(kugluktuk,kugaaruk)
@@ -91,7 +92,7 @@ land_sharedbins <- land_target %>%
 # Let's perform a count and save
 land_count <- as.data.frame(table(land_sharedbins$bin_uri))
 names(land_count)[names(land_count) == "Var1"] <- "bin_uri"
-write_csv(x = land_count, "C:/R/InsectsArctic/data/land_count.csv")
+write_csv(x = land_count, "data/land_count.csv")
 
 # We also want to make a combination of records for the island communities, Cambridge Bay and GJoa Haven
 island_target <- rbind(cambridgebay,gjoahaven)
@@ -106,10 +107,10 @@ island_sharedbins <- island_target %>%
 # Let's do a count and save
 island_count <- as.data.frame(table(island_sharedbins$bin_uri))
 names(island_count)[names(island_count) == "Var1"] <- "bin_uri"
-write_csv(x = island_count, "C:/R/InsectsArctic/data/island_count.csv")
+write_csv(x = island_count, "data/island_count.csv")
 
 # You'll need to enter a Google Maps API key
-register_google(key = "YOURKEYHERE")
+register_google(key = "AIzaSyAN1NbGpO6bZqJKx8EAqek_wK-Rg2C7geo")
 
 # Create a data frame containing our lat's and lon's for the center of each communitiy
 communities <- data.frame(
@@ -238,8 +239,8 @@ kitikmeot_nonflying <- rbind(kitikmeot_araneae,kitikmeot_coleoptera,kitikmeot_en
 rm(kitikmeot_araneae,kitikmeot_coleoptera,kitikmeot_entomobryomorpha,kitikmeot_poduromorpha,kitikmeot_symphypleona,kitikmeot_sarcoptiformes,kitikmeot_trombidiformes,kitikmeot_mesostigmata)
 
 # Before we move on though, let's save our data as kitikmeot_flying.csv and kitikmeot_nonflying.csv
-write_csv(x = kitikmeot_flying, "C:/R/InsectsArctic/data/kitikmeot_flying.csv")
-write_csv(x = kitikmeot_nonflying, "C:/R/InsectsArctic/data/kitikmeot_nonflying.csv")
+write_csv(x = kitikmeot_flying, "data/kitikmeot_flying.csv")
+write_csv(x = kitikmeot_nonflying, "data/kitikmeot_nonflying.csv")
 
 # Install ggVennDiagram
 install.packages("ggVennDiagram")
@@ -261,14 +262,14 @@ x <- kitikmeot_bold %>%
 
 # Generate a simple colour blind friendly Venn Diagram
 p <- ggVennDiagram(x, category.names = c("Cambridge Bay","Gjoa Haven","Kugaaruk","Kugluktuk"),
-              label_alpha = 0) +
+                   label_alpha = 0) +
   guides(fill = guide_legend(title = "# of Unique BINs")) +
   theme(legend.title = element_text(color = "black"),
         legend.position = "right") +
   scale_fill_distiller(palette = "RdBu") +
   labs(title = "Unique matching BINs per community")
-  
- 
+
+
 # Don't just take ggVennDiagram at it's word though, double-check that against our total unique BIN counts performed earlier
 # Cambridge Bay: 971 Unique BINs
 #  620+17+15+159+32+23+16+89=971
@@ -281,8 +282,8 @@ p <- ggVennDiagram(x, category.names = c("Cambridge Bay","Gjoa Haven","Kugaaruk"
 
 # Let's go ahead and create two more and put 'em side by side. One for flying, one for non-flying
 # To do that, we need to combine the four flying together
-kitikmeot_flying <- read_csv("C:/R/InsectsArctic/data/kitikmeot_flying.csv")
-kitikmeot_nonflying <- read_csv("C:/R/InsectsArctic/data/kitikmeot_nonflying.csv")
+kitikmeot_flying <- read_csv("data/kitikmeot_flying.csv")
+kitikmeot_nonflying <- read_csv("data/kitikmeot_nonflying.csv")
 
 # Let's do the same thing again, but this time let's stitch 'em together side by side.
 # First, let's load gridExtra to do that
@@ -299,7 +300,7 @@ fly <- kitikmeot_flying  %>%
   map(pull)
 
 flyp <- ggVennDiagram(fly, category.names = c("Cambridge Bay","Gjoa Haven","Kugaaruk","Kugluktuk"),
-                         label_alpha = 0) +
+                      label_alpha = 0) +
   guides(fill = guide_legend(title = "# of Unique BINs")) +
   theme(legend.title = element_text(color = "black"),
         legend.position = "right") +
@@ -317,7 +318,7 @@ nofly <- kitikmeot_nonflying  %>%
   map(pull)
 
 noflyp <- ggVennDiagram(nofly, category.names = c("Cambridge Bay","Gjoa Haven","Kugaaruk","Kugluktuk"),
-                      label_alpha = 0) +
+                        label_alpha = 0) +
   guides(fill = guide_legend(title = "# of Unique BINs")) +
   theme(legend.title = element_text(color = "black"),
         legend.position = "right") +
