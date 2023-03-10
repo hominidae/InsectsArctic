@@ -1,4 +1,5 @@
-# Generate distances to nearest links
+# Generate a distance boxplot to the nearest links elsewhere in Canada
+
 library(tidyverse)
 library(geosphere)
 library(measurements)
@@ -8,14 +9,14 @@ library(gridExtra)
 library(grid)
 
 # Load our shared links with communities in the Kitikmeot
-cbay_sharedbins <- read_tsv("C:/R/InsectsArctic/data/cbay_sharedBOLDbins.tsv")
-kugl_sharedbins <- read_tsv("C:/R/InsectsArctic/data/kugl_sharedBOLDbins.tsv")
-gjoa_sharedbins <- read_tsv("C:/R/InsectsArctic/data/gjoa_sharedBOLDbins.tsv")
-kuga_sharedbins <- read_tsv("C:/R/InsectsArctic/data/kuga_sharedBOLDbins.tsv")
+cbay_sharedbins <- read_tsv("data/cbay_sharedBOLDbins.tsv")
+kugl_sharedbins <- read_tsv("data/kugl_sharedBOLDbins.tsv")
+gjoa_sharedbins <- read_tsv("data/gjoa_sharedBOLDbins.tsv")
+kuga_sharedbins <- read_tsv("data/kuga_sharedBOLDbins.tsv")
 
 # Load our flying and non-flying BIN matches too
-kitikmeot_flying <- read_csv("C:/R/InsectsArctic/data/kitikmeot_flying.csv")
-kitikmeot_nonflying <- read_csv("C:/R/InsectsArctic/data/kitikmeot_nonflying.csv")
+kitikmeot_flying <- read_csv("data/kitikmeot_flying.csv")
+kitikmeot_nonflying <- read_csv("data/kitikmeot_nonflying.csv")
 
 # Bummer, we want matches for the sharedbins to flying and non-flying too.
 # Let's do a simple match and split cbay_sharedbins into *_sharedbins_f and *_sharedbins_nf by matching BINs against kitikmeot_flying and kitikmeot_nonfyling
@@ -63,7 +64,7 @@ cbay_distkm_f <- conv_unit(cbay_distm_f, "m", "km")
 
 # Re-join the distances to new dataframe
 cbay_linkdist_f <- cbay_sharedbins_f %>%
-  select(bin_uri,lon,lat) %>%
+  select(bin_uri,lon,lat,order_name) %>%
   mutate(distance = cbay_distkm_f)
 rm(cbay_distmatrix_f,cbay_links_f,cbay_distm_f,cbay_distkm_f)
 
@@ -74,7 +75,7 @@ cbay_distkm_nf <- conv_unit(cbay_distm_nf, "m", "km")
 
 # Re-join the distances to new dataframe
 cbay_linkdist_nf <- cbay_sharedbins_nf %>%
-  select(bin_uri,lon,lat) %>%
+  select(bin_uri,lon,lat,order_name) %>%
   mutate(distance = cbay_distkm_nf)
 rm(cbay_distmatrix_nf,cbay_links_nf,cbay_distm_nf,cbay_distkm_nf)
 
@@ -85,7 +86,7 @@ kugl_distkm_f <- conv_unit(kugl_distm_f, "m", "km")
 
 # Re-join the distances to new dataframe
 kugl_linkdist_f <- kugl_sharedbins_f %>%
-  select(bin_uri,lon,lat) %>%
+  select(bin_uri,lon,lat,order_name) %>%
   mutate(distance = kugl_distkm_f)
 rm(kugl_distmatrix_f,kugl_links_f,kugl_distm_f,kugl_distkm_f)
 
@@ -96,7 +97,7 @@ kugl_distkm_nf <- conv_unit(kugl_distm_nf, "m", "km")
 
 # Re-join the distances to new dataframe
 kugl_linkdist_nf <- kugl_sharedbins_nf %>%
-  select(bin_uri,lon,lat) %>%
+  select(bin_uri,lon,lat,order_name) %>%
   mutate(distance = kugl_distkm_nf)
 rm(kugl_distmatrix_nf,kugl_links_nf,kugl_distm_nf,kugl_distkm_nf)
 
@@ -107,7 +108,7 @@ gjoa_distkm_f <- conv_unit(gjoa_distm_f, "m", "km")
 
 # Re-join the distances to new dataframe
 gjoa_linkdist_f <- gjoa_sharedbins_f %>%
-  select(bin_uri,lon,lat) %>%
+  select(bin_uri,lon,lat,order_name) %>%
   mutate(distance = gjoa_distkm_f)
 rm(gjoa_distmatrix_f,gjoa_links_f,gjoa_distm_f,gjoa_distkm_f)
 
@@ -118,7 +119,7 @@ gjoa_distkm_nf <- conv_unit(gjoa_distm_nf, "m", "km")
 
 # Re-join the distances to new dataframe
 gjoa_linkdist_nf <- gjoa_sharedbins_nf %>%
-  select(bin_uri,lon,lat) %>%
+  select(bin_uri,lon,lat,order_name) %>%
   mutate(distance = gjoa_distkm_nf)
 rm(gjoa_distmatrix_nf,gjoa_links_nf,gjoa_distm_nf,gjoa_distkm_nf)
 
@@ -129,7 +130,7 @@ kuga_distkm_f <- conv_unit(kuga_distm_f, "m", "km")
 
 # Re-join the distances to new dataframe
 kuga_linkdist_f <- kuga_sharedbins_f %>%
-  select(bin_uri,lon,lat) %>%
+  select(bin_uri,lon,lat,order_name) %>%
   mutate(distance = kuga_distkm_f)
 rm(kuga_distmatrix_f,kuga_links_f,kuga_distm_f,kuga_distkm_f)
 
@@ -140,21 +141,11 @@ kuga_distkm_nf <- conv_unit(kuga_distm_nf, "m", "km")
 
 # Re-join the distances to new dataframe
 kuga_linkdist_nf <- kuga_sharedbins_nf %>%
-  select(bin_uri,lon,lat) %>%
+  select(bin_uri,lon,lat,order_name) %>%
   mutate(distance = kuga_distkm_nf)
 rm(kuga_distmatrix_nf,kuga_links_nf,kuga_distm_nf,kuga_distkm_nf)
 
 # Before we move on though, we should make a new matrix. We want community by distances
-# We could do this in two ways, but we'll try the easiest way first. Separately.
-ggplot(cbay_linkdist_f) +
-  geom_boxplot(aes(distance)) +
-  xlab("Distance")
-ggplot(cbay_linkdist_nf) +
-  geom_boxplot(aes(distance)) +
-  xlab("Distance")
-
-# Rather bland. We don't want a one dimensional box plot.
-
 # To do that, let's combine the flying and non-flying distances. We also want the frequency count to add as a jitter or violin field
 cbay_linkdist_f <- cbay_linkdist_f %>%
   add_column(type = "Flying")
@@ -176,48 +167,51 @@ kuga_linkdist_nf <- kuga_linkdist_nf %>%
 # This is rather a pain in the ass to do things this way, but what the hell.
 # Let's select just the type and distance column for *_linkdist_f and *_linkdist_nf so we can rowbind 'em together
 cbay_distances_f <- cbay_linkdist_f %>%
-  select(bin_uri,type,distance)
+  select(bin_uri,type,distance,order_name)
 cbay_distances_nf <- cbay_linkdist_nf %>%
-  select(bin_uri,type,distance)
+  select(bin_uri,type,distance,order_name)
 cbay_distances <- rbind(cbay_distances_f,cbay_distances_nf)
 # Let's do Kugluktuk
 kugl_distances_f <- kugl_linkdist_f %>%
-  select(bin_uri,type,distance)
+  select(bin_uri,type,distance,order_name)
 kugl_distances_nf <- kugl_linkdist_nf %>%
-  select(bin_uri,type,distance)
+  select(bin_uri,type,distance,order_name)
 kugl_distances <- rbind(kugl_distances_f,kugl_distances_nf)
 # And Gjoa Haven
 gjoa_distances_f <- gjoa_linkdist_f %>%
-  select(bin_uri,type,distance)
+  select(bin_uri,type,distance,order_name)
 gjoa_distances_nf <- gjoa_linkdist_nf %>%
-  select(bin_uri,type,distance)
+  select(bin_uri,type,distance,order_name)
 gjoa_distances <- rbind(gjoa_distances_f,gjoa_distances_nf)
 # Last, Kugaaruk
 kuga_distances_f <- kuga_linkdist_f %>%
-  select(bin_uri,type,distance)
+  select(bin_uri,type,distance,order_name)
 kuga_distances_nf <- kuga_linkdist_nf %>%
-  select(bin_uri,type,distance)
+  select(bin_uri,type,distance,order_name)
 kuga_distances <- rbind(kuga_distances_f,kuga_distances_nf)
 
 # Setup colors
-col = c("#1b9e77", "#d95f02", "#7570b3") 
-# Setup a theme
-theme_nice <- theme(legend.position = 'none',
-                       panel.grid.minor = element_blank(),
-                       panel.background = element_blank(), 
-                       panel.border = element_rect(colour = "black", fill=NA, size = 1))
+col = c("#999999", "#d95f02", "#E69F00", "#56B4E9", "#1b1e77", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#7570b3", "#FAA442", "black", "green", "#F0AAAA")
 
-# Createa distance boxplot Cambridge Bay
+# Setup a theme
+theme_nice <- theme(legend.position = 'right',
+                    panel.grid.minor = element_blank(),
+                    panel.background = element_blank(), 
+                    panel.border = element_rect(colour = "black", fill=NA, size = 1))
+
+# Create a distance boxplot Cambridge Bay
 cbay_boxplot <- ggplot(cbay_distances, aes(type, 
-                     distance, 
-                     color = type)) + 
-  geom_boxplot(outlier.color = NA) + ## outlier.color = NA removes the outlier points that are automatically assigned with geom_boxplot
-  geom_jitter(alpha = 0.5) + ## The use of geom_jitter is what adds the points
-  geom_violin(alpha = 0.5) + ## The use of geom_violin adds the violin plot, which includes lines to demonstrate sample size
+                                           distance)) + 
+  geom_jitter(aes(color = order_name), alpha = 0.75) + 
+  geom_boxplot(outlier.color = NA, alpha=0.5, size=1) +
+  geom_violin(alpha = 0.5) +
   ylab("Distance in km") +
   xlab("Type") +
+  labs(color='Order') +
   scale_color_manual(values = col) +
   theme_nice
+cbay_boxplot
+
 # Generate one for Kugluktuk
 kugl_boxplot <- ggplot(kugl_distances, aes(type, 
                                            distance, 
@@ -258,3 +252,26 @@ grid.arrange(arrangeGrob(cbay_boxplot,top=textGrob("Cambridge Bay"),ncol=1),
              arrangeGrob(gjoa_boxplot,top=textGrob("Gjoa Haven"),ncol=1),
              arrangeGrob(kuga_boxplot,top=textGrob("Kugaaruk"),ncol=1),
              ncol=2,nrow=2)
+
+# What if we made a boxplot and matched every BIN to it's nearest match only?
+# First, we need to take the unique BIN's, then match that list to the lowest possible distance.
+test <- cbay_distances %>%
+  group_by(bin_uri) %>%
+  slice(which.min(distance))
+
+# Let's confirm that did what we thought.
+test1 <- cbay_distances %>%
+  group_by(bin_uri) %>%
+  summarise(n = n())
+
+# Let's try and graph test now
+test_boxplot <- ggplot(test, aes(type,distance)) + 
+  geom_jitter(aes(color = order_name), alpha = 0.75) + 
+  geom_boxplot(outlier.color = NA, alpha=0.5, size=1) +
+  geom_violin(aes(type), alpha = 0.5) +
+  ylab("Distance in km") +
+  xlab("Type") +
+  labs(color='Order') +
+  scale_color_manual(values = col) +
+  theme_nice
+test_boxplot
