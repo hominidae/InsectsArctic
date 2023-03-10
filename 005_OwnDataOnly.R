@@ -77,7 +77,7 @@ ggplot(workingdata, aes(y = Sector)) +
   geom_bar(aes(fill = Order)) +
   labs(x = "# of Specimens", y = "Community") +
   theme(legend.position = "top") +
-  geom_text(stat='count', aes(label=..count..))
+  geom_text(stat='count', aes(label=after_stat(count)))
 
 # Save our state
 write_tsv(x = workingdata, "data/workingdata_2022_12_20.tsv")
