@@ -26,8 +26,10 @@ The data from Canada once downloaded and combined takes up around 2 gigabytes. U
 
 For the provinces/territories, you simply need to download the data as TSV files. I would suggest downloading in the combined specimen and sequencing TSV format for this part.
 
-Alternatively, here is Google Drive link to the data: (Warning: File is 2.13GB)
+Alternatively, here is Google Drive link to the data:
 https://drive.google.com/file/d/17Hsf81Qq95XPkpZpbaJrfSDK0hQ5D13x/view?usp=share_link
+
+(Warning: File is 2.13GB)
 
 ### Global Biodiversity Information Facility data
 
@@ -36,8 +38,10 @@ https://www.gbif.org/occurrence/search
 
 Select combined csv file as the download, you can elect to go with human observations or research grade observations.
 
-Alternatively, here is a Google Drive link to the data: (Warning: File is 628MB)
+Alternatively, here is a Google Drive link to the data:
 https://drive.google.com/file/d/1unJboimp8S8fS0mzVaAiSPFR448ru_j7/view?usp=share_link
+
+(Warning: File is 628MB)
 
 ## Process DNA sequencing data
 Run 001_LoadSequencingData.R to process the available sequencing data from "data.7z" and save as a tsv file.
