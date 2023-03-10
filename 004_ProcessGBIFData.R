@@ -11,7 +11,7 @@ library(ggplot2)
 library(scales)
 
 # Load the GBIF data set containing only human observations from iNaturalist
-gbif_data <- read_tsv("C:/R//InsectsArctic/data/GBIF_Canada_Arthropod_2022_10_15.csv")
+gbif_data <- read_tsv("data/GBIF_Canada_Arthropod_2022_10_15.csv")
 
 # Let's have a peek at it.
 table(gbif_data$stateProvince)
@@ -90,7 +90,7 @@ rm(gbif_data)
 # GBIF.org (18 October 2022) GBIF Occurrence Download  https://doi.org/10.15468/dl.mxvn32
 
 # Load the GBIF data set containing only human observations from iNaturalist
-gbif_data <- read_tsv("C:/R//ProcessGBIFPublicData/data/Canada_GBIF_Occurrences_2022_10_18.csv")
+gbif_data <- read_tsv("data/Canada_GBIF_Occurrences_2022_10_18.csv")
 
 # Let's look at that too before we proceed further
 table(gbif_data$stateProvince)
