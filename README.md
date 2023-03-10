@@ -22,7 +22,7 @@ You can also download data from BOLD via the public data portal by selecting ter
 
 https://boldsystems.org/index.php/Public_BINSearch?searchtype=records
 
-The data from Canada once downloaded and combined takes up around 2 gigabytes. Use the repository here to stitch it all together: https://github.com/hominidae/ProcessBOLDPublicData
+Once the individual province/territory Barcode data is downloaded, use the repository here to stitch it all together into a single TSV file: https://github.com/hominidae/ProcessBOLDPublicData
 
 For the provinces/territories, you simply need to download the data as TSV files. I would suggest downloading in the combined specimen and sequencing TSV format for this part.
 
