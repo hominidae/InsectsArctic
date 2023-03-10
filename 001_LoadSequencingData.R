@@ -21,7 +21,7 @@ library(stringr)
 
 # Process BCHAR ---------------------------------------------------------------
 # Load sequencing data using read.fasta
-bchar_sequencedata <- read.fasta(file = "C:/R/InsectsArctic/Data/BCHAR/SequenceData.fas")
+bchar_sequencedata <- read.fasta(file = "Data/BCHAR/SequenceData.fas")
 
 # First, copy the seq.name column to x temporarily
 x <- bchar_sequencedata$seq.name
@@ -45,13 +45,13 @@ bchar_expanded_na <- bchar_expanded %>%
 
 # Fabulous. Now that we have the sequencing data sorted let's do some cool shit.
 # That's it for this script. But before we go, let's save our work.
-write_tsv(x = bchar_expanded_na, "C:/R/InsectsArctic/Data/BCHAR/bchar-sequencedata.tsv")
+write_tsv(x = bchar_expanded_na, "Data/BCHAR/bchar-sequencedata.tsv")
 
 # Let's clean up our workspace.
 rm(x,y,bchar_sequencedata,bchar_splitdata,bchar_expanded,bchar_expanded_na)
 
 # Process CCHAR ---------------------------------------------------------------
-cchar_sequencedata <- read.fasta(file = "C:/R/InsectsArctic/Data/CCHAR/SequenceData.fas")
+cchar_sequencedata <- read.fasta(file = "Data/CCHAR/SequenceData.fas")
 x <- cchar_sequencedata$seq.name
 y <- x %>%
   str_split("\\|")
@@ -60,11 +60,11 @@ cchar_expanded <- data.frame(cchar_sequencedata$seq.text,cchar_sequencedata$seq.
 names(cchar_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
 cchar_expanded_na <- cchar_expanded %>%
   mutate_all(na_if,"")
-write_tsv(x = cchar_expanded_na, "C:/R/InsectsArctic/Data/CCHAR/cchar-sequencedata.tsv")
+write_tsv(x = cchar_expanded_na, "Data/CCHAR/cchar-sequencedata.tsv")
 rm(x,y,cchar_sequencedata,cchar_splitdata,cchar_expanded,cchar_expanded_na)
 
 # Process DCHAR ---------------------------------------------------------------
-dchar_sequencedata <- read.fasta(file = "C:/R/InsectsArctic/Data/DCHAR/SequenceData.fas")
+dchar_sequencedata <- read.fasta(file = "Data/DCHAR/SequenceData.fas")
 x <- dchar_sequencedata$seq.name
 y <- x %>%
   str_split("\\|")
@@ -73,11 +73,11 @@ dchar_expanded <- data.frame(dchar_sequencedata$seq.text,dchar_sequencedata$seq.
 names(dchar_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
 dchar_expanded_na <- dchar_expanded %>%
   mutate_all(na_if,"")
-write_tsv(x = dchar_expanded_na, "C:/R/InsectsArctic/Data/DCHAR/dchar-sequencedata.tsv")
+write_tsv(x = dchar_expanded_na, "Data/DCHAR/dchar-sequencedata.tsv")
 rm(x,y,dchar_sequencedata,dchar_splitdata,dchar_expanded,dchar_expanded_na)
 
 # Process FCHAR ---------------------------------------------------------------
-fchar_sequencedata <- read.fasta(file = "C:/R/InsectsArctic/Data/FCHAR/SequenceData.fas")
+fchar_sequencedata <- read.fasta(file = "Data/FCHAR/SequenceData.fas")
 x <- fchar_sequencedata$seq.name
 y <- x %>%
   str_split("\\|")
@@ -86,11 +86,11 @@ fchar_expanded <- data.frame(fchar_sequencedata$seq.text,fchar_sequencedata$seq.
 names(fchar_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
 fchar_expanded_na <- fchar_expanded %>%
   mutate_all(na_if,"")
-write_tsv(x = fchar_expanded_na, "C:/R/InsectsArctic/Data/FCHAR/fchar-sequencedata.tsv")
+write_tsv(x = fchar_expanded_na, "Data/FCHAR/fchar-sequencedata.tsv")
 rm(x,y,fchar_sequencedata,fchar_splitdata,fchar_expanded,fchar_expanded_na)
 
 # Process GCHAR ---------------------------------------------------------------
-gchar_sequencedata <- read.fasta(file = "C:/R/InsectsArctic/Data/GCHAR/SequenceData.fas")
+gchar_sequencedata <- read.fasta(file = "Data/GCHAR/SequenceData.fas")
 x <- gchar_sequencedata$seq.name
 y <- x %>%
   str_split("\\|")
@@ -99,11 +99,11 @@ gchar_expanded <- data.frame(gchar_sequencedata$seq.text,gchar_sequencedata$seq.
 names(gchar_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
 gchar_expanded_na <- gchar_expanded %>%
   mutate_all(na_if,"")
-write_tsv(x = gchar_expanded_na, "C:/R/InsectsArctic/Data/GCHAR/gchar-sequencedata.tsv")
+write_tsv(x = gchar_expanded_na, "Data/GCHAR/gchar-sequencedata.tsv")
 rm(x,y,gchar_sequencedata,gchar_splitdata,gchar_expanded,gchar_expanded_na)
 
 # Process GCHAR ---------------------------------------------------------------
-hchar_sequencedata <- read.fasta(file = "C:/R/InsectsArctic/Data/HCHAR/SequenceData.fas")
+hchar_sequencedata <- read.fasta(file = "Data/HCHAR/SequenceData.fas")
 x <- hchar_sequencedata$seq.name
 y <- x %>%
   str_split("\\|")
@@ -112,11 +112,11 @@ hchar_expanded <- data.frame(hchar_sequencedata$seq.text,hchar_sequencedata$seq.
 names(hchar_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
 hchar_expanded_na <- hchar_expanded %>%
   mutate_all(na_if,"")
-write_tsv(x = hchar_expanded_na, "C:/R/InsectsArctic/Data/HCHAR/hchar-sequencedata.tsv")
+write_tsv(x = hchar_expanded_na, "Data/HCHAR/hchar-sequencedata.tsv")
 rm(x,y,hchar_sequencedata,hchar_splitdata,hchar_expanded,hchar_expanded_na)
 
 # Process CBAY ---------------------------------------------------------------
-cbay_sequencedata <- read.fasta(file = "C:/R/InsectsArctic/Data/CBAY/SequenceData.fas")
+cbay_sequencedata <- read.fasta(file = "Data/CBAY/SequenceData.fas")
 x <- cbay_sequencedata$seq.name
 y <- x %>%
   str_split("\\|")
@@ -125,11 +125,11 @@ cbay_expanded <- data.frame(cbay_sequencedata$seq.text,cbay_sequencedata$seq.nam
 names(cbay_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
 cbay_expanded_na <- cbay_expanded %>%
   mutate_all(na_if,"")
-write_tsv(x = cbay_expanded_na, "C:/R/InsectsArctic/Data/CBAY/cbay-sequencedata.tsv")
+write_tsv(x = cbay_expanded_na, "Data/CBAY/cbay-sequencedata.tsv")
 rm(x,y,cbay_sequencedata,cbay_splitdata,cbay_expanded,cbay_expanded_na)
 
 # Process KUGA ---------------------------------------------------------------
-kuga_sequencedata <- read.fasta(file = "C:/R/InsectsArctic/Data/KUGA/SequenceData.fas")
+kuga_sequencedata <- read.fasta(file = "Data/KUGA/SequenceData.fas")
 x <- kuga_sequencedata$seq.name
 y <- x %>%
   str_split("\\|")
@@ -138,11 +138,11 @@ kuga_expanded <- data.frame(kuga_sequencedata$seq.text,kuga_sequencedata$seq.nam
 names(kuga_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
 kuga_expanded_na <- kuga_expanded %>%
   mutate_all(na_if,"")
-write_tsv(x = kuga_expanded_na, "C:/R/InsectsArctic/Data/KUGA/kuga-sequencedata.tsv")
+write_tsv(x = kuga_expanded_na, "Data/KUGA/kuga-sequencedata.tsv")
 rm(x,y,kuga_sequencedata,kuga_splitdata,kuga_expanded,kuga_expanded_na)
 
 # Process KUGA ---------------------------------------------------------------
-gjoa_sequencedata <- read.fasta(file = "C:/R/InsectsArctic/Data/GJOA/SequenceData.fas")
+gjoa_sequencedata <- read.fasta(file = "Data/GJOA/SequenceData.fas")
 x <- gjoa_sequencedata$seq.name
 y <- x %>%
   str_split("\\|")
@@ -151,11 +151,11 @@ gjoa_expanded <- data.frame(gjoa_sequencedata$seq.text,gjoa_sequencedata$seq.nam
 names(gjoa_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
 gjoa_expanded_na <- gjoa_expanded %>%
   mutate_all(na_if,"")
-write_tsv(x = gjoa_expanded_na, "C:/R/InsectsArctic/Data/GJOA/gjoa-sequencedata.tsv")
+write_tsv(x = gjoa_expanded_na, "Data/GJOA/gjoa-sequencedata.tsv")
 rm(x,y,gjoa_sequencedata,gjoa_splitdata,gjoa_expanded,gjoa_expanded_na)
 
 # Process KUGL ---------------------------------------------------------------
-kugl_sequencedata <- read.fasta(file = "C:/R/InsectsArctic/Data/KUGL/SequenceData.fas")
+kugl_sequencedata <- read.fasta(file = "Data/KUGL/SequenceData.fas")
 x <- kugl_sequencedata$seq.name
 y <- x %>%
   str_split("\\|")
@@ -164,5 +164,5 @@ kugl_expanded <- data.frame(kugl_sequencedata$seq.text,kugl_sequencedata$seq.nam
 names(kugl_expanded) <- c("seq.data","seq.text","process.id","taxon","sample.id","bin.uri")
 kugl_expanded_na <- kugl_expanded %>%
   mutate_all(na_if,"")
-write_tsv(x = kugl_expanded_na, "C:/R/InsectsArctic/Data/KUGL/kugl-sequencedata.tsv")
+write_tsv(x = kugl_expanded_na, "Data/KUGL/kugl-sequencedata.tsv")
 rm(x,y,kugl_sequencedata,kugl_splitdata,kugl_expanded,kugl_expanded_na)
