@@ -8,7 +8,7 @@ This is the Git reposity for taking DNA barcoding data from BOLD and generating 
 
 The data included in this repository are from specimens that I and others at Polar Knowledge Canada, the University of Guelph, ARCBIO, and other participants collected in the communities of Cambridge Bay, Kugluktuk, Gjoa Haven, and Kugaaruk.
 
-It is attached to this repository as a 7Zip archive titled "Data.7z". However, since all of these data have relied on public funds the data is generally considered to be open source. You can also download these data from BOLD directly and it will be part of any search there too.
+It is attached to this repository as a 7Zip archive titled "data.7z". Simply extract to a folder called "data/"
 
 Since the sequencing data has been downloaded as FASTA format files, the use of the R library "phylotools" to read the FASTA format, selecting the data required and exporting as TSV was used.
 
