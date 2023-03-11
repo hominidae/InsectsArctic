@@ -1,4 +1,6 @@
 # Process data from public BOLD data
+# This involves the combination of data downloaded from the Public BOLD search console
+
 # OBJECTIVE:
 #  - Take public BOLD data and prepare it for comparison against own collected data
 
@@ -14,7 +16,7 @@ library(dplyr)
 # Load the data set containing publicly available BOLD data, warning uses about 4.61GB of memory
 # This data was stitched together from across Canada using code from my other ProcessBOLDPublicData code
 # It involves downloading BOLD data from various provinces and stitching it all back together.
-canada_data <- read_tsv("data/canada_data_december.tsv")
+canada_data <- read_tsv("data/canada_data_2022_12_20.tsv")
 
 # Have a quick peek to see how easy this will be.
 table(canada_data$province_state)
@@ -63,7 +65,7 @@ canada_data <- canada_truncated
 rm(canada_truncated)
 
 # Righteous. Clean data. Let's save it before it gets lost.
-write_tsv(x = canada_data, "data/Canada_data_clean_december.tsv")
+write_tsv(x = canada_data, "data/Canada_data_clean.tsv")
 
 # Reload here if necessary.
 # canada_data <- read_tsv("data/Canada_data_clean_december.tsv")
@@ -90,12 +92,12 @@ canada_data_arthropoda <- canada_data_arthropoda %>%
   drop_na(order_name)
 
 # Save it as a clean slate.
-write_tsv(x = canada_data_arthropoda, "data/Canada_data_clean_arthropoda_december.tsv")
+write_tsv(x = canada_data_arthropoda, "data/Canada_data_clean_arthropoda.tsv")
 
 # Load in case it's needed.
 #canada_data_arthropoda <- read_tsv("data/Canada_data_clean_arthropoda_december.tsv")
 
-# Filter out just COllembola
+# Filter out just Collembola
 canada_collembola <- canada_data_arthropoda %>%
   filter(class_name == "Collembola")
 
