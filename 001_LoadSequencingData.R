@@ -1,6 +1,6 @@
 # Process data from collection efforts in Cambridge Bay
-# Data is downloaded from the BOLD systems data console
-# Selected data is the 
+# Data is downloaded from the BOLD systems data console rather than the public data search
+# As a result, there are differences in amount of associated metadata that is attached
 
 # OBJECTIVE:
 #  1 Load sequencing data in the FASTA format
