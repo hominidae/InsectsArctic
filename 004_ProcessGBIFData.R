@@ -1,4 +1,6 @@
 # Process data from GBIF
+# This takes GBIF research grade observations and human observations and produces an estimate of overall coverage
+
 # OBJECTIVE:
 #  - Take GBIF human observations data and prepare it for comparison against own collected data
 
