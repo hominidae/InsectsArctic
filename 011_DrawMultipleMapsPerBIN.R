@@ -3,6 +3,7 @@
 # Load libraries
 library(tidyverse)
 library(ggmap)
+library(RColorBrewer)
 
 # Load our data
 kitikmeot_bold <- read_tsv("data/kitikmeot_bold_target.tsv")
@@ -168,6 +169,17 @@ cbay_sharedbins_list <- cbay_sharedbins_count %>%
   select(bin_uri) %>%
   mutate(bin_uri = str_replace(bin_uri, "BOLD:", ""))
 
+# Let's try manually assigning colors to the order_name types.
+# Manually assign two different palletes for the 8 possible order types for flying and non-flying orders
+col_fly = palette(brewer.pal(n = 8, name = "Set1"))
+col_nofly = palette(brewer.pal(n = 8, name = "Dark2"))
+
+# Next, we need to manually assign order type to those palletes.
+# We can do that by calling scale_color_manual.
+#   scale_color_manual(values = c("setosa" = "purple",
+#                                 "versicolor="orange",
+#                                "virginica"="steelblue")) 
+
 # Map each BIN and save as a PNG
 for (i in cbay_sharedbins_count$bin_uri) {
   bins <- cbay_sharedbins_f %>%
@@ -179,6 +191,12 @@ for (i in cbay_sharedbins_count$bin_uri) {
                                      xend = communities$lon[1],
                                      yend = communities$lat[1], color = order_name), size = 0.5) +
     geom_point(data = bins, aes(x = lon, y = lat, color = order_name), size=0.5) + # Then add a point at the end
+    # Add our custom colors for order's
+    scale_color_manual(values = c("Diptera" = col_fly[1],
+                                  "Hemiptera" = col_fly[2],
+                                  "Hymenoptera" = col_fly[3],
+                                  "Lepidoptera" = col_fly[4],
+                                  "Thysanoptera" = col_fly[7])) +
     # Title and labels
     labs(x = "Longitude", y = "Latitude", title=paste("Exact BIN matches for ",i, "to Cambridge Bay", sep = " "), color="Order")
   ggsave(filename = paste("fig/CBAY_Flying_PNG/BOLD-",j,"_Matches.png", sep = ""), plot = my_plot, width=3084, height=2160, units = "px")
@@ -203,9 +221,17 @@ for (i in kugl_sharedbins_count$bin_uri) {
   print(j)
   # Generate the plot
   my_plot <- mp + geom_segment(data = bins, aes(x = lon, y = lat, # Add the drawn lines
-                                                xend = communities$lon[1],
-                                                yend = communities$lat[1], color = order_name), size = 0.5) +
+                                                xend = communities$lon[2],
+                                                yend = communities$lat[2], color = order_name), size = 0.5) +
     geom_point(data = bins, aes(x = lon, y = lat, color = order_name), size=0.5) + # Then add a point at the end
+    # Add our custom colors for order's
+    scale_color_manual(values = c("Diptera" = col_fly[1],
+                                  "Hemiptera" = col_fly[2],
+                                  "Hymenoptera" = col_fly[3],
+                                  "Lepidoptera" = col_fly[4],
+                                  "Neuroptera" = col_fly[5],
+                                  "Orthoptera" = col_fly[6],
+                                  "Thysanoptera" = col_fly[7])) +
     # Title and labels
     labs(x = "Longitude", y = "Latitude", title=paste("Exact BIN matches for ",i, "to Kugluktuk", sep = " "), color="Order")
   ggsave(filename = paste("fig/KUGL_Flying_PNG/BOLD-",j,"_Matches.png", sep = ""), plot = my_plot, width=3084, height=2160, units = "px")
@@ -230,10 +256,48 @@ for (i in gjoa_sharedbins_count$bin_uri) {
   print(j)
   # Generate the plot
   my_plot <- mp + geom_segment(data = bins, aes(x = lon, y = lat, # Add the drawn lines
-                                                xend = communities$lon[1],
-                                                yend = communities$lat[1], color = order_name), size = 0.5) +
+                                                xend = communities$lon[3],
+                                                yend = communities$lat[3], color = order_name), size = 0.5) +
     geom_point(data = bins, aes(x = lon, y = lat, color = order_name), size=0.5) + # Then add a point at the end
     # Title and labels
+    scale_color_manual(values = c("Diptera" = col_fly[1],
+                                  "Hemiptera" = col_fly[2],
+                                  "Hymenoptera" = col_fly[3],
+                                  "Lepidoptera" = col_fly[4]))
     labs(x = "Longitude", y = "Latitude", title=paste("Exact BIN matches for ",i, "to Gjoa Haven", sep = " "), color="Order")
   ggsave(filename = paste("fig/GJOA_Flying_PNG/BOLD-",j,"_Matches.png", sep = ""), plot = my_plot, width=3084, height=2160, units = "px")
+}
+
+# Lastly, let's do Kugaaruk
+kuga_sharedbins_count <- kuga_sharedbins_f %>%
+  group_by(bin_uri) %>%
+  summarise(n = n()) %>%
+  arrange(-n)
+
+# Let's replace the ":" with "-" so that it can be used for the out filenames in a for loop function
+kuga_sharedbins_list <- kuga_sharedbins_count %>%
+  select(bin_uri) %>%
+  mutate(bin_uri = str_replace(bin_uri, "BOLD:", ""))
+
+# Map each BIN and save as a PNG
+for (i in kuga_sharedbins_count$bin_uri) {
+  bins <- kuga_sharedbins_f %>%
+    filter(bin_uri == i)
+  j <- str_replace(i, "BOLD:", "")
+  print(j)
+  # Generate the plot
+  my_plot <- mp + geom_segment(data = bins, aes(x = lon, y = lat, # Add the drawn lines
+                                                xend = communities$lon[4],
+                                                yend = communities$lat[4], color = order_name), size = 0.5) +
+    geom_point(data = bins, aes(x = lon, y = lat, color = order_name), size=0.5) + # Then add a point at the end
+    # Title and labels
+    scale_color_manual(values = c("Diptera" = col_fly[1],
+                                  "Hemiptera" = col_fly[2],
+                                  "Hymenoptera" = col_fly[3],
+                                  "Lepidoptera" = col_fly[4],
+                                  "Thysanoptera" = col_fly[5],
+                                  "Neuroptera" = col_fly[6],
+                                  "Orthoptera" = col_fly[7]))
+    labs(x = "Longitude", y = "Latitude", title=paste("Exact BIN matches for ",i, "to Kugaaruk", sep = " "), color="Order")
+  ggsave(filename = paste("fig/KUGA_Flying_PNG/BOLD-",j,"_Matches.png", sep = ""), plot = my_plot, width=3084, height=2160, units = "px")
 }
