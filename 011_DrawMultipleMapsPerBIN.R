@@ -807,6 +807,8 @@ for (i in kuga_sharedbins_count$bin_uri) {
                                                 xend = communities$lon[4],
                                                 yend = communities$lat[4], color = order_name), size = 0.5) +
     geom_point(data = bins, aes(x = lon, y = lat, color = order_name), size=0.5) + # Then add a point at the end
+    # Title and labels
+    labs(x = "Longitude", y = "Latitude", title=paste("Exact BIN matches for ",i, "to Kugaaruk", sep = " "), color="Order") +
     # Let's add our custom colors by order
     scale_color_manual(values = c("Araneae" = col_nofly[1],
                                   "Coleoptera" = col_nofly[2],
@@ -828,7 +830,5 @@ for (i in kuga_sharedbins_count$bin_uri) {
     geom_text(aes(x = -62, y = 66, label = paste("ON:",on_count))) +
     geom_text(aes(x = -62, y = 65, label = paste("QC:",qc_count))) +
     geom_text(aes(x = -62, y = 64, label = paste("YT:",yt_count)))
-  # Title and labels
-  labs(x = "Longitude", y = "Latitude", title=paste("Exact BIN matches for ",i, "to Kugaaruk", sep = " "), color="Order")
   ggsave(filename = paste("fig/KUGA_nonflying_PNG/BOLD-",j,"_Matches.png", sep = ""), plot = my_plot, width=3084, height=2160, units = "px")
 }
