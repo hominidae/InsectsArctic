@@ -5,6 +5,7 @@
 library(tidyverse)
 library(ggmap)
 library(gridExtra)
+library(ggVennDiagram)
 
 # Great. Now we need to work on community level links within the Kitikmeot to each other.
 # Let's load the data set we created earlier.
@@ -110,7 +111,7 @@ names(island_count)[names(island_count) == "Var1"] <- "bin_uri"
 write_csv(x = island_count, "data/island_count.csv")
 
 # You'll need to enter a Google Maps API key
-register_google(key = "YOURKEYHERE")
+#register_google(key = "YOURKEYHERE")
 
 # Create a data frame containing our lat's and lon's for the center of each communitiy
 communities <- data.frame(
@@ -242,12 +243,6 @@ rm(kitikmeot_araneae,kitikmeot_coleoptera,kitikmeot_entomobryomorpha,kitikmeot_p
 write_csv(x = kitikmeot_flying, "data/kitikmeot_flying.csv")
 write_csv(x = kitikmeot_nonflying, "data/kitikmeot_nonflying.csv")
 
-# Install ggVennDiagram
-install.packages("ggVennDiagram")
-
-# Load ggVennDiagram
-library(ggVennDiagram)
-
 # First things first, we have cambridgebay, kugluktuk, gjoahaven, and kugaaruk
 # These were parsed out from kitikmeot_bold
 # Assign our variables to a vector list variable x
@@ -268,7 +263,7 @@ p <- ggVennDiagram(x, category.names = c("Cambridge Bay","Gjoa Haven","Kugaaruk"
         legend.position = "right") +
   scale_fill_distiller(palette = "RdBu") +
   labs(title = "Unique matching BINs per community")
-
+p
 
 # Don't just take ggVennDiagram at it's word though, double-check that against our total unique BIN counts performed earlier
 # Cambridge Bay: 971 Unique BINs
@@ -285,10 +280,6 @@ p <- ggVennDiagram(x, category.names = c("Cambridge Bay","Gjoa Haven","Kugaaruk"
 kitikmeot_flying <- read_csv("data/kitikmeot_flying.csv")
 kitikmeot_nonflying <- read_csv("data/kitikmeot_nonflying.csv")
 
-# Let's do the same thing again, but this time let's stitch 'em together side by side.
-# First, let's load gridExtra to do that
-library(gridExtra)
-
 # Let's create a plot for matching flying arthropod BINs
 fly <- kitikmeot_flying  %>%
   select(sector,bin_uri) %>%
@@ -299,6 +290,14 @@ fly <- kitikmeot_flying  %>%
   map(unique) %>%
   map(pull)
 
+# Apparently we need to fix this. The order of kitikmeot_bold is Cambridge Bay, Gjoa Haven, 
+fly1 <- fly[1]
+fly2 <- fly[2] 
+fly3 <- fly[3]
+fly4 <- fly[4]
+fly <- c(fly1,fly3,fly4,fly2)
+
+# For some reason, Gjoa Haven and Kuglutuk have swapped places
 flyp <- ggVennDiagram(fly, category.names = c("Cambridge Bay","Gjoa Haven","Kugaaruk","Kugluktuk"),
                       label_alpha = 0) +
   guides(fill = guide_legend(title = "# of Unique BINs")) +
@@ -306,6 +305,7 @@ flyp <- ggVennDiagram(fly, category.names = c("Cambridge Bay","Gjoa Haven","Kuga
         legend.position = "right") +
   scale_fill_distiller(palette = "RdBu") +
   labs(title = "Unique matching flying BINs per community")
+flyp
 
 # Let's do non-flying next
 nofly <- kitikmeot_nonflying  %>%
@@ -317,6 +317,13 @@ nofly <- kitikmeot_nonflying  %>%
   map(unique) %>%
   map(pull)
 
+# We need to fix this as well
+nofly1 <- nofly[1]
+nofly2 <- nofly[2] 
+nofly3 <- nofly[3]
+nofly4 <- nofly[4]
+nofly <- c(nofly1,nofly3,nofly4,nofly2)
+
 noflyp <- ggVennDiagram(nofly, category.names = c("Cambridge Bay","Gjoa Haven","Kugaaruk","Kugluktuk"),
                         label_alpha = 0) +
   guides(fill = guide_legend(title = "# of Unique BINs")) +
@@ -324,6 +331,7 @@ noflyp <- ggVennDiagram(nofly, category.names = c("Cambridge Bay","Gjoa Haven","
         legend.position = "right") +
   scale_fill_distiller(palette = "RdBu") +
   labs(title = "Unique matching non-flying BINs per community")
+noflyp
 
 # Alright, let's plot 'em together
 grid.arrange(p, arrangeGrob(flyp, noflyp), ncol = 2)
