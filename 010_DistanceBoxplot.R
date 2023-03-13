@@ -223,6 +223,7 @@ kugl_boxplot <- ggplot(kugl_distances, aes(type,
   xlab("Type") +
   scale_color_manual(values = col) +
   theme_nice
+
 # Do Gjoa Haven
 gjoa_boxplot <- ggplot(gjoa_distances, aes(type, 
                                            distance, 
@@ -234,6 +235,7 @@ gjoa_boxplot <- ggplot(gjoa_distances, aes(type,
   xlab("Type") +
   scale_color_manual(values = col) +
   theme_nice
+
 # Last, do Kugaaruk
 kuga_boxplot <- ggplot(kuga_distances, aes(type, 
                                            distance, 
@@ -255,17 +257,17 @@ grid.arrange(arrangeGrob(cbay_boxplot,top=textGrob("Cambridge Bay"),ncol=1),
 
 # What if we made a boxplot and matched every BIN to it's nearest match only?
 # First, we need to take the unique BIN's, then match that list to the lowest possible distance.
-test <- cbay_distances %>%
+cbay_distances <- cbay_distances %>%
   group_by(bin_uri) %>%
   slice(which.min(distance))
 
 # Let's confirm that did what we thought.
-test1 <- cbay_distances %>%
+cbay_distcount <- cbay_distances %>%
   group_by(bin_uri) %>%
   summarise(n = n())
 
 # Let's try and graph test now
-test_boxplot <- ggplot(test, aes(type,distance)) + 
+cbay_boxplot <- ggplot(cbay_distances, aes(type,distance)) + 
   geom_jitter(aes(color = order_name), alpha = 0.75) + 
   geom_boxplot(outlier.color = NA, alpha=0.5, size=1) +
   geom_violin(aes(type), alpha = 0.5) +
@@ -274,4 +276,77 @@ test_boxplot <- ggplot(test, aes(type,distance)) +
   labs(color='Order') +
   scale_color_manual(values = col) +
   theme_nice
-test_boxplot
+cbay_boxplot
+
+# First, we need to take the unique BIN's, then match that list to the lowest possible distance.
+kugl_distances <- cbay_distances %>%
+  group_by(bin_uri) %>%
+  slice(which.min(distance))
+
+# Let's confirm that did what we thought.
+kugl_distcount <- cbay_distances %>%
+  group_by(bin_uri) %>%
+  summarise(n = n())
+
+# Let's try and graph test now
+kugl_boxplot <- ggplot(kugl_distances, aes(type,distance)) + 
+  geom_jitter(aes(color = order_name), alpha = 0.75) + 
+  geom_boxplot(outlier.color = NA, alpha=0.5, size=1) +
+  geom_violin(aes(type), alpha = 0.5) +
+  ylab("Distance in km") +
+  xlab("Type") +
+  labs(color='Order') +
+  scale_color_manual(values = col) +
+  theme_nice
+kugl_boxplot
+
+# First, we need to take the unique BIN's, then match that list to the lowest possible distance.
+gjoa_distances <- gjoa_distances %>%
+  group_by(bin_uri) %>%
+  slice(which.min(distance))
+
+# Let's confirm that did what we thought.
+gjoa_distcount <- gjoa_distances %>%
+  group_by(bin_uri) %>%
+  summarise(n = n())
+
+# Let's try and graph test now
+gjoa_boxplot <- ggplot(gjoa_distances, aes(type,distance)) + 
+  geom_jitter(aes(color = order_name), alpha = 0.75) + 
+  geom_boxplot(outlier.color = NA, alpha=0.5, size=1) +
+  geom_violin(aes(type), alpha = 0.5) +
+  ylab("Distance in km") +
+  xlab("Type") +
+  labs(color='Order') +
+  scale_color_manual(values = col) +
+  theme_nice
+gjoa_boxplot
+
+# First, we need to take the unique BIN's, then match that list to the lowest possible distance.
+kuga_distances <- kuga_distances %>%
+  group_by(bin_uri) %>%
+  slice(which.min(distance))
+
+# Let's confirm that did what we thought.
+kuga_distcount <- kuga_distances %>%
+  group_by(bin_uri) %>%
+  summarise(n = n())
+
+# Let's try and graph test now
+kuga_boxplot <- ggplot(kuga_distances, aes(type,distance)) + 
+  geom_jitter(aes(color = order_name), alpha = 0.75) + 
+  geom_boxplot(outlier.color = NA, alpha=0.5, size=1) +
+  geom_violin(aes(type), alpha = 0.5) +
+  ylab("Distance in km") +
+  xlab("Type") +
+  labs(color='Order') +
+  scale_color_manual(values = col) +
+  theme_nice
+kuga_boxplot
+
+# Let's grid arrange those
+grid.arrange(arrangeGrob(cbay_boxplot,top=textGrob("Cambridge Bay"),ncol=1),
+             arrangeGrob(kugl_boxplot,top=textGrob("Kugluktuk"),ncol=1),
+             arrangeGrob(gjoa_boxplot,top=textGrob("Gjoa Haven"),ncol=1),
+             arrangeGrob(kuga_boxplot,top=textGrob("Kugaaruk"),ncol=1),
+             ncol=2,nrow=2)
