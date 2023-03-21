@@ -108,5 +108,8 @@ cbay <- cbay_complete %>%
 
 # Very cool. Let's make another GGplot from 1949
 ggplot(cbay, aes(x = date, y = maxtemp)) +
-  geom_line() +
-  labs(x = "Date", y = "Tempearture", title="Temperature Chart for Cambridge Bay")
+  geom_line(color = "red") +
+  geom_point(color = "red") +
+  geom_line(aes(y = mintemp), color = "blue") +
+  geom_line(aes(y = mintemp), color = "blue") +
+  labs(x = "Date", y = "Temperature", title="Temperature Chart for Cambridge Bay")
