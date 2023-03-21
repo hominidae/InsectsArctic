@@ -66,14 +66,18 @@ cbay_copy <- data.frame(
 cbay_new_compare <- cbay_new %>%
   mutate(
     date_new = floor_date(cbay_new$date, "month"),
-    maxtemp = cbay_new$maxtemp,
-    mintemp = cbay_new$mintemp
+    mintemp = cbay_new$mintemp,
+    maxtemp = cbay_new$maxtemp
   )
+
+# Before we go on, remove some NA's
+cbay_new_compare <- cbay_new_compare %>%
+  drop_na(mintemp,maxtemp)
 
 # Try this way
 cbay_new_test <- cbay_new_compare %>%
   group_by(date_new) %>%
-  summarise(mintemp,maxtemp)
+  summarise(across(c(mintemp,maxtemp), sum))
 
 # Alright, now we need to join them with our new data. 
 cbay_complete <- rbind(cbay_new,cbay_copy)
