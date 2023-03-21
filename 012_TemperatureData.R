@@ -112,4 +112,5 @@ ggplot(cbay_complete, aes(x = mintemp, y = maxtemp)) +
 
 # Very cool. Let's make another GGplot from 1949
 ggplot(cbay, aes(x = date, y = maxtemp)) +
-  geom_line()
+  geom_line() +
+  labs(x = "Date", y = "Tempearture", title="Temperature Chart for Cambridge Bay")
