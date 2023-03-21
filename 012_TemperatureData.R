@@ -61,11 +61,6 @@ cbay_copy <- data.frame(
 )
 
 # Before we join the new data and the old data, we want to average the data out even further by month instead of days.
-# So we need to work on cbay_new.
-cbay_new_compare <- cbay_new %>%
-  select(date,maxtemp,mintemp) %>%
-  group_by(date) %>%
-  floor_date(date, "month")
 
 # Create a new column in cbay_new_compare from cbay_new
 cbay_new_compare <- cbay_new %>%
@@ -75,9 +70,10 @@ cbay_new_compare <- cbay_new %>%
     mintemp = cbay_new$mintemp
   )
 
-cbay_new_compare %>%
+# Try this way
+cbay_new_test <- cbay_new_compare %>%
   group_by(date_new) %>%
-  summarise(new_maxtemp = max(maxtemp), new_mintemp = min(mintemp))
+  summarise(mintemp,maxtemp)
 
 # Alright, now we need to join them with our new data. 
 cbay_complete <- rbind(cbay_new,cbay_copy)
