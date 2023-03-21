@@ -106,10 +106,6 @@ rm(cbay_dates,cbay_new_dates)
 cbay <- cbay_complete %>%
   filter(date >= "1949-01-01" & date <= "2023-01-01")
 
-# Let's do a test plot of all those temperature ranges from 1929 to 2023
-ggplot(cbay_complete, aes(x = mintemp, y = maxtemp)) +
-  geom_point()
-
 # Very cool. Let's make another GGplot from 1949
 ggplot(cbay, aes(x = date, y = maxtemp)) +
   geom_line() +
