@@ -67,6 +67,18 @@ cbay_new_compare <- cbay_new %>%
   group_by(date) %>%
   floor_date(date, "month")
 
+# Create a new column in cbay_new_compare from cbay_new
+cbay_new_compare <- cbay_new %>%
+  mutate(
+    date_new = floor_date(cbay_new$date, "month"),
+    maxtemp = cbay_new$maxtemp,
+    mintemp = cbay_new$mintemp
+  )
+
+cbay_new_compare %>%
+  group_by(date_new) %>%
+  summarise(new_maxtemp = max(maxtemp), new_mintemp = min(mintemp))
+
 # Alright, now we need to join them with our new data. 
 cbay_complete <- rbind(cbay_new,cbay_copy)
 
