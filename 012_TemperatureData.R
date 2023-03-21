@@ -106,6 +106,8 @@ rm(cbay_dates,cbay_new_dates)
 cbay <- cbay_complete %>%
   filter(date >= "1949-01-01" & date <= "2023-01-01")
 
-# Before we do anything else though, let's plot those monthly average temperatures from 1929 till 2015.
+# Let's do a test plot of those temperature ranges from 1949 to 2023
 ggplot(cbay_complete, aes(x = mintemp, y = maxtemp)) +
   geom_point()
+
+# Very cool.
