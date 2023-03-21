@@ -61,7 +61,6 @@ cbay_copy <- data.frame(
 )
 
 # Before we join the new data and the old data, we want to average the data out even further by month instead of days.
-
 # Create a new column in cbay_new_compare from cbay_new
 cbay_new_compare <- cbay_new %>%
   mutate(
@@ -83,8 +82,11 @@ cbay_new_test <- cbay_new_compare %>%
     maxtemp = round(maxtemp, digits = 1)
   )
 
+# Change from date_new to date
+names(cbay_new_test) <- c("date","mintemp","maxtemp")
+
 # Alright, now we need to join them with our new data. 
-cbay_complete <- rbind(cbay_new,cbay_copy)
+cbay_complete <- rbind(cbay_copy,cbay_new_test)
 
 # Before we do anything else though, let's plot those monthly average temperatures from 1929 till 2015.
 ggplot(cbay_copy, aes(x = mintemp, y = maxtemp)) +
