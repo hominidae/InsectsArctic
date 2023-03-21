@@ -1,0 +1,58 @@
+# Read climate data from Cambridge Bay
+# Montly averages span from 1929 to 2015. However, it isn't until 1950 that measurements were consistent.
+# The measurements were upgraded to hourly measurements in 2015.
+
+# Install the weathercan package if necessary, which allows for easy downloads of Environment and Climate Change Canada data
+#install.packages("weathercan", 
+#                 repos = c("https://ropensci.r-universe.dev", 
+#                           "https://cloud.r-project.org"))
+
+# Load library
+library(tidyverse)
+library(ggplot2)
+library(weathercan)
+
+# Load data that we can already easily access
+cbay_weatherold <- read_csv("data/en_climate_monthly_NU_2400600_1929-2015_P1M.csv")
+
+# Get a list of the weather data that we're interested in
+stations_search(coords = c(69, -105), dist = 20, interval = "day")
+
+# Bummer. It appears we can get a monthly summary from 1929 to 2015.
+# However, to access 2015 to 2023 data we will need to combine those.
+
+# Let's download the data and add it to a data frame
+# Note: I've commented this out, simply use the station search above to select your location ID and download your selected data using the command below
+#cbay_weathernew <- weather_dl(station_ids = 53512, start = "2015-03-01", end = "2023-01-01")
+
+# save it so we don't stress Environment and Climate Change Canada's servers
+#write_csv(x = cbay_weathernew, "data/en_climate_daily_NU_2015-2023.csv")
+
+# Read in case we need it back
+cbay_weathernew <- read_csv("data/en_climate_daily_NU_2015-2023.csv")
+
+# We need to simplify. Every temperature reading on March 1st. We need the mean maximum and the mean minimum
+cbay_new <- cbay_weathernew %>%
+  select(date,time,temp) %>%
+  group_by(date) %>%
+  summarise(maxtemp = max(temp),mintemp = min(temp))
+
+# Make a copy of the old data
+cbay_copy <- cbay_weatherold %>%
+  select("Date/Time", "Mean Max Temp (°C)", "Mean Min Temp (°C)")
+
+# Change names so they're readable
+names(cbay_copy) <- c("date","maxtemp","mintemp")
+
+# Remove NA's because apparently 1929 was inconsistent AF. Up until 1950 at least.
+# As it turns out, having someone around to record the weather was important.
+cbay_copy <- cbay_copy %>%
+  drop_na(maxtemp)
+cbay_copy <- cbay_copy %>%
+  drop_na(mintemp)
+
+# Before we join the new data and the old data, we want to average the data out even further by month instead of days.
+# So we need to work on cbay_new
+cbay_new_compare <- cbay_new %>%
+  select(date,maxtemp,mintemp) %>%
+  group_by(date)
