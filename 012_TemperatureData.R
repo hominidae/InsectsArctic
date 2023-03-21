@@ -112,4 +112,6 @@ ggplot(cbay, aes(x = date, y = maxtemp)) +
   geom_point(color = "red") +
   geom_line(aes(y = mintemp), color = "blue") +
   geom_line(aes(y = mintemp), color = "blue") +
+  scale_x_date(breaks = as.Date(c("1949-01-01","1960-01-01", "1970-01-01", "1980-01-01", "1990-01-01", "2000-01-01", "2010-01-01", "2023-01-01")),
+               minor_breaks = as.Date(c("1950-01-01","1955-01-01","1965-01-01","1975-01-01","1985-01-01","1995-01-01","2005-01-01","2015-01-01","2020-01-01"))) +
   labs(x = "Date", y = "Temperature", title="Temperature Chart for Cambridge Bay")
