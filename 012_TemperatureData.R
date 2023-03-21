@@ -1,7 +1,4 @@
 # Read climate data from Cambridge Bay
-# Montly averages span from 1929 to 2015. However, it isn't until 1950 that measurements were consistent.
-# The measurements were upgraded to hourly measurements in 2015.
-
 # Install the weathercan package if necessary, which allows for easy downloads of Environment and Climate Change Canada data
 #install.packages("weathercan", 
 #                 repos = c("https://ropensci.r-universe.dev", 
@@ -11,6 +8,7 @@
 library(tidyverse)
 library(ggplot2)
 library(weathercan)
+library(lubridate)
 
 # Load data that we can already easily access
 cbay_weatherold <- read_csv("data/en_climate_monthly_NU_2400600_1929-2015_P1M.csv")
@@ -51,8 +49,27 @@ cbay_copy <- cbay_copy %>%
 cbay_copy <- cbay_copy %>%
   drop_na(mintemp)
 
+# Let's do some data preparation first though.
+cbay_dates <- cbay_copy$date
+cbay_dates <- ym(cbay_dates)
+
+# Re-combine with cbay_copy
+cbay_copy <- data.frame(
+  date = cbay_dates,
+  maxtemp = cbay_copy$maxtemp,
+  mintemp = cbay_copy$mintemp
+)
+
 # Before we join the new data and the old data, we want to average the data out even further by month instead of days.
-# So we need to work on cbay_new
+# So we need to work on cbay_new.
 cbay_new_compare <- cbay_new %>%
   select(date,maxtemp,mintemp) %>%
-  group_by(date)
+  group_by(date) %>%
+  floor_date(date, "month")
+
+# Alright, now we need to join them with our new data. 
+cbay_complete <- rbind(cbay_new,cbay_copy)
+
+# Before we do anything else though, let's plot those monthly average temperatures from 1929 till 2015.
+ggplot(cbay_copy, aes(x = mintemp, y = maxtemp)) +
+  geom_point()
