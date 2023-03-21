@@ -65,8 +65,8 @@ cbay_copy <- data.frame(
 cbay_new_compare <- cbay_new %>%
   mutate(
     date_new = floor_date(cbay_new$date, "month"),
-    mintemp = cbay_new$mintemp,
-    maxtemp = cbay_new$maxtemp
+    maxtemp = cbay_new$maxtemp,
+    mintemp = cbay_new$mintemp
   )
 
 # Before we go on, remove some NA's
@@ -87,10 +87,12 @@ names(cbay_new_test) <- c("date","mintemp","maxtemp")
 
 # However, before we move on, we need to convert to year month again.
 cbay_new_dates <- cbay_new_test$date
-cbay_new_dates <- ym(cbay_new_dates)
 
-cbay_new_test <- date.frame(
-  date = cbay_
+# 
+cbay_new_test <- data.frame(
+  date = cbay_new_dates,
+  maxtemp = cbay_new_test$maxtemp,
+  mintemp = cbay_new_test$mintemp
 )
 
 # Alright, now we need to join them with our new data. 
@@ -98,10 +100,11 @@ cbay_complete <- rbind(cbay_copy,cbay_new_test)
 
 # Some garbage collection
 rm(cbay_new,cbay_copy,cbay_new_compare,cbay_weathernew,cbay_weatherold,cbay_new_test)
+rm(cbay_dates,cbay_new_dates)
 
 # Let's split cbay from complete data starting in 1949
 cbay <- cbay_complete %>%
-  filter(date >= "1949-01" & date <= "2023-01")
+  filter(date >= "1949-01-01" & date <= "2023-01-01")
 
 # Before we do anything else though, let's plot those monthly average temperatures from 1929 till 2015.
 ggplot(cbay_complete, aes(x = mintemp, y = maxtemp)) +
