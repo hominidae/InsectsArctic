@@ -77,7 +77,7 @@ cbay_new_compare <- cbay_new_compare %>%
 # Try this way
 cbay_new_test <- cbay_new_compare %>%
   group_by(date_new) %>%
-  summarise(across(c(mintemp,maxtemp), sum))
+  summarise(across(c(mintemp,maxtemp), mean))
 
 # Alright, now we need to join them with our new data. 
 cbay_complete <- rbind(cbay_new,cbay_copy)
