@@ -12,7 +12,7 @@ library(lubridate)
 
 # Load data that we can already easily access
 # I downloaded this from the CSV file from the Environment and Climate Change Canada website.
-cbay_weatherold <- read_csv("data/en_climate_monthly_NU_2400600_1929-2015_P1M.csv")
+cbay_weatherold <- read_csv("data/en_climate_monthly_CBAY_1929-2015.csv")
 
 # Get a list of the weather data that we're interested in. Specifically Cambridge Bay.
 stations_search(coords = c(69, -105), dist = 20, interval = "day")
@@ -22,13 +22,13 @@ stations_search(coords = c(69, -105), dist = 20, interval = "day")
 
 # Let's download the data and add it to a data frame
 # Note: I've commented this out, simply use the station search above to select your location ID and download your selected data using the command below
-#cbay_weathernew <- weather_dl(station_ids = 53512, start = "2015-03-01", end = "2023-01-01")
+cbay_weathernew <- weather_dl(station_ids = 53512, start = "2015-03-01", end = "2023-01-01")
 
 # save it so we don't stress Environment and Climate Change Canada's servers
 #write_csv(x = cbay_weathernew, "data/en_climate_daily_NU_2015-2023.csv")
 
 # Read in case we need it back
-cbay_weathernew <- read_csv("data/en_climate_daily_NU_2015-2023.csv")
+#cbay_weathernew <- read_csv("data/en_climate_daily_CBAY_2015-2023.csv")
 
 # We need to simplify. Every temperature reading on March 1st. We need the mean maximum and the mean minimum
 cbay_new <- cbay_weathernew %>%
@@ -150,10 +150,26 @@ stations_search(coords = c(68.625, -95.8777), dist = 20, interval = "day")
 gjoa_weatherold <- weather_dl(station_ids = 1715, start = "1984-01-01", end = "2014-12-31")
 
 # Save it so we don't need to download it again 
-# write_csv(x = gjoa_weatherold, "data/en_climate_daily_GJOA_1984-2023.csv")
+write_csv(x = gjoa_weatherold, "data/en_climate_daily_GJOA_1984-2014.csv")
 
 # Same for the new data
-gjoa_weathernew <- weather_dl(station_ids = 1715, start = "2014-0-01", end = "2023-01-01")
+gjoa_weathernew <- weather_dl(station_ids = 51079, start = "2014-01-01", end = "2023-01-01")
 
 # Save it so we don't need to download it again 
-# write_csv(x = gjoa_weathernew, "data/en_climate_daily_GJOA_2014-2023.csv")
+write_csv(x = gjoa_weathernew, "data/en_climate_daily_GJOA_2014-2023.csv")
+
+# Do Kugaaruk next, which is at 68.534722, -89.825
+stations_search(coords = c(68.534, -89.825), dist = 20, interval = "day")
+
+# Download the oldest data
+kuga_weatherold <- weather_dl(station_ids = 1718, start = "1957-01-01", end = "1992-12-31")
+
+# Save it so we don't need to download it again
+write_csv(x = kuga_weatherold, "data/en_climate_daily_KUGA_1957-1992.csv")
+
+# Download more data
+kuga_weathernew <- weather_dl(station_ids = 10847, start = "1994-01-01", end = "2023-01-01")
+
+# Save it so we don't need to download it again
+write_csv(x = kuga_weathernew, "data/en_climate_daily_KUGA_1994-2023.csv")
+
