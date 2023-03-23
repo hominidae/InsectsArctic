@@ -11,9 +11,10 @@ library(weathercan)
 library(lubridate)
 
 # Load data that we can already easily access
+# I downloaded this from the CSV file from the Environment and Climate Change Canada website.
 cbay_weatherold <- read_csv("data/en_climate_monthly_NU_2400600_1929-2015_P1M.csv")
 
-# Get a list of the weather data that we're interested in
+# Get a list of the weather data that we're interested in. Specifically Cambridge Bay.
 stations_search(coords = c(69, -105), dist = 20, interval = "day")
 
 # Bummer. It appears we can get a monthly summary from 1929 to 2015.
@@ -112,6 +113,47 @@ ggplot(cbay, aes(x = date, y = maxtemp)) +
   geom_point(color = "red") +
   geom_line(aes(y = mintemp), color = "blue") +
   geom_line(aes(y = mintemp), color = "blue") +
-  scale_x_date(breaks = as.Date(c("1949-01-01","1960-01-01", "1970-01-01", "1980-01-01", "1990-01-01", "2000-01-01", "2010-01-01", "2023-01-01")),
-               minor_breaks = as.Date(c("1950-01-01","1955-01-01","1965-01-01","1975-01-01","1985-01-01","1995-01-01","2005-01-01","2015-01-01","2020-01-01"))) +
+  scale_x_date(breaks = as.Date(c("1950-01-01","1955-01-01","1960-01-01","1965-01-01","1970-01-01","1975-01-01","1980-01-01","1985-01-01",
+                                  "1990-01-01","1995-01-01","2000-01-01","2005-01-01","2010-01-01","2015-01-01","2020-01-01","2023-01-01")),
+               minor_breaks = as.Date(c("1949-01-01")),
+               date_labels = "%Y") +
+  scale_y_continuous(breaks = as.integer(c(-45,-40,-35,-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,34,40))) +
   labs(x = "Date", y = "Temperature", title="Temperature Chart for Cambridge Bay")
+
+# An interesting chart. We'll come back to it later. Let's see if we have weather data for the other three communities too.
+# But if you're interested in watching an interesting video on what I'll be doing with this data.
+# Here is a video from Dr Pat Schloss on reproducing a visualization of monthly temperature anomalies from NASA's Earth Observatory Earth Matters blog.
+# https://www.youtube.com/watch?v=DrNQMaIVEVo
+# In short, we don't necessarily want a chart showing the high's and low's. We want to visualize what the differences are over time.
+# Before we move onto that however, let's see if we have data from the other communites. Starting with Kugluktuk
+
+# Starting with Kugluktuk, which is positioned at 67.826667, -115.093333
+stations_search(coords = c(67.82, -115.09), dist = 20, interval = "day")
+
+# The data from Kugluktuk seems to have the same issue, these weather data span from 1977 to 2014.
+# Note: Coppermine was the name of the community prior to it's change to Kugluktuk on Jan 1st 1996.
+kugl_weatherold <- weather_dl(station_ids = 1641, start = "1977-01-01", end = "2014-12-31")
+
+# Save it so we don't need to download it again
+#write_csv(x = kugl_weatherold, "data/en_climate_daily_KUGL_1977-2014.csv")
+
+# Let's download the new data too.
+kugl_weathernew <- weather_dl(station_ids = 53335, start = "2014-01-01", end = "2023-01-01")
+
+# Save it so we don't need to download it again
+#write_csv(x = kugl_weathernew, "data/en_climate_daily_KUGL_2014-2023.csv")
+
+# Next let's do the same for Gjoa Haven, which is at 68.625, -95.877778
+stations_search(coords = c(68.625, -95.8777), dist = 20, interval = "day")
+
+# Download that data
+gjoa_weatherold <- weather_dl(station_ids = 1715, start = "1984-01-01", end = "2014-12-31")
+
+# Save it so we don't need to download it again 
+# write_csv(x = gjoa_weatherold, "data/en_climate_daily_GJOA_1984-2023.csv")
+
+# Same for the new data
+gjoa_weathernew <- weather_dl(station_ids = 1715, start = "2014-0-01", end = "2023-01-01")
+
+# Save it so we don't need to download it again 
+# write_csv(x = gjoa_weathernew, "data/en_climate_daily_GJOA_2014-2023.csv")
