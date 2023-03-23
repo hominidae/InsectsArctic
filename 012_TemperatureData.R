@@ -150,13 +150,13 @@ stations_search(coords = c(68.625, -95.8777), dist = 20, interval = "day")
 gjoa_weatherold <- weather_dl(station_ids = 1715, start = "1984-01-01", end = "2014-12-31")
 
 # Save it so we don't need to download it again 
-write_csv(x = gjoa_weatherold, "data/en_climate_daily_GJOA_1984-2014.csv")
+#write_csv(x = gjoa_weatherold, "data/en_climate_daily_GJOA_1984-2014.csv")
 
 # Same for the new data
 gjoa_weathernew <- weather_dl(station_ids = 51079, start = "2014-01-01", end = "2023-01-01")
 
 # Save it so we don't need to download it again 
-write_csv(x = gjoa_weathernew, "data/en_climate_daily_GJOA_2014-2023.csv")
+#write_csv(x = gjoa_weathernew, "data/en_climate_daily_GJOA_2014-2023.csv")
 
 # Do Kugaaruk next, which is at 68.534722, -89.825
 stations_search(coords = c(68.534, -89.825), dist = 20, interval = "day")
@@ -165,11 +165,11 @@ stations_search(coords = c(68.534, -89.825), dist = 20, interval = "day")
 kuga_weatherold <- weather_dl(station_ids = 1718, start = "1957-01-01", end = "1992-12-31")
 
 # Save it so we don't need to download it again
-write_csv(x = kuga_weatherold, "data/en_climate_daily_KUGA_1957-1992.csv")
+#write_csv(x = kuga_weatherold, "data/en_climate_daily_KUGA_1957-1992.csv")
 
 # Download more data
 kuga_weathernew <- weather_dl(station_ids = 10847, start = "1994-01-01", end = "2023-01-01")
 
 # Save it so we don't need to download it again
-write_csv(x = kuga_weathernew, "data/en_climate_daily_KUGA_1994-2023.csv")
+#write_csv(x = kuga_weathernew, "data/en_climate_daily_KUGA_1994-2023.csv")
 
