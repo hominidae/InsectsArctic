@@ -9,11 +9,12 @@ library(tidyverse)
 library(ggplot2)
 library(weathercan)
 library(lubridate)
+library(gganimate)
 
 # Download data for Cambridge bay ----------------------------------------------------------
 # Get a list of the weather data that we're interested in.
 # Specifically from Cambridge Bay, which is the nearest result from it's approximate GPS coordinates at 69.00, -105.00
-stations_search(coords = c(69, -105), dist = 20, interval = "month")
+stations_search(coords = c(69, -105), dist = 20, interval = "day")
 
 # Firstly, notice two things. There is monthly data available from 1929 to 2015.
 # But that there are no monthly averages produced after 2015.
@@ -544,6 +545,15 @@ test_cbay <- cbay %>%
   select(year,month,maxtemp,mintemp) %>%
   mutate(month = factor(month, levels = month.abb))
 
-test_cbay %>%
+test_cbay = data.frame(test_cbay)
+
+p <- test_cbay %>%
   ggplot(aes(x = month, y = maxtemp, group=year)) +
   geom_line()
+
+a <- p +
+  geom_label(aes(x = 7, y = 0, label=year), fontface="bold", label.size=0) +
+  transition_manual(year, cumulative = TRUE)
+
+animate(a, width=6, height=4, unit="in", res=300)
+anim_save("fig/month.gif")
