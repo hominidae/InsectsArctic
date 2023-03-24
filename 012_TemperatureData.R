@@ -4,110 +4,208 @@
 #                 repos = c("https://ropensci.r-universe.dev", 
 #                           "https://cloud.r-project.org"))
 
-# Load library
+### Load libraries ----------------------------------------------------------
 library(tidyverse)
 library(ggplot2)
 library(weathercan)
 library(lubridate)
 
-# Load data that we can already easily access
-# I downloaded this from the CSV file from the Environment and Climate Change Canada website.
-cbay_weatherold <- read_csv("data/en_climate_monthly_CBAY_1929-2015.csv")
+# Download data for Cambridge bay ----------------------------------------------------------
+# Get a list of the weather data that we're interested in.
+# Specifically from Cambridge Bay, which is the nearest result from it's approximate GPS coordinates at 69.00, -105.00
+stations_search(coords = c(69, -105), dist = 20, interval = "month")
 
-# Get a list of the weather data that we're interested in. Specifically Cambridge Bay.
-stations_search(coords = c(69, -105), dist = 20, interval = "day")
+# Firstly, notice two things. There is monthly data available from 1929 to 2015.
+# But that there are no monthly averages produced after 2015.
+# This means we'll need to do it ourselves.
 
-# Bummer. It appears we can get a monthly summary from 1929 to 2015.
-# However, to access 2015 to 2023 data we will need to combine those.
+# Let's download the old Cambridge Bay weather day in a monthly format
+cbay_weatherold <- weather_dl(station_ids = 1786, start = "1953-01-01", end ="2015-12-31")
 
-# Let's download the data and add it to a data frame
-# Note: I've commented this out, simply use the station search above to select your location ID and download your selected data using the command below
-cbay_weathernew <- weather_dl(station_ids = 53512, start = "2015-03-01", end = "2023-01-01")
+# We've got a problem. Looking at the data, we have it starting not in 1929 but in 1953.
+# Let's save it for now, then download the earlier data too.
+#write_csv(x = cbay_weatherold, "data/en_climate_daily_CBAY_1953-2015.csv")
+
+# And reload it if necessary
+#cbay_weatherold <- read_csv("data/en_climate_daily_CBAY_1953-2015.csv")
+
+# Let's repeat the search but select "day" and see if data exists for that period.
+stations_search(coords = c(69, -105), dist = 20, interval = "month")
+
+# Download the 1929 to 1953 data. It starts in 1953-01-01, so we need anything before that too.
+cbay_weatherolder <- weather_dl(station_ids = 1786, start = "1949-01-01", end = "1952-12-31", interval = "month")
+# Keep this in mind for later. In order to use the older data, we need to combine it with the newer data which was performed hourly from 1953.
+# So, we'll get the mean minimum temp, mean maximum temp for all those data and combine them.
 
 # save it so we don't stress Environment and Climate Change Canada's servers
-#write_csv(x = cbay_weathernew, "data/en_climate_daily_NU_2015-2023.csv")
+#write_csv(x = cbay_weatherolder, "data/en_climate_monthly_CBAY_1949-1953.csv")
 
-# Read in case we need it back
+# And reload it if necessary
+#cbay_weatherolder <- read_csv("data/en_climate_monthly_CBAY_1949-1953.csv")
+
+# Great! We have data that we can combine with our old data.
+# Let's download the new weather data and add it to a data frame. Since the 1929 - 2015 data set ended on 2015-02-12, we'll need from that date onwards.
+cbay_weathernew <- weather_dl(station_ids = 53512, start = "2015-02-13", end = "2023-03-01")
+
+# save it so we don't stress Environment and Climate Change Canada's servers
+#write_csv(x = cbay_weathernew, "data/en_climate_daily_CBAY_2015-2023.csv")
+
+# And reload it if necessary
 #cbay_weathernew <- read_csv("data/en_climate_daily_CBAY_2015-2023.csv")
 
-# We need to simplify. Every temperature reading on March 1st. We need the mean maximum and the mean minimum
+# Download data for Kugluktuk ----------------------------------------------------------
+# Starting with Kugluktuk, which is positioned at 67.826667, -115.093333
+stations_search(coords = c(67.82, -115.09), dist = 20, interval = "day")
+
+# The data from Kugluktuk seems to have the same issue.
+# Note: Coppermine was the name of the community prior to it's change to Kugluktuk on Jan 1st 1996.
+# So we have monthly data available from 1930 to 1977. Let's download that.
+kugl_weatherolder <- weather_dl(station_ids = 1640, start = "1930-01-01", end = "1977-12-31")
+
+# Let's save it so we can use it later.
+#write_csv(x = kugl_weatherolder, "data/en_climate_daily_KUGL_1930-1977.csv")
+
+# We also have data from the end of 1977 to the end of 2014.
+kugl_weatherold <- weather_dl(station_ids = 1641, start ="1978-01-01", end = "2014-12-31")
+
+# Save it so we don't need to download it again
+#write_csv(x = kugl_weatherold, "data/en_climate_daily_KUGL_1978-2014.csv")
+
+# Let's download the new data too.
+kugl_weathernew <- weather_dl(station_ids = 53335, start = "2014-12-05", end = "2023-03-01")
+
+# Save it so we don't need to download it again
+#write_csv(x = kugl_weathernew, "data/en_climate_daily_KUGL_2015-2023.csv")
+
+# Download data for Gjoa Haven ----------------------------------------------------------
+# Next let's do the same for Gjoa Haven, which is at 68.625, -95.877778
+stations_search(coords = c(68.625, -95.8777), dist = 20, interval = "month")
+
+# Interesting. We have monthly weather from 1984 to 2007. Then nothing afterwards.
+# That isn't very useful. Let's look at daily instead.
+stations_search(coords = c(68.625, -95.8777), dist = 20, interval = "day")
+
+# Great. We have more complete data here.
+# Download that data from 1984 to 2014 first.
+gjoa_weatherold <- weather_dl(station_ids = 1715, start = "1984-01-01", end = "2013-01-10")
+
+# Save it so we don't need to download it again 
+write_csv(x = gjoa_weatherold, "data/en_climate_daily_GJOA_1984-2013.csv")
+
+# Same for the new data
+gjoa_weathernew <- weather_dl(station_ids = 51079, start = "2013-01-11", end = "2023-03-01")
+
+# Save it so we don't need to download it again 
+#write_csv(x = gjoa_weathernew, "data/en_climate_daily_GJOA_2013-2023.csv")
+
+# Download data for Kugaaruk ----------------------------------------------------------
+# Do Kugaaruk next, which is at 68.534722, -89.825
+stations_search(coords = c(68.534, -89.825), dist = 20, interval = "day")
+
+# Download the oldest data. Once again, Pelly Bay changed it's name to Kugaaruk in 1992.
+kuga_weatherolder <- weather_dl(station_ids = 1718, start = "1957-01-01", end = "1992-05-31")
+
+# Save it so we don't need to download it again
+#write_csv(x = kuga_weatherolder, "data/en_climate_daily_KUGA_1957-1992.csv")
+
+# Download interim data. Looking at kuga_weatherolder it ends on 1992-05-31, so we set the next day as the start date
+kuga_weatherold <- weather_dl(station_ids = 1719, start = "1992-06-01", end = "2012-12-31")
+
+# Save it so don't need to download it again
+#write_csv(x = kuga_weatherold, "data/en_climate_daily_KUGA_1992-2012.csv")
+
+# Download more data, since the old data ends on 1992-05-31, we'll set the start date to end 
+kuga_weathernew <- weather_dl(station_ids = 53518, start = "2013-01-01", end = "2021-03-01")
+# Bummer. We have an issue. The data runs from 2013-01-01 to 2021-08-18. We need up until now.
+
+# Save it so we don't need to download it again
+write_csv(x = kuga_weathernew, "data/en_climate_daily_KUGA_2013-2021.csv")
+
+# Let's get that newer data too.
+kuga_weathernewer <- weather_dl(station_ids = 53518, start = "2021-08-19", end = "2023-03-01")
+
+# Save it so we don't need to download it again
+#write_csv(x = kuga_weathernewer, "data/en_climate_daily_KUGA_2021-2023.csv")
+
+# Process Cambridge Bay ----------------------------------------------------------
+# Start with fixing cbay data
+# Looking at the data:
+#  We need to stitch together hourly reporting from Cambridge Bay spanning 1953-01-01 to 2023-03-01
+#  We also have monthly reporting data from Cambridge Bay spanning 1949-01-01 to 1953-12-310
+
+# Let's start by loading the data and dropping anything with NA's in temp
 cbay_new <- cbay_weathernew %>%
+  drop_na(temp)
+
+# Let's combine all the hourly reports into a single day
+cbay_new <- cbay_new %>%
   select(date,time,temp) %>%
   group_by(date) %>%
   summarise(maxtemp = max(temp),mintemp = min(temp))
+# Great. We've used the hourly reporting data to produce a minimum mean temperature and maximum mean temperature
 
-# Make a copy of the old data
-cbay_copy <- cbay_weatherold %>%
-  select("Date/Time", "Mean Max Temp (°C)", "Mean Min Temp (°C)")
-
-# Change names so they're readable
-names(cbay_copy) <- c("date","maxtemp","mintemp")
-
-# Remove NA's because apparently 1929 was inconsistent AF. Up until 1950 at least.
-# As it turns out, having someone around to record the weather was important.
-cbay_copy <- cbay_copy %>%
-  drop_na(maxtemp)
-cbay_copy <- cbay_copy %>%
-  drop_na(mintemp)
-
-# Let's do some data preparation first though.
-cbay_dates <- cbay_copy$date
-cbay_dates <- ym(cbay_dates)
-
-# Re-combine with cbay_copy
-cbay_copy <- data.frame(
-  date = cbay_dates,
-  maxtemp = cbay_copy$maxtemp,
-  mintemp = cbay_copy$mintemp
-)
-
-# Before we join the new data and the old data, we want to average the data out even further by month instead of days.
-# Create a new column in cbay_new_compare from cbay_new
-cbay_new_compare <- cbay_new %>%
+# Create a new column, and we'll use it to join all the days within that month together by their mean min and  mean max 
+cbay_new <- cbay_new %>%
   mutate(
-    date_new = floor_date(cbay_new$date, "month"),
-    maxtemp = cbay_new$maxtemp,
-    mintemp = cbay_new$mintemp
+    date = floor_date(cbay_new$date, "month"),
+    mintemp = cbay_new$mintemp,
+    maxtemp = cbay_new$maxtemp
   )
 
-# Before we go on, remove some NA's
-cbay_new_compare <- cbay_new_compare %>%
-  drop_na(mintemp,maxtemp)
-
-# Try this way
-cbay_new_test <- cbay_new_compare %>%
-  group_by(date_new) %>%
+# Then we average out the mean maximum and mean minimum temperatures across days into months
+cbay_new <- cbay_new %>%
+  group_by(date) %>%
   summarise(across(c(mintemp,maxtemp), mean)) %>%
   mutate(
     mintemp = round(mintemp, digits = 1),
     maxtemp = round(maxtemp, digits = 1)
   )
 
-# Change from date_new to date
-names(cbay_new_test) <- c("date","mintemp","maxtemp")
+# Let's load the cbay_old data and remove NA's
+cbay_old <- cbay_weatherold %>%
+  drop_na(temp)
 
-# However, before we move on, we need to convert to year month again.
-cbay_new_dates <- cbay_new_test$date
+# Let's combine the hourly reports into daily reports
+cbay_old <- cbay_old %>%
+  select(date,time,temp) %>%
+  group_by(date) %>%
+  summarise(maxtemp = max(temp),mintemp = min(temp))
 
-# 
-cbay_new_test <- data.frame(
-  date = cbay_new_dates,
-  maxtemp = cbay_new_test$maxtemp,
-  mintemp = cbay_new_test$mintemp
+# Create a new column, and we'll use it to join all the days within that month together by their mean min and  mean max 
+cbay_old <- cbay_old %>%
+  mutate(
+    date = floor_date(cbay_old$date, "month"),
+    mintemp = cbay_old$mintemp,
+    maxtemp = cbay_old$maxtemp
+  )
+
+# Average out the reports to months too
+cbay_old <- cbay_old %>%
+  group_by(date) %>%
+  summarise(across(c(mintemp,maxtemp), mean)) %>%
+  mutate(
+    mintemp = round(mintemp, digits = 1),
+    maxtemp = round(maxtemp, digits = 1)
+  )
+
+# Let's load the cbay_older data
+cbay_older <- cbay_weatherolder %>%
+  drop_na(mean_max_temp,mean_min_temp)
+
+# We will also need to change the names
+cbay_older <- data.frame(
+  date = cbay_older$date,
+  maxtemp = cbay_older$mean_max_temp,
+  mintemp = cbay_older$mean_min_temp
 )
 
 # Alright, now we need to join them with our new data. 
-cbay_complete <- rbind(cbay_copy,cbay_new_test)
+cbay <- rbind(cbay_older,cbay_old,cbay_new)
 
-# Some garbage collection
-rm(cbay_new,cbay_copy,cbay_new_compare,cbay_weathernew,cbay_weatherold,cbay_new_test)
-rm(cbay_dates,cbay_new_dates)
+# Do some garbage collection
+rm(cbay_new,cbay_old,cbay_older)
 
-# Let's split cbay from complete data starting in 1949
-cbay <- cbay_complete %>%
-  filter(date >= "1949-01-01" & date <= "2023-01-01")
-
-# Very cool. Let's make another GGplot from 1949
+# Very cool. Let's make another GGplot from 1949 to 2023
 ggplot(cbay, aes(x = date, y = maxtemp)) +
   geom_line(color = "red") +
   geom_point(color = "red") +
@@ -125,51 +223,315 @@ ggplot(cbay, aes(x = date, y = maxtemp)) +
 # Here is a video from Dr Pat Schloss on reproducing a visualization of monthly temperature anomalies from NASA's Earth Observatory Earth Matters blog.
 # https://www.youtube.com/watch?v=DrNQMaIVEVo
 # In short, we don't necessarily want a chart showing the high's and low's. We want to visualize what the differences are over time.
-# Before we move onto that however, let's see if we have data from the other communites. Starting with Kugluktuk
+# Before we do that however, let's do the same thing with the other three communities and check that the graphs from the other communities are complete
 
-# Starting with Kugluktuk, which is positioned at 67.826667, -115.093333
-stations_search(coords = c(67.82, -115.09), dist = 20, interval = "day")
+# Process Kugluktuk ----------------------------------------------------------
+# Let's start by loading the data and dropping anything with NA's in temp
+kugl_new <- kugl_weathernew %>%
+  drop_na(temp)
 
-# The data from Kugluktuk seems to have the same issue, these weather data span from 1977 to 2014.
-# Note: Coppermine was the name of the community prior to it's change to Kugluktuk on Jan 1st 1996.
-kugl_weatherold <- weather_dl(station_ids = 1641, start = "1977-01-01", end = "2014-12-31")
+# Let's combine all the hourly reports into a single day
+kugl_new <- kugl_new %>%
+  select(date,time,temp) %>%
+  group_by(date) %>%
+  summarise(maxtemp = max(temp),mintemp = min(temp))
+# Great. We've used the hourly reporting data to produce a minimum mean temperature and maximum mean temperature
 
-# Save it so we don't need to download it again
-#write_csv(x = kugl_weatherold, "data/en_climate_daily_KUGL_1977-2014.csv")
+# Create a new column, and we'll use it to join all the days within that month together by their mean min and  mean max 
+kugl_new <- kugl_new %>%
+  mutate(
+    date = floor_date(kugl_new$date, "month"),
+    mintemp = kugl_new$mintemp,
+    maxtemp = kugl_new$maxtemp
+  )
 
-# Let's download the new data too.
-kugl_weathernew <- weather_dl(station_ids = 53335, start = "2014-01-01", end = "2023-01-01")
+# Then we average out the mean maximum and mean minimum temperatures across days into months
+kugl_new <- kugl_new %>%
+  group_by(date) %>%
+  summarise(across(c(mintemp,maxtemp), mean)) %>%
+  mutate(
+    mintemp = round(mintemp, digits = 1),
+    maxtemp = round(maxtemp, digits = 1)
+  )
 
-# Save it so we don't need to download it again
-#write_csv(x = kugl_weathernew, "data/en_climate_daily_KUGL_2014-2023.csv")
+# Let's load the kugl_old data and remove NA's
+kugl_old <- kugl_weatherold %>%
+  drop_na(temp)
 
-# Next let's do the same for Gjoa Haven, which is at 68.625, -95.877778
-stations_search(coords = c(68.625, -95.8777), dist = 20, interval = "day")
+# Let's combine the hourly reports into daily reports
+kugl_old <- kugl_old %>%
+  select(date,time,temp) %>%
+  group_by(date) %>%
+  summarise(maxtemp = max(temp),mintemp = min(temp))
 
-# Download that data
-gjoa_weatherold <- weather_dl(station_ids = 1715, start = "1984-01-01", end = "2014-12-31")
+# Create a new column, and we'll use it to join all the days within that month together by their mean min and  mean max 
+kugl_old <- kugl_old %>%
+  mutate(
+    date = floor_date(kugl_old$date, "month"),
+    mintemp = kugl_old$mintemp,
+    maxtemp = kugl_old$maxtemp
+  )
 
-# Save it so we don't need to download it again 
-#write_csv(x = gjoa_weatherold, "data/en_climate_daily_GJOA_1984-2014.csv")
+# Average out the reports to months too
+kugl_old <- kugl_old %>%
+  group_by(date) %>%
+  summarise(across(c(mintemp,maxtemp), mean)) %>%
+  mutate(
+    mintemp = round(mintemp, digits = 1),
+    maxtemp = round(maxtemp, digits = 1)
+  )
 
-# Same for the new data
-gjoa_weathernew <- weather_dl(station_ids = 51079, start = "2014-01-01", end = "2023-01-01")
+# Let's load the kugl_older data
+kugl_older <- kugl_weatherolder %>%
+  drop_na(temp)
 
-# Save it so we don't need to download it again 
-#write_csv(x = gjoa_weathernew, "data/en_climate_daily_GJOA_2014-2023.csv")
+# Let's combine the hourly reports into daily reports
+kugl_older <- kugl_older %>%
+  select(date,time,temp) %>%
+  group_by(date) %>%
+  summarise(maxtemp = max(temp),mintemp = min(temp))
 
-# Do Kugaaruk next, which is at 68.534722, -89.825
-stations_search(coords = c(68.534, -89.825), dist = 20, interval = "day")
+# Create a new column, and we'll use it to join all the days within that month together by their mean min and  mean max 
+kugl_older <- kugl_older %>%
+  mutate(
+    date = floor_date(kugl_older$date, "month"),
+    mintemp = kugl_older$mintemp,
+    maxtemp = kugl_older$maxtemp
+  )
 
-# Download the oldest data
-kuga_weatherold <- weather_dl(station_ids = 1718, start = "1957-01-01", end = "1992-12-31")
+# Average out the reports to months too
+kugl_older <- kugl_older %>%
+  group_by(date) %>%
+  summarise(across(c(mintemp,maxtemp), mean)) %>%
+  mutate(
+    mintemp = round(mintemp, digits = 1),
+    maxtemp = round(maxtemp, digits = 1)
+  )
 
-# Save it so we don't need to download it again
-#write_csv(x = kuga_weatherold, "data/en_climate_daily_KUGA_1957-1992.csv")
+# Alright, now we need to join them with our new data. 
+kugl <- rbind(kugl_older,kugl_old,kugl_new)
 
-# Download more data
-kuga_weathernew <- weather_dl(station_ids = 10847, start = "1994-01-01", end = "2023-01-01")
+# Do some garbage collection
+rm(kugl_new,kugl_old,kugl_older)
 
-# Save it so we don't need to download it again
-#write_csv(x = kuga_weathernew, "data/en_climate_daily_KUGA_1994-2023.csv")
+# Very cool. Let's make another GGplot from 1953 to 2023
+ggplot(kugl, aes(x = date, y = maxtemp)) +
+  geom_line(color = "red") +
+  geom_point(color = "red") +
+  geom_line(aes(y = mintemp), color = "blue") +
+  geom_line(aes(y = mintemp), color = "blue") +
+  scale_x_date(breaks = as.Date(c("1950-01-01","1955-01-01","1960-01-01","1965-01-01","1970-01-01","1975-01-01","1980-01-01","1985-01-01",
+                                  "1990-01-01","1995-01-01","2000-01-01","2005-01-01","2010-01-01","2015-01-01","2020-01-01","2023-01-01")),
+               minor_breaks = as.Date(c("1949-01-01")),
+               date_labels = "%Y") +
+  scale_y_continuous(breaks = as.integer(c(-45,-40,-35,-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,34,40))) +
+  labs(x = "Date", y = "Temperature", title="Temperature Chart for Kugluktuk")
 
+# Process Gjoa Haven ----------------------------------------------------------
+# Let's start by loading the data and dropping anything with NA's in temp
+gjoa_new <- gjoa_weathernew %>%
+  drop_na(temp)
+
+# Let's combine all the hourly reports into a single day
+gjoa_new <- gjoa_new %>%
+  select(date,time,temp) %>%
+  group_by(date) %>%
+  summarise(maxtemp = max(temp),mintemp = min(temp))
+# Great. We've used the hourly reporting data to produce a minimum mean temperature and maximum mean temperature
+
+# Create a new column, and we'll use it to join all the days within that month together by their mean min and  mean max 
+gjoa_new <- gjoa_new %>%
+  mutate(
+    date = floor_date(gjoa_new$date, "month"),
+    mintemp = gjoa_new$mintemp,
+    maxtemp = gjoa_new$maxtemp
+  )
+
+# Then we average out the mean maximum and mean minimum temperatures across days into months
+gjoa_new <- gjoa_new %>%
+  group_by(date) %>%
+  summarise(across(c(mintemp,maxtemp), mean)) %>%
+  mutate(
+    mintemp = round(mintemp, digits = 1),
+    maxtemp = round(maxtemp, digits = 1)
+  )
+
+# Let's load the gjoa_old data and remove NA's
+gjoa_old <- gjoa_weatherold %>%
+  drop_na(temp)
+
+# Let's combine the hourly reports into daily reports
+gjoa_old <- gjoa_old %>%
+  select(date,time,temp) %>%
+  group_by(date) %>%
+  summarise(maxtemp = max(temp),mintemp = min(temp))
+
+# Create a new column, and we'll use it to join all the days within that month together by their mean min and  mean max 
+gjoa_old <- gjoa_old %>%
+  mutate(
+    date = floor_date(gjoa_old$date, "month"),
+    mintemp = gjoa_old$mintemp,
+    maxtemp = gjoa_old$maxtemp
+  )
+
+# Average out the reports to months too
+gjoa_old <- gjoa_old %>%
+  group_by(date) %>%
+  summarise(across(c(mintemp,maxtemp), mean)) %>%
+  mutate(
+    mintemp = round(mintemp, digits = 1),
+    maxtemp = round(maxtemp, digits = 1)
+  )
+
+# Alright, now we need to join them with our new data. 
+gjoa <- rbind(gjoa_old,gjoa_new)
+
+# Do some garbage collection
+rm(gjoa_new,gjoa_old)
+
+# Very cool. Let's make another GGplot from 1953 to 2023
+ggplot(gjoa, aes(x = date, y = maxtemp)) +
+  geom_line(color = "red") +
+  geom_point(color = "red") +
+  geom_line(aes(y = mintemp), color = "blue") +
+  geom_line(aes(y = mintemp), color = "blue") +
+  scale_x_date(breaks = as.Date(c("1950-01-01","1955-01-01","1960-01-01","1965-01-01","1970-01-01","1975-01-01","1980-01-01","1985-01-01",
+                                  "1990-01-01","1995-01-01","2000-01-01","2005-01-01","2010-01-01","2015-01-01","2020-01-01","2023-01-01")),
+               minor_breaks = as.Date(c("1949-01-01")),
+               date_labels = "%Y") +
+  scale_y_continuous(breaks = as.integer(c(-45,-40,-35,-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,34,40))) +
+  labs(x = "Date", y = "Temperature", title="Temperature Chart for Gjoa Haven")
+
+# Process kuga Haven ----------------------------------------------------------
+# Let's start by loading the data and dropping anything with NA's in temp
+kuga_new <- kuga_weathernew %>%
+  drop_na(temp)
+
+# Check for the missing dates
+kuga_test <- kuga_weathernew %>%
+  filter(date >= "2019-09-01" & date <= "2021-08-31")
+
+# Let's combine all the hourly reports into a single day
+kuga_new <- kuga_new %>%
+  select(date,time,temp) %>%
+  group_by(date) %>%
+  summarise(maxtemp = max(temp),mintemp = min(temp))
+# Great. We've used the hourly reporting data to produce a minimum mean temperature and maximum mean temperature
+
+# Create a new column, and we'll use it to join all the days within that month together by their mean min and  mean max 
+kuga_new <- kuga_new %>%
+  mutate(
+    date = floor_date(kuga_new$date, "month"),
+    mintemp = kuga_new$mintemp,
+    maxtemp = kuga_new$maxtemp
+  )
+
+# Then we average out the mean maximum and mean minimum temperatures across days into months
+kuga_new <- kuga_new %>%
+  group_by(date) %>%
+  summarise(across(c(mintemp,maxtemp), mean)) %>%
+  mutate(
+    mintemp = round(mintemp, digits = 1),
+    maxtemp = round(maxtemp, digits = 1)
+  )
+
+# Let's start by loading the data and dropping anything with NA's in temp
+kuga_newer <- kuga_weathernewer %>%
+  drop_na(temp)
+
+# Let's combine all the hourly reports into a single day
+kuga_newer <- kuga_newer %>%
+  select(date,time,temp) %>%
+  group_by(date) %>%
+  summarise(maxtemp = max(temp),mintemp = min(temp))
+# Great. We've used the hourly reporting data to produce a minimum mean temperature and maximum mean temperature
+
+# Create a new column, and we'll use it to join all the days within that month together by their mean min and  mean max 
+kuga_newer <- kuga_newer %>%
+  mutate(
+    date = floor_date(kuga_newer$date, "month"),
+    mintemp = kuga_newer$mintemp,
+    maxtemp = kuga_newer$maxtemp
+  )
+
+# Then we average out the mean maximum and mean minimum temperatures across days into months
+kuga_newer <- kuga_newer %>%
+  group_by(date) %>%
+  summarise(across(c(mintemp,maxtemp), mean)) %>%
+  mutate(
+    mintemp = round(mintemp, digits = 1),
+    maxtemp = round(maxtemp, digits = 1)
+  )
+
+# Let's load the kuga_old data and remove NA's
+kuga_old <- kuga_weatherold %>%
+  drop_na(temp)
+
+# Let's combine the hourly reports into daily reports
+kuga_old <- kuga_old %>%
+  select(date,time,temp) %>%
+  group_by(date) %>%
+  summarise(maxtemp = max(temp),mintemp = min(temp))
+
+# Create a new column, and we'll use it to join all the days within that month together by their mean min and  mean max 
+kuga_old <- kuga_old %>%
+  mutate(
+    date = floor_date(kuga_old$date, "month"),
+    mintemp = kuga_old$mintemp,
+    maxtemp = kuga_old$maxtemp
+  )
+
+# Average out the reports to months too
+kuga_old <- kuga_old %>%
+  group_by(date) %>%
+  summarise(across(c(mintemp,maxtemp), mean)) %>%
+  mutate(
+    mintemp = round(mintemp, digits = 1),
+    maxtemp = round(maxtemp, digits = 1)
+  )
+
+# Let's load the kuga_old data and remove NA's
+kuga_older <- kuga_weatherolder %>%
+  drop_na(temp)
+
+# Let's combine the hourly reports into daily reports
+kuga_older <- kuga_older %>%
+  select(date,time,temp) %>%
+  group_by(date) %>%
+  summarise(maxtemp = max(temp),mintemp = min(temp))
+
+# Create a new column, and we'll use it to join all the days within that month together by their mean min and  mean max 
+kuga_older <- kuga_older %>%
+  mutate(
+    date = floor_date(kuga_older$date, "month"),
+    mintemp = kuga_older$mintemp,
+    maxtemp = kuga_older$maxtemp
+  )
+
+# Average out the reports to months too
+kuga_older <- kuga_older %>%
+  group_by(date) %>%
+  summarise(across(c(mintemp,maxtemp), mean)) %>%
+  mutate(
+    mintemp = round(mintemp, digits = 1),
+    maxtemp = round(maxtemp, digits = 1)
+  )
+
+# Alright, now we need to join them with our new data. 
+kuga <- rbind(kuga_older,kuga_old,kuga_new,kuga_newer)
+
+# Do some garbage collection
+rm(kuga_older,kuga_old,kuga_new,kuga_newer)
+
+# Very cool. Let's make another GGplot from 1953 to 2023
+ggplot(kuga, aes(x = date, y = maxtemp)) +
+  geom_line(color = "red") +
+  geom_point(color = "red") +
+  geom_line(aes(y = mintemp), color = "blue") +
+  geom_line(aes(y = mintemp), color = "blue") +
+  scale_x_date(breaks = as.Date(c("1950-01-01","1955-01-01","1960-01-01","1965-01-01","1970-01-01","1975-01-01","1980-01-01","1985-01-01",
+                                  "1990-01-01","1995-01-01","2000-01-01","2005-01-01","2010-01-01","2015-01-01","2020-01-01","2023-01-01")),
+               minor_breaks = as.Date(c("1949-01-01")),
+               date_labels = "%Y") +
+  scale_y_continuous(breaks = as.integer(c(-45,-40,-35,-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,34,40))) +
+  labs(x = "Date", y = "Temperature", title="Temperature Chart for Kugaaruk")
