@@ -530,3 +530,20 @@ ggplot(kuga, aes(x = date, y = maxtemp)) +
                date_labels = "%Y") +
   scale_y_continuous(breaks = as.integer(c(-45,-40,-35,-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,34,40))) +
   labs(x = "Date", y = "Temperature", title="Temperature Chart for Kugaaruk")
+
+# Now for the fun stuff ----------------------------------------------------------
+# We're going to use this temperature date to plot the mean maximum temperature over and over again
+
+# Let's start with Cambridge Bay
+test_cbay <- cbay %>%
+  mutate(year = year(cbay$date),
+    month = month(cbay$date),
+    month = month.abb[month],
+    maxtemp = cbay$maxtemp,
+    mintemp = cbay$mintemp) %>%
+  select(year,month,maxtemp,mintemp) %>%
+  mutate(month = factor(month, levels = month.abb))
+
+test_cbay %>%
+  ggplot(aes(x = month, y = maxtemp, group=year)) +
+  geom_line()
