@@ -100,7 +100,7 @@ gjoa_weathernew <- weather_dl(station_ids = 51079, start = "2013-01-11", end = "
 
 # Download data for Kugaaruk ----------------------------------------------------------
 # Do Kugaaruk next, which is at 68.534722, -89.825
-stations_search(coords = c(68.534, -89.825), dist = 20, interval = "day")
+stations_search(coords = c(68.534, -89.825), dist = 20, interval = "hour")
 
 # Download the oldest data. Once again, Pelly Bay changed it's name to Kugaaruk in 1992.
 kuga_weatherolder <- weather_dl(station_ids = 1718, start = "1957-01-01", end = "1992-05-31")
@@ -114,18 +114,17 @@ kuga_weatherold <- weather_dl(station_ids = 1719, start = "1992-06-01", end = "2
 # Save it so don't need to download it again
 #write_csv(x = kuga_weatherold, "data/en_climate_daily_KUGA_1992-2012.csv")
 
-# Download more data, since the old data ends on 1992-05-31, we'll set the start date to end 
-kuga_weathernew <- weather_dl(station_ids = 53518, start = "2013-01-01", end = "2021-03-01")
-# Bummer. We have an issue. The data runs from 2013-01-01 to 2021-08-18. We need up until now.
-
-# Save it so we don't need to download it again
-write_csv(x = kuga_weathernew, "data/en_climate_daily_KUGA_2013-2021.csv")
-
 # Let's get that newer data too.
-kuga_weathernewer <- weather_dl(station_ids = 53518, start = "2021-08-19", end = "2023-03-01")
+kuga_weathernew <- weather_dl(station_ids = 10847, start = "2013-01-01", end = "2015-02-12")
 
 # Save it so we don't need to download it again
-#write_csv(x = kuga_weathernewer, "data/en_climate_daily_KUGA_2021-2023.csv")
+#write_csv(x = kuga_weathernew, "data/en_climate_daily_KUGA_2013-2015.csv")
+
+# Download more data, since the old data ends on 1992-05-31, we'll set the start date to end 
+kuga_weathernewer <- weather_dl(station_ids = 53518, start = "2015-02-12", end = "2023-03-01")
+
+# Save it so we don't need to download it again
+#write_csv(x = kuga_weathernewer, "data/en_climate_daily_KUGA_2015-2023.csv")
 
 # Process Cambridge Bay ----------------------------------------------------------
 # Start with fixing cbay data
@@ -389,7 +388,7 @@ gjoa <- rbind(gjoa_old,gjoa_new)
 # Do some garbage collection
 rm(gjoa_new,gjoa_old)
 
-# Very cool. Let's make another GGplot from 1953 to 2023
+# Very cool. Let's make another GGplot from 1985 to 2023
 ggplot(gjoa, aes(x = date, y = maxtemp)) +
   geom_line(color = "red") +
   geom_point(color = "red") +
@@ -406,10 +405,6 @@ ggplot(gjoa, aes(x = date, y = maxtemp)) +
 # Let's start by loading the data and dropping anything with NA's in temp
 kuga_new <- kuga_weathernew %>%
   drop_na(temp)
-
-# Check for the missing dates
-kuga_test <- kuga_weathernew %>%
-  filter(date >= "2019-09-01" & date <= "2021-08-31")
 
 # Let's combine all the hourly reports into a single day
 kuga_new <- kuga_new %>%
@@ -523,7 +518,7 @@ kuga <- rbind(kuga_older,kuga_old,kuga_new,kuga_newer)
 # Do some garbage collection
 rm(kuga_older,kuga_old,kuga_new,kuga_newer)
 
-# Very cool. Let's make another GGplot from 1953 to 2023
+# Very cool. Let's make another GGplot from 1957 to 2023
 ggplot(kuga, aes(x = date, y = maxtemp)) +
   geom_line(color = "red") +
   geom_point(color = "red") +
