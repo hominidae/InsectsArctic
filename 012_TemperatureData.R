@@ -560,9 +560,9 @@ ggplot(kuga, aes(x = date, y = maxtemp)) +
   labs(x = "Date", y = "Temperature", title="Temperature Chart for Kugaaruk")
 
 # Now for the fun stuff ----------------------------------------------------------
-# We're going to use this temperature date to plot the mean maximum temperature over and over again
 
-# Let's start with Cambridge Bay
+# Test animation
+# Let's start with Cambridge Bay.
 test_cbay <- cbay %>%
   mutate(year = year(cbay$date),
     month = month(cbay$date),
@@ -571,8 +571,6 @@ test_cbay <- cbay %>%
     mintemp = cbay$mintemp) %>%
   select(year,month,maxtemp,mintemp) %>%
   mutate(month = factor(month, levels = month.abb))
-
-test_cbay = data.frame(test_cbay)
 
 p <- test_cbay %>%
   ggplot(aes(x = month, y = maxtemp, group=year)) +
@@ -587,3 +585,167 @@ animate(a, width=6, height=4, unit="in", res=300)
 
 # Save it
 anim_save("fig/cbay_monthlytemperature.gif", a)
+
+# Let's get serious though ----------------------------------------------------------
+# We need to generate for each community, an average mean temperature from the start of the data to the end of the data
+# For Cambridge Bay, it's the monthly average from 1949 to 2015
+
+# So let's select the months that exist between those years to produce something can can compare the annual difference to
+# I'm not the smarted tool in the shed, so I'm going to do this in an incredibly crude way.
+# Start with Jan
+target_cbay_jan <- test_cbay %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1949 & year <= 2015) %>%
+  filter(month == "Jan") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Feb
+target_cbay_feb <- test_cbay %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1949 & year <= 2015) %>%
+  filter(month == "Feb") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Mar
+target_cbay_mar <- test_cbay %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1949 & year <= 2015) %>%
+  filter(month == "Mar") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Apr
+target_cbay_apr <- test_cbay %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1949 & year <= 2015) %>%
+  filter(month == "Apr") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do May
+target_cbay_may <- test_cbay %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1949 & year <= 2015) %>%
+  filter(month == "May") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Jun
+target_cbay_jun <- test_cbay %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1949 & year <= 2015) %>%
+  filter(month == "Jun") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Jul
+target_cbay_jul <- test_cbay %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1949 & year <= 2015) %>%
+  filter(month == "Jul") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Aug
+target_cbay_aug <- test_cbay %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1949 & year <= 2015) %>%
+  filter(month == "Aug") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Sep
+target_cbay_sep <- test_cbay %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1949 & year <= 2015) %>%
+  filter(month == "Sep") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Oct
+target_cbay_oct <- test_cbay %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1949 & year <= 2015) %>%
+  filter(month == "Oct") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Nov
+target_cbay_nov <- test_cbay %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1949 & year <= 2015) %>%
+  filter(month == "Nov") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Dec
+target_cbay_dec <- test_cbay %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1949 & year <= 2015) %>%
+  filter(month == "Dec") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+
+# Next, make a new data frame with those values
+maxavg_cbay <- data.frame(
+  Jan = c(target_cbay_jan$maxavg[1]),
+  Feb = c(target_cbay_feb$maxavg[1]),
+  Mar = c(target_cbay_mar$maxavg[1]),
+  Apr = c(target_cbay_apr$maxavg[1]),
+  May = c(target_cbay_may$maxavg[1]),
+  Jun = c(target_cbay_jun$maxavg[1]),
+  Jul = c(target_cbay_jul$maxavg[1]),
+  Aug = c(target_cbay_aug$maxavg[1]),
+  Sep = c(target_cbay_sep$maxavg[1]),
+  Oct = c(target_cbay_oct$maxavg[1]),
+  Nov = c(target_cbay_nov$maxavg[1]),
+  Dec = c(target_cbay_dec$maxavg[1])
+) %>%
+  pivot_longer(-0,names_to = "month", values_to = "maxavg")
+# Let's do the same with the min averages
+minavg_cbay <- data.frame(
+  Jan = c(target_cbay_jan$minavg[1]),
+  Feb = c(target_cbay_feb$minavg[1]),
+  Mar = c(target_cbay_mar$minavg[1]),
+  Apr = c(target_cbay_apr$minavg[1]),
+  May = c(target_cbay_may$minavg[1]),
+  Jun = c(target_cbay_jun$minavg[1]),
+  Jul = c(target_cbay_jul$minavg[1]),
+  Aug = c(target_cbay_aug$minavg[1]),
+  Sep = c(target_cbay_sep$minavg[1]),
+  Oct = c(target_cbay_oct$minavg[1]),
+  Nov = c(target_cbay_nov$minavg[1]),
+  Dec = c(target_cbay_dec$minavg[1])
+) %>%
+  pivot_longer(-0,names_to = "month", values_to = "minavg")
+# Let's bind 'em together
+cbay_avg <- inner_join(minavg_cbay,maxavg_cbay, by="month")
+# Let's do some garbage collection
+rm(target_cbay_jan,target_cbay_feb,target_cbay_mar,target_cbay_apr,target_cbay_may,target_cbay_jun,target_cbay_jul,target_cbay_aug,target_cbay_sep,target_cbay_oct,target_cbay_nov,target_cbay_dec)
+rm(maxavg_cbay,minavg_cbay)
+
+# That was a lot of work. Why are what should be intuitively easy solutions sometimes impossible to think of?
+# Let's produce another data frame where we take the reported values for every year and create a new column called t_diff?
+# Before we do that, let's maybe round to a nice nearest decimal place
+cbay_avg <- cbay_avg %>%
+  mutate(
+    minavg = round(minavg, digits = 1),
+    maxavg = round(maxavg, digits = 1)
+  )
+
+# If it looks stupid and like it's a really long way of doing something, that's generally a sign I haven't thought of a better way of doing it. Alas, here we are.
