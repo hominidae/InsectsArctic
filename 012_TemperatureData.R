@@ -28,7 +28,7 @@ cbay_weatherold <- weather_dl(station_ids = 1786, start = "1953-01-01", end ="20
 #write_csv(x = cbay_weatherold, "data/en_climate_daily_CBAY_1953-2015.csv")
 
 # And reload it if necessary
-#cbay_weatherold <- read_csv("data/en_climate_daily_CBAY_1953-2015.csv")
+cbay_weatherold <- read_csv("data/en_climate_daily_CBAY_1953-2015.csv")
 
 # Let's repeat the search but select "day" and see if data exists for that period.
 stations_search(coords = c(69, -105), dist = 20, interval = "month")
@@ -42,7 +42,7 @@ cbay_weatherolder <- weather_dl(station_ids = 1786, start = "1949-01-01", end = 
 #write_csv(x = cbay_weatherolder, "data/en_climate_monthly_CBAY_1949-1953.csv")
 
 # And reload it if necessary
-#cbay_weatherolder <- read_csv("data/en_climate_monthly_CBAY_1949-1953.csv")
+cbay_weatherolder <- read_csv("data/en_climate_monthly_CBAY_1949-1953.csv")
 
 # Great! We have data that we can combine with our old data.
 # Let's download the new weather data and add it to a data frame. Since the 1929 - 2015 data set ended on 2015-02-12, we'll need from that date onwards.
@@ -52,7 +52,7 @@ cbay_weathernew <- weather_dl(station_ids = 53512, start = "2015-02-13", end = "
 #write_csv(x = cbay_weathernew, "data/en_climate_daily_CBAY_2015-2023.csv")
 
 # And reload it if necessary
-#cbay_weathernew <- read_csv("data/en_climate_daily_CBAY_2015-2023.csv")
+cbay_weathernew <- read_csv("data/en_climate_daily_CBAY_2015-2023.csv")
 
 # Download data for Kugluktuk ----------------------------------------------------------
 # Starting with Kugluktuk, which is positioned at 67.826667, -115.093333
@@ -66,17 +66,26 @@ kugl_weatherolder <- weather_dl(station_ids = 1640, start = "1930-01-01", end = 
 # Let's save it so we can use it later.
 #write_csv(x = kugl_weatherolder, "data/en_climate_daily_KUGL_1930-1977.csv")
 
+# And reload it if necessary
+kugl_weatherolder <- read_csv("data/en_climate_daily_KUGL_1930-1977.csv")
+
 # We also have data from the end of 1977 to the end of 2014.
 kugl_weatherold <- weather_dl(station_ids = 1641, start ="1978-01-01", end = "2014-12-31")
 
 # Save it so we don't need to download it again
 #write_csv(x = kugl_weatherold, "data/en_climate_daily_KUGL_1978-2014.csv")
 
+# And reload it if necessary
+kugl_weatherold <- read_csv("data/en_climate_daily_KUGL_1978-2014.csv")
+
 # Let's download the new data too.
 kugl_weathernew <- weather_dl(station_ids = 53335, start = "2014-12-05", end = "2023-03-01")
 
 # Save it so we don't need to download it again
 #write_csv(x = kugl_weathernew, "data/en_climate_daily_KUGL_2015-2023.csv")
+
+# And reload it if necessary
+kugl_weathernew <- read_csv("data/en_climate_daily_KUGL_2015-2023.csv")
 
 # Download data for Gjoa Haven ----------------------------------------------------------
 # Next let's do the same for Gjoa Haven, which is at 68.625, -95.877778
@@ -91,13 +100,19 @@ stations_search(coords = c(68.625, -95.8777), dist = 20, interval = "day")
 gjoa_weatherold <- weather_dl(station_ids = 1715, start = "1984-01-01", end = "2013-01-10")
 
 # Save it so we don't need to download it again 
-write_csv(x = gjoa_weatherold, "data/en_climate_daily_GJOA_1984-2013.csv")
+#write_csv(x = gjoa_weatherold, "data/en_climate_daily_GJOA_1984-2013.csv")
+
+# And reload it if necessary
+gjoa_weatherold <- read_csv("data/en_climate_daily_GJOA_1984-2013.csv")
 
 # Same for the new data
 gjoa_weathernew <- weather_dl(station_ids = 51079, start = "2013-01-11", end = "2023-03-01")
 
 # Save it so we don't need to download it again 
 #write_csv(x = gjoa_weathernew, "data/en_climate_daily_GJOA_2013-2023.csv")
+
+# And reload it if necessary
+gjoa_weathernew <- read_csv("data/en_climate_daily_GJOA_2013-2023.csv")
 
 # Download data for Kugaaruk ----------------------------------------------------------
 # Do Kugaaruk next, which is at 68.534722, -89.825
@@ -109,11 +124,17 @@ kuga_weatherolder <- weather_dl(station_ids = 1718, start = "1957-01-01", end = 
 # Save it so we don't need to download it again
 #write_csv(x = kuga_weatherolder, "data/en_climate_daily_KUGA_1957-1992.csv")
 
+# And reload it if necessary
+kuga_weatherolder <- read_csv("data/en_climate_daily_KUGA_1957-1992.csv")
+
 # Download interim data. Looking at kuga_weatherolder it ends on 1992-05-31, so we set the next day as the start date
 kuga_weatherold <- weather_dl(station_ids = 1719, start = "1992-06-01", end = "2012-12-31")
 
 # Save it so don't need to download it again
 #write_csv(x = kuga_weatherold, "data/en_climate_daily_KUGA_1992-2012.csv")
+
+# And reload it if necessary
+kuga_weatherold <- read_csv("data/en_climate_daily_KUGA_1992-2012.csv")
 
 # Let's get that newer data too.
 kuga_weathernew <- weather_dl(station_ids = 10847, start = "2013-01-01", end = "2015-02-12")
@@ -121,11 +142,17 @@ kuga_weathernew <- weather_dl(station_ids = 10847, start = "2013-01-01", end = "
 # Save it so we don't need to download it again
 #write_csv(x = kuga_weathernew, "data/en_climate_daily_KUGA_2013-2015.csv")
 
+# And reload it if necessary
+kuga_weathernew <- read_csv("data/en_climate_daily_KUGA_2013-2015.csv")
+
 # Download more data, since the old data ends on 1992-05-31, we'll set the start date to end 
 kuga_weathernewer <- weather_dl(station_ids = 53518, start = "2015-02-12", end = "2023-03-01")
 
 # Save it so we don't need to download it again
 #write_csv(x = kuga_weathernewer, "data/en_climate_daily_KUGA_2015-2023.csv")
+
+# And reload it if necessary
+kuga_weathernewer <- read_csv("data/en_climate_daily_KUGA_2015-2023.csv")
 
 # Process Cambridge Bay ----------------------------------------------------------
 # Start with fixing cbay data
@@ -555,5 +582,8 @@ a <- p +
   geom_label(aes(x = 7, y = 0, label=year), fontface="bold", label.size=0) +
   transition_manual(year, cumulative = TRUE)
 
+# Create animation
 animate(a, width=6, height=4, unit="in", res=300)
-anim_save("fig/month.gif")
+
+# Save it
+anim_save("fig/cbay_monthlytemperature.gif", a)
