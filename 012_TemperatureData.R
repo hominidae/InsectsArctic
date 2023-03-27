@@ -832,3 +832,514 @@ rm(cbay_jan,cbay_feb,cbay_mar,cbay_apr,cbay_may,cbay_jun,cbay_jul,cbay_aug,cbay_
 # Right, let's sort that by year and month
 cbay_data <- cbay_data %>%
   arrange(year,month)
+# Great. We did that for Cambridge Bay. Let's do it for Kugluktuk, Gjoa Haven, and Kugaaruk too.
+
+# Let's do Kugluktuk ----------------------------------------------------------
+#The data spans from 1953 to 2023
+
+# Start by making a tailoured copy of kugl
+test_kugl <- kugl %>%
+  mutate(year = year(kugl$date),
+         month = month(kugl$date),
+         month = month.abb[month],
+         maxtemp = kugl$maxtemp,
+         mintemp = kugl$mintemp) %>%
+  select(year,month,maxtemp,mintemp) %>%
+  mutate(month = factor(month, levels = month.abb))
+
+# Start with Jan
+target_kugl_jan <- test_kugl %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1953 & year <= 2015) %>%
+  filter(month == "Jan") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Feb
+target_kugl_feb <- test_kugl %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1953 & year <= 2015) %>%
+  filter(month == "Feb") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Mar
+target_kugl_mar <- test_kugl %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1953 & year <= 2015) %>%
+  filter(month == "Mar") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Apr
+target_kugl_apr <- test_kugl %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1953 & year <= 2015) %>%
+  filter(month == "Apr") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do May
+target_kugl_may <- test_kugl %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1953 & year <= 2015) %>%
+  filter(month == "May") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Jun
+target_kugl_jun <- test_kugl %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1953 & year <= 2015) %>%
+  filter(month == "Jun") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Jul
+target_kugl_jul <- test_kugl %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1953 & year <= 2015) %>%
+  filter(month == "Jul") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Aug
+target_kugl_aug <- test_kugl %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1953 & year <= 2015) %>%
+  filter(month == "Aug") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Sep
+target_kugl_sep <- test_kugl %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1953 & year <= 2015) %>%
+  filter(month == "Sep") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Oct
+target_kugl_oct <- test_kugl %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1953 & year <= 2015) %>%
+  filter(month == "Oct") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Nov
+target_kugl_nov <- test_kugl %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1953 & year <= 2015) %>%
+  filter(month == "Nov") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Dec
+target_kugl_dec <- test_kugl %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1953 & year <= 2015) %>%
+  filter(month == "Dec") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+
+# Next, make a new data frame with those values
+maxavg_kugl <- data.frame(
+  Jan = c(target_kugl_jan$maxavg[1]),
+  Feb = c(target_kugl_feb$maxavg[1]),
+  Mar = c(target_kugl_mar$maxavg[1]),
+  Apr = c(target_kugl_apr$maxavg[1]),
+  May = c(target_kugl_may$maxavg[1]),
+  Jun = c(target_kugl_jun$maxavg[1]),
+  Jul = c(target_kugl_jul$maxavg[1]),
+  Aug = c(target_kugl_aug$maxavg[1]),
+  Sep = c(target_kugl_sep$maxavg[1]),
+  Oct = c(target_kugl_oct$maxavg[1]),
+  Nov = c(target_kugl_nov$maxavg[1]),
+  Dec = c(target_kugl_dec$maxavg[1])
+) %>%
+  pivot_longer(-0,names_to = "month", values_to = "maxavg")
+# Let's do the same with the min averages
+minavg_kugl <- data.frame(
+  Jan = c(target_kugl_jan$minavg[1]),
+  Feb = c(target_kugl_feb$minavg[1]),
+  Mar = c(target_kugl_mar$minavg[1]),
+  Apr = c(target_kugl_apr$minavg[1]),
+  May = c(target_kugl_may$minavg[1]),
+  Jun = c(target_kugl_jun$minavg[1]),
+  Jul = c(target_kugl_jul$minavg[1]),
+  Aug = c(target_kugl_aug$minavg[1]),
+  Sep = c(target_kugl_sep$minavg[1]),
+  Oct = c(target_kugl_oct$minavg[1]),
+  Nov = c(target_kugl_nov$minavg[1]),
+  Dec = c(target_kugl_dec$minavg[1])
+) %>%
+  pivot_longer(-0,names_to = "month", values_to = "minavg")
+# Let's bind 'em together
+kugl_avg <- inner_join(minavg_kugl,maxavg_kugl, by="month")
+# Let's do some garbage collection
+rm(target_kugl_jan,target_kugl_feb,target_kugl_mar,target_kugl_apr,target_kugl_may,target_kugl_jun,target_kugl_jul,target_kugl_aug,target_kugl_sep,target_kugl_oct,target_kugl_nov,target_kugl_dec)
+rm(maxavg_kugl,minavg_kugl)
+
+# That was a lot of work. Why are what should be intuitively easy solutions sometimes impossible to think of?
+# Let's produce another data frame where we take the reported values for every year and create a new column called t_diff?
+
+# Before we do that, let's maybe round to a nice nearest decimal place
+kugl_avg <- kugl_avg %>%
+  mutate(
+    minavg = round(minavg, digits = 1),
+    maxavg = round(maxavg, digits = 1)
+  )
+
+# If it looks stupid and like it's a really long way of doing something, that's generally a sign I haven't thought of a better way of doing it. Alas, here we are.
+# But now that we have our minimum mean and maximum mean temperature averages from 1953 to 2015 for Kugluktuk, let's take our data and see what the differences are based on those averages
+# Let's try something silly. Let's subset our data by months.
+kugl_jan <- subset(test_kugl, month == "Jan")
+kugl_feb <- subset(test_kugl, month == "Feb")
+kugl_mar <- subset(test_kugl, month == "Mar")
+kugl_apr <- subset(test_kugl, month == "Apr")
+kugl_may <- subset(test_kugl, month == "May")
+kugl_jun <- subset(test_kugl, month == "Jun")
+kugl_jul <- subset(test_kugl, month == "Jul")
+kugl_aug <- subset(test_kugl, month == "Aug")
+kugl_sep <- subset(test_kugl, month == "Sep")
+kugl_oct <- subset(test_kugl, month == "Oct")
+kugl_nov <- subset(test_kugl, month == "Nov")
+kugl_dec <- subset(test_kugl, month == "Dec")
+# Great. That's dirty AF. I love it. Now let's do our shitty math with our monthly averages from 1953 to 2015.
+kugl_jan <- kugl_jan %>%
+  mutate(
+    maxavg = maxtemp-kugl_avg$maxavg[1],
+    minavg = mintemp-kugl_avg$minavg[1]
+  )
+kugl_feb <- kugl_feb %>%
+  mutate(
+    maxavg = maxtemp-kugl_avg$maxavg[2],
+    minavg = mintemp-kugl_avg$minavg[2]
+  )
+kugl_mar <- kugl_mar %>%
+  mutate(
+    maxavg = maxtemp-kugl_avg$maxavg[3],
+    minavg = mintemp-kugl_avg$minavg[3]
+  )
+kugl_apr <- kugl_apr %>%
+  mutate(
+    maxavg = maxtemp-kugl_avg$maxavg[4],
+    minavg = mintemp-kugl_avg$minavg[4]
+  )
+kugl_may <- kugl_may %>%
+  mutate(
+    maxavg = maxtemp-kugl_avg$maxavg[5],
+    minavg = mintemp-kugl_avg$minavg[5]
+  )
+kugl_jun <- kugl_jun %>%
+  mutate(
+    maxavg = maxtemp-kugl_avg$maxavg[6],
+    minavg = mintemp-kugl_avg$minavg[6]
+  )
+kugl_jul <- kugl_jul %>%
+  mutate(
+    maxavg = maxtemp-kugl_avg$maxavg[7],
+    minavg = mintemp-kugl_avg$minavg[7]
+  )
+kugl_aug <- kugl_aug %>%
+  mutate(
+    maxavg = maxtemp-kugl_avg$maxavg[8],
+    minavg = mintemp-kugl_avg$minavg[8]
+  )
+kugl_sep <- kugl_sep %>%
+  mutate(
+    maxavg = maxtemp-kugl_avg$maxavg[9],
+    minavg = mintemp-kugl_avg$minavg[9]
+  )
+kugl_oct <- kugl_oct %>%
+  mutate(
+    maxavg = maxtemp-kugl_avg$maxavg[10],
+    minavg = mintemp-kugl_avg$minavg[10]
+  )
+kugl_nov <- kugl_nov %>%
+  mutate(
+    maxavg = maxtemp-kugl_avg$maxavg[11],
+    minavg = mintemp-kugl_avg$minavg[11]
+  )
+kugl_dec <- kugl_dec %>%
+  mutate(
+    maxavg = maxtemp-kugl_avg$maxavg[12],
+    minavg = mintemp-kugl_avg$minavg[12]
+  )
+# Great. We did something. Let's stitch 'em all back together again.
+kugl_data <- rbind(kugl_jan,kugl_feb,kugl_mar,kugl_apr,kugl_may,kugl_jun,kugl_jul,kugl_aug,kugl_sep,kugl_oct,kugl_nov,kugl_dec)
+# Do some garbage collection
+rm(kugl_jan,kugl_feb,kugl_mar,kugl_apr,kugl_may,kugl_jun,kugl_jul,kugl_aug,kugl_sep,kugl_oct,kugl_nov,kugl_dec)
+# Right, let's sort that by year and month
+kugl_data <- kugl_data %>%
+  arrange(year,month)
+
+# Let's do Gjoa Haven ----------------------------------------------------------
+#The data spans from 
+
+# Start by making a tailoured copy of gjoa
+test_gjoa <- gjoa %>%
+  mutate(year = year(gjoa$date),
+         month = month(gjoa$date),
+         month = month.abb[month],
+         maxtemp = gjoa$maxtemp,
+         mintemp = gjoa$mintemp) %>%
+  select(year,month,maxtemp,mintemp) %>%
+  mutate(month = factor(month, levels = month.abb))
+
+# Start with Jan
+target_gjoa_jan <- test_gjoa %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1984 & year <= 2015) %>%
+  filter(month == "Jan") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Feb
+target_gjoa_feb <- test_gjoa %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1984 & year <= 2015) %>%
+  filter(month == "Feb") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Mar
+target_gjoa_mar <- test_gjoa %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1984 & year <= 2015) %>%
+  filter(month == "Mar") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Apr
+target_gjoa_apr <- test_gjoa %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1984 & year <= 2015) %>%
+  filter(month == "Apr") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do May
+target_gjoa_may <- test_gjoa %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1984 & year <= 2015) %>%
+  filter(month == "May") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Jun
+target_gjoa_jun <- test_gjoa %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1984 & year <= 2015) %>%
+  filter(month == "Jun") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Jul
+target_gjoa_jul <- test_gjoa %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1984 & year <= 2015) %>%
+  filter(month == "Jul") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Aug
+target_gjoa_aug <- test_gjoa %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1984 & year <= 2015) %>%
+  filter(month == "Aug") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Sep
+target_gjoa_sep <- test_gjoa %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1984 & year <= 2015) %>%
+  filter(month == "Sep") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Oct
+target_gjoa_oct <- test_gjoa %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1984 & year <= 2015) %>%
+  filter(month == "Oct") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Nov
+target_gjoa_nov <- test_gjoa %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1984 & year <= 2015) %>%
+  filter(month == "Nov") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+# Do Dec
+target_gjoa_dec <- test_gjoa %>%
+  select(year,month,maxtemp,mintemp) %>%
+  filter(year >= 1984 & year <= 2015) %>%
+  filter(month == "Dec") %>%
+  mutate(
+    maxavg = mean(maxtemp),
+    minavg = mean(mintemp)
+  )
+
+# Next, make a new data frame with those values
+maxavg_gjoa <- data.frame(
+  Jan = c(target_gjoa_jan$maxavg[1]),
+  Feb = c(target_gjoa_feb$maxavg[1]),
+  Mar = c(target_gjoa_mar$maxavg[1]),
+  Apr = c(target_gjoa_apr$maxavg[1]),
+  May = c(target_gjoa_may$maxavg[1]),
+  Jun = c(target_gjoa_jun$maxavg[1]),
+  Jul = c(target_gjoa_jul$maxavg[1]),
+  Aug = c(target_gjoa_aug$maxavg[1]),
+  Sep = c(target_gjoa_sep$maxavg[1]),
+  Oct = c(target_gjoa_oct$maxavg[1]),
+  Nov = c(target_gjoa_nov$maxavg[1]),
+  Dec = c(target_gjoa_dec$maxavg[1])
+) %>%
+  pivot_longer(-0,names_to = "month", values_to = "maxavg")
+# Let's do the same with the min averages
+minavg_gjoa <- data.frame(
+  Jan = c(target_gjoa_jan$minavg[1]),
+  Feb = c(target_gjoa_feb$minavg[1]),
+  Mar = c(target_gjoa_mar$minavg[1]),
+  Apr = c(target_gjoa_apr$minavg[1]),
+  May = c(target_gjoa_may$minavg[1]),
+  Jun = c(target_gjoa_jun$minavg[1]),
+  Jul = c(target_gjoa_jul$minavg[1]),
+  Aug = c(target_gjoa_aug$minavg[1]),
+  Sep = c(target_gjoa_sep$minavg[1]),
+  Oct = c(target_gjoa_oct$minavg[1]),
+  Nov = c(target_gjoa_nov$minavg[1]),
+  Dec = c(target_gjoa_dec$minavg[1])
+) %>%
+  pivot_longer(-0,names_to = "month", values_to = "minavg")
+# Let's bind 'em together
+gjoa_avg <- inner_join(minavg_gjoa,maxavg_gjoa, by="month")
+# Let's do some garbage collection
+rm(target_gjoa_jan,target_gjoa_feb,target_gjoa_mar,target_gjoa_apr,target_gjoa_may,target_gjoa_jun,target_gjoa_jul,target_gjoa_aug,target_gjoa_sep,target_gjoa_oct,target_gjoa_nov,target_gjoa_dec)
+rm(maxavg_gjoa,minavg_gjoa)
+
+# That was a lot of work. Why are what should be intuitively easy solutions sometimes impossible to think of?
+# Let's produce another data frame where we take the reported values for every year and create a new column called t_diff?
+
+# Before we do that, let's maybe round to a nice nearest decimal place
+gjoa_avg <- gjoa_avg %>%
+  mutate(
+    minavg = round(minavg, digits = 1),
+    maxavg = round(maxavg, digits = 1)
+  )
+
+# If it looks stupid and like it's a really long way of doing something, that's generally a sign I haven't thought of a better way of doing it. Alas, here we are.
+# But now that we have our minimum mean and maximum mean temperature averages from 1984 to 2015 for gjoauktuk, let's take our data and see what the differences are based on those averages
+# Let's try something silly. Let's subset our data by months.
+gjoa_jan <- subset(test_gjoa, month == "Jan")
+gjoa_feb <- subset(test_gjoa, month == "Feb")
+gjoa_mar <- subset(test_gjoa, month == "Mar")
+gjoa_apr <- subset(test_gjoa, month == "Apr")
+gjoa_may <- subset(test_gjoa, month == "May")
+gjoa_jun <- subset(test_gjoa, month == "Jun")
+gjoa_jul <- subset(test_gjoa, month == "Jul")
+gjoa_aug <- subset(test_gjoa, month == "Aug")
+gjoa_sep <- subset(test_gjoa, month == "Sep")
+gjoa_oct <- subset(test_gjoa, month == "Oct")
+gjoa_nov <- subset(test_gjoa, month == "Nov")
+gjoa_dec <- subset(test_gjoa, month == "Dec")
+# Great. That's dirty AF. I love it. Now let's do our shitty math with our monthly averages from 1984 to 2015.
+gjoa_jan <- gjoa_jan %>%
+  mutate(
+    maxavg = maxtemp-gjoa_avg$maxavg[1],
+    minavg = mintemp-gjoa_avg$minavg[1]
+  )
+gjoa_feb <- gjoa_feb %>%
+  mutate(
+    maxavg = maxtemp-gjoa_avg$maxavg[2],
+    minavg = mintemp-gjoa_avg$minavg[2]
+  )
+gjoa_mar <- gjoa_mar %>%
+  mutate(
+    maxavg = maxtemp-gjoa_avg$maxavg[3],
+    minavg = mintemp-gjoa_avg$minavg[3]
+  )
+gjoa_apr <- gjoa_apr %>%
+  mutate(
+    maxavg = maxtemp-gjoa_avg$maxavg[4],
+    minavg = mintemp-gjoa_avg$minavg[4]
+  )
+gjoa_may <- gjoa_may %>%
+  mutate(
+    maxavg = maxtemp-gjoa_avg$maxavg[5],
+    minavg = mintemp-gjoa_avg$minavg[5]
+  )
+gjoa_jun <- gjoa_jun %>%
+  mutate(
+    maxavg = maxtemp-gjoa_avg$maxavg[6],
+    minavg = mintemp-gjoa_avg$minavg[6]
+  )
+gjoa_jul <- gjoa_jul %>%
+  mutate(
+    maxavg = maxtemp-gjoa_avg$maxavg[7],
+    minavg = mintemp-gjoa_avg$minavg[7]
+  )
+gjoa_aug <- gjoa_aug %>%
+  mutate(
+    maxavg = maxtemp-gjoa_avg$maxavg[8],
+    minavg = mintemp-gjoa_avg$minavg[8]
+  )
+gjoa_sep <- gjoa_sep %>%
+  mutate(
+    maxavg = maxtemp-gjoa_avg$maxavg[9],
+    minavg = mintemp-gjoa_avg$minavg[9]
+  )
+gjoa_oct <- gjoa_oct %>%
+  mutate(
+    maxavg = maxtemp-gjoa_avg$maxavg[10],
+    minavg = mintemp-gjoa_avg$minavg[10]
+  )
+gjoa_nov <- gjoa_nov %>%
+  mutate(
+    maxavg = maxtemp-gjoa_avg$maxavg[11],
+    minavg = mintemp-gjoa_avg$minavg[11]
+  )
+gjoa_dec <- gjoa_dec %>%
+  mutate(
+    maxavg = maxtemp-gjoa_avg$maxavg[12],
+    minavg = mintemp-gjoa_avg$minavg[12]
+  )
+# Great. We did something. Let's stitch 'em all back together again.
+gjoa_data <- rbind(gjoa_jan,gjoa_feb,gjoa_mar,gjoa_apr,gjoa_may,gjoa_jun,gjoa_jul,gjoa_aug,gjoa_sep,gjoa_oct,gjoa_nov,gjoa_dec)
+# Do some garbage collection
+rm(gjoa_jan,gjoa_feb,gjoa_mar,gjoa_apr,gjoa_may,gjoa_jun,gjoa_jul,gjoa_aug,gjoa_sep,gjoa_oct,gjoa_nov,gjoa_dec)
+# Right, let's sort that by year and month
+gjoa_data <- gjoa_data %>%
+  arrange(year,month)
+
+# Lastly, let's do Kugaaruk
