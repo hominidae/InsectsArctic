@@ -749,3 +749,86 @@ cbay_avg <- cbay_avg %>%
   )
 
 # If it looks stupid and like it's a really long way of doing something, that's generally a sign I haven't thought of a better way of doing it. Alas, here we are.
+# But now that we have our minimum mean and maximum mean temperature averages from 1949 to 2015 for Cambridge Bay, let's take our data and see what the differences are based on those averages
+
+# Let's try something silly. Let's subset our data by months.
+cbay_jan <- subset(test_cbay, month == "Jan")
+cbay_feb <- subset(test_cbay, month == "Feb")
+cbay_mar <- subset(test_cbay, month == "Mar")
+cbay_apr <- subset(test_cbay, month == "Apr")
+cbay_may <- subset(test_cbay, month == "May")
+cbay_jun <- subset(test_cbay, month == "Jun")
+cbay_jul <- subset(test_cbay, month == "Jul")
+cbay_aug <- subset(test_cbay, month == "Aug")
+cbay_sep <- subset(test_cbay, month == "Sep")
+cbay_oct <- subset(test_cbay, month == "Oct")
+cbay_nov <- subset(test_cbay, month == "Nov")
+cbay_dec <- subset(test_cbay, month == "Dec")
+# Great. That's dirty AF. I love it. Now let's do our shitty math with our monthly averages from 1949 to 2015.
+cbay_jan <- cbay_jan %>%
+  mutate(
+    maxavg = maxtemp-cbay_avg$maxavg[1],
+    minavg = mintemp-cbay_avg$minavg[1]
+  )
+cbay_feb <- cbay_feb %>%
+  mutate(
+    maxavg = maxtemp-cbay_avg$maxavg[2],
+    minavg = mintemp-cbay_avg$minavg[2]
+  )
+cbay_mar <- cbay_mar %>%
+  mutate(
+    maxavg = maxtemp-cbay_avg$maxavg[3],
+    minavg = mintemp-cbay_avg$minavg[3]
+  )
+cbay_apr <- cbay_apr %>%
+  mutate(
+    maxavg = maxtemp-cbay_avg$maxavg[4],
+    minavg = mintemp-cbay_avg$minavg[4]
+  )
+cbay_may <- cbay_may %>%
+  mutate(
+    maxavg = maxtemp-cbay_avg$maxavg[5],
+    minavg = mintemp-cbay_avg$minavg[5]
+  )
+cbay_jun <- cbay_jun %>%
+  mutate(
+    maxavg = maxtemp-cbay_avg$maxavg[6],
+    minavg = mintemp-cbay_avg$minavg[6]
+  )
+cbay_jul <- cbay_jul %>%
+  mutate(
+    maxavg = maxtemp-cbay_avg$maxavg[7],
+    minavg = mintemp-cbay_avg$minavg[7]
+  )
+cbay_aug <- cbay_aug %>%
+  mutate(
+    maxavg = maxtemp-cbay_avg$maxavg[8],
+    minavg = mintemp-cbay_avg$minavg[8]
+  )
+cbay_sep <- cbay_sep %>%
+  mutate(
+    maxavg = maxtemp-cbay_avg$maxavg[9],
+    minavg = mintemp-cbay_avg$minavg[9]
+  )
+cbay_oct <- cbay_oct %>%
+  mutate(
+    maxavg = maxtemp-cbay_avg$maxavg[10],
+    minavg = mintemp-cbay_avg$minavg[10]
+  )
+cbay_nov <- cbay_nov %>%
+  mutate(
+    maxavg = maxtemp-cbay_avg$maxavg[11],
+    minavg = mintemp-cbay_avg$minavg[11]
+  )
+cbay_dec <- cbay_dec %>%
+  mutate(
+    maxavg = maxtemp-cbay_avg$maxavg[12],
+    minavg = mintemp-cbay_avg$minavg[12]
+  )
+# Great. We did something. Let's stitch 'em all back together again.
+cbay_data <- rbind(cbay_jan,cbay_feb,cbay_mar,cbay_apr,cbay_may,cbay_jun,cbay_jul,cbay_aug,cbay_sep,cbay_oct,cbay_nov,cbay_dec)
+# Do some garbage collection
+rm(cbay_jan,cbay_feb,cbay_mar,cbay_apr,cbay_may,cbay_jun,cbay_jul,cbay_aug,cbay_sep,cbay_oct,cbay_nov,cbay_dec)
+# Right, let's sort that by year and month
+cbay_data <- cbay_data %>%
+  arrange(year,month)
