@@ -1493,3 +1493,5 @@ kuga_data <- rbind(kuga_jan,kuga_feb,kuga_mar,kuga_apr,kuga_may,kuga_jun,kuga_ju
 rm(kuga_jan,kuga_feb,kuga_mar,kuga_apr,kuga_may,kuga_jun,kuga_jul,kuga_aug,kuga_sep,kuga_oct,kuga_nov,kuga_dec)
 kuga_data <- kuga_data %>%
   arrange(year,month)
+
+# Let's make some cool graphs with those differences ----------------------------------------------------------
