@@ -1495,3 +1495,54 @@ kuga_data <- kuga_data %>%
   arrange(year,month)
 
 # Let's make some cool graphs with those differences ----------------------------------------------------------
+t_data <- cbay_data %>%
+  mutate(
+    month = factor(month, levels = month.abb)
+    ) %>%
+  group_by(year) %>%
+  ungroup() %>%
+  mutate(maxavg = if_else(year == 2023, max(abs(maxavg)), maxavg))
+
+# Let's try an odd graph
+p <- t_data %>%
+  ggplot(aes(x=month, y=maxtemp, group=year, color = maxavg)) +
+  geom_line() +
+  scale_color_gradient2(low = "darkblue", mid="grey", high="darkred", midpoint = 0, guide = "none") +
+  scale_y_continuous(breaks = seq(-45, 20, 5)) +
+  scale_x_discrete(expand = c(0,0)) +
+  labs(x = NULL, y = NULL, title="Cambridge Bay temperature anomalies (\u00B0C)",
+       subtitle = "(Difference from 1949 to 2015 annual mean max temperature)") +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_line(color = "gray", linetype = "dotted", linewidth=0.25),
+    plot.title.position = "plot",
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(color = "gray", size = 10),
+    plot.margin = margin(t = 10, r = 15, b = 10, l = 10)
+  )
+
+# Let's grab the last three month of 2023
+annotation <- t_data %>%
+  slice_tail(n = 1)
+
+p
+
+# Now let's try it with gganimate
+p +
+  geom_point(data = annotation, aes(x = month, y = maxtemp), size = 2) +
+  geom_text(data = annotation, aes(x = 3, y = -20),
+            label = "March 2023", hjust = 1)
+
+# Odd. I am not sure that this is being done right.
+p +
+  geom_label(aes(x = 7, y = 0, label=year), fontface = "bold", label.size = 0) +
+  transition_manual(year, cumulative = TRUE)
+
+a <- p +
+  geom_label(aes(x = 7, y = 0, label=year), fontface= "bold", label.size=0) +
+  transition_manual(year, cumulative = TRUE) # Will reveal, then fade out with new years
+
+
+anim_save("fig/monthly_anomaly.gif", a, fps=1)
