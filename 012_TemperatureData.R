@@ -1523,26 +1523,27 @@ p <- t_data %>%
     plot.margin = margin(t = 10, r = 15, b = 10, l = 10)
   )
 
-# Let's grab the last three month of 2023
+# Let's grab the last month of data from 2023
 annotation <- t_data %>%
   slice_tail(n = 1)
 
 p
 
-# Now let's try it with gganimate
+# Now let's try it with gganimate, first let's see if we can annotate March 2023
 p +
   geom_point(data = annotation, aes(x = month, y = maxtemp), size = 2) +
   geom_text(data = annotation, aes(x = 3, y = -20),
             label = "March 2023", hjust = 1)
 
-# Odd. I am not sure that this is being done right.
+# Odd. I am not sure that this is being done right. But heck it. Let's see what happens.
 p +
   geom_label(aes(x = 7, y = 0, label=year), fontface = "bold", label.size = 0) +
   transition_manual(year, cumulative = TRUE)
 
+# Create the animation
 a <- p +
   geom_label(aes(x = 7, y = 0, label=year), fontface= "bold", label.size=0) +
   transition_manual(year, cumulative = TRUE) # Will reveal, then fade out with new years
 
-
+# Save the animated GIF
 anim_save("fig/monthly_anomaly.gif", a, fps=1)
