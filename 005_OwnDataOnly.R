@@ -31,11 +31,23 @@ library(scales)
 # Load our working data set
 workingdata <- read_tsv("data/kitikmeot_data_arth.tsv")
 
+# Before we remove NA's let's look at what we're losing
+nonworkingdata <- (workingdata[is.na(workingdata$bin.uri),])
+
+# Let's get a count of the order represented in that data
+out <- nonworkingdata %>%
+  select(Class,Order) %>%
+  count(Class,Order)
+# We did this to record those values for later:
+# 547 Diptera, 425 Hymenoptera, 365 Arachnida, 78 Araneae, 189 Hemiptera, 232 Collembola, 137 other
+# Do some garbage collection
+rm(out,nonworkingdata)
+
 # Remove any NA's from bin.uri in workingdata
 workingdata <- workingdata %>%
   drop_na(bin.uri)
-# Note: There are 30373 specimens
-# After removing any NA's in bin.uri, there are 28410 left. A difference of 1963.
+# Note: There are 31833 specimens
+# After removing any NA's in bin.uri, there are 29860 left. A difference of 1973.
 
 # Remove any sector that does not conform to a few selected communities by renaming them.
 # To do that, we'll replace any instance where "3km NW Cambridge Bay, Water Lake Site" as just "Cambridge Bay" instead
@@ -43,6 +55,23 @@ workingdata$Sector[workingdata$Sector == "3 km NW Cambridge Bay, Water Lake site
 
 # Trust, but verify.
 table(workingdata$Sector)
+
+# There are a few odd ones left. 1 from the North Shaler Mountains, 29 from Icebreaker Channel
+# We'll effectively ignore those as well, but let's have a look at them while we're at it.
+location1 <- workingdata %>%
+  filter(Sector == "Icebreaker Channel")
+location2 <- workingdata %>%
+  filter(Sector == "North Shaler Mountains")
+rm(location1,location2)
+
+# The Icebreaker Channel data isn't what we're looking for. So we'll discard it. In fact, we'll remove it when we select down to the Phylum Arthropoda later.
+# However, the springtail specimen was noticed during unrelated plant pressing at CHARS. It might be interesting since it was successfully barcoded.
+# Before we proceed, let's see if there's a BIN match to the rest of our data. It returned a bin_uri of BOLD:AAI8142
+lookatme <- workingdata %>%
+  filter(bin.uri == "BOLD:AAI8142")
+# Interesting. 40 matches to our data from the 4 communities.
+# Nonetheless, Let's put it aside since it's not necessary to work with it. But it is interesting to know that the other matching locations for this BIN are in Cambridge Bay, Gjoa Haven, and Kugaaruk.
+rm(lookatme)
 
 # Okay cool, that worked. "Victoria Island" will need to be dropped. "North Shaler Mountains" will also need to be dropped too.
 # Let's try that. To do that, we'll create by community then re-combine.
@@ -59,8 +88,9 @@ test5 <- rbind(test4,test2)
 test6 <- rbind(test5,test3)
 workingdata <- test6
 rm(test,test1,test2,test3,test4,test5,test6)
+# So, we've eliminated 30 specimens from places not in our target location(s) of Cambridge Bay, Kugluktuk, Gjoa Haven, and Kugaaruk
 
-# Filter out arthopoda first
+# Let's filter that down even further to just Arthropoda
 workingdata <- workingdata %>%
   filter(Phylum == "Arthropoda")
 
@@ -71,11 +101,10 @@ names(workingdata)[names(workingdata) == "Collection Date"] <- "CollectionDate"
 workingdata <- workingdata %>%
   mutate(CollectionDate = as.Date(CollectionDate, format = "%d-%b-%Y"))
 
-# This works!
-# Let's create a graph showing what we've got by order.
+# Let's create a graph showing what we've got by order. We'll remove NA's and narrow it down to arthropoda we're interested in the next few scripts.
 ggplot(workingdata, aes(y = Sector)) +
   geom_bar(aes(fill = Order)) +
-  labs(x = "# of Specimens", y = "Community") +
+  labs(x = "# of Specimens", y = "Community", title = "Specimens prior to filtering out all aquatic invertebrates") +
   theme(legend.position = "top") +
   geom_text(stat='count', aes(label=after_stat(count)))
 
