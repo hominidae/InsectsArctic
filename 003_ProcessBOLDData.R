@@ -1,28 +1,29 @@
 # Process data from public BOLD data
-# This involves the combination of data downloaded from the Public BOLD search console
-
 # OBJECTIVE:
 #  - Take public BOLD data and prepare it for comparison against own collected data
 
 # Note:
 #  This code takes advantage of code from ProcessBOLDPublicData code from this github link:
 #  https://github.com/hominidae/ProcessBOLDPublicData
-#  "canada_data_october.csv" is that data
+#  "canada_data.tsv" is that resukt of that data
+#  "nunavut_data.tsv" is also the result of that code, but we'll use that later in another script.
 
 # Load libraries
 library(tidyverse)
 library(dplyr)
+library(ggplot2)
+library(scales)
 
 # Load the data set containing publicly available BOLD data, warning uses about 4.61GB of memory
 # This data was stitched together from across Canada using code from my other ProcessBOLDPublicData code
 # It involves downloading BOLD data from various provinces and stitching it all back together.
-canada_data <- read_tsv("data/canada_data_2022_12_20.tsv")
+canada_data <- read_tsv("data/canada_data.tsv")
 
 # Have a quick peek to see how easy this will be.
 table(canada_data$province_state)
 # Easy peasy. We just need to remove the isolated items from odd places.
 
-# We do that by selecting only the provinces we want.
+# We will do that by selecting only the provinces we want. So, getting rid of US states and other odd matches.
 canada_data_alberta <- canada_data %>%
   filter(province_state == "Alberta")
 canada_data_bc <- canada_data %>%
@@ -54,7 +55,7 @@ rm(canada_data_alberta,canada_data_bc,canada_data_manitoba,canada_data_nb,canada
 
 # Let's check that we've effectively cleaned up our data.
 table(canada_data$province_state)
-# Right, the table now returns only valid provinces. We've effectively dropped anything out of place.
+# Right, the table now returns only valid provinces. We've effectively dropped anything that was out of place.
 
 # Before we move on however, we need to trim some of this data. To do that, we'll use a select statement.
 canada_truncated <- canada_data %>%
@@ -65,19 +66,16 @@ canada_data <- canada_truncated
 rm(canada_truncated)
 
 # Righteous. Clean data. Let's save it before it gets lost.
-write_tsv(x = canada_data, "data/Canada_data_clean.tsv")
+write_tsv(x = canada_data, "data/canada_data_clean.tsv")
 
 # Reload here if necessary.
-# canada_data <- read_tsv("data/Canada_data_clean_december.tsv")
+# canada_data <- read_tsv("data/canada_data_clean.tsv")
 
 # Let's filter that data down to just arthropods
 canada_data_arthropoda <- canada_data %>%
   filter(phylum_name == "Arthropoda")
 # Let's remove canada_data since we don't need it any more.
 rm(canada_data)
-
-# Optionally, write and save that canada_data_arthropoda data as a TSV too
-# write_tsv(x = canada_data_arthropoda, "data/Canada_data_clean_arthropoda_december.tsv")
 
 # Next, remove any NA's from lat/lon. Without lat/lon for collections it's kind of moot.
 canada_data_arthropoda <- canada_data_arthropoda %>%
@@ -92,25 +90,10 @@ canada_data_arthropoda <- canada_data_arthropoda %>%
   drop_na(order_name)
 
 # Save it as a clean slate.
-write_tsv(x = canada_data_arthropoda, "data/Canada_data_clean_arthropoda.tsv")
+write_tsv(x = canada_data_arthropoda, "data/canada_data_clean_arthropoda.tsv")
 
 # Load in case it's needed.
 #canada_data_arthropoda <- read_tsv("data/Canada_data_clean_arthropoda_december.tsv")
-
-# Filter out just Collembola
-canada_collembola <- canada_data_arthropoda %>%
-  filter(class_name == "Collembola")
-
-# Filter out all Entomob
-canada_entomobryidae <- canada_collembola %>%
-  filter(family_name == "Entomobryidae")
-
-# Confirmed, all Entomobryidae are part of the class Entomobry
-
-# Next up, let's graph that data to see what it looks like
-# Load ggplot and scales libraries
-library(ggplot2)
-library(scales)
 
 # This plot simply details the major arthropod orders and sorts them by province.
 ggplot(canada_data_arthropoda, aes(y = province_state)) +
