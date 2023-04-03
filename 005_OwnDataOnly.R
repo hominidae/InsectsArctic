@@ -143,7 +143,7 @@ gjoahaven <- workingdata %>%
 kugaaruk <- workingdata %>%
   filter(Sector == "Kugaaruk")
 # Let's do a little mapping. We want a figure to represent our sampling sites in Cambridge Bay.
-register_google(key = "AIzaSyCiLLxHhvam9sO4XGnpt2xrWo9DP2ovA4o")
+# register_google(key = "YOURKEYHERE")
 
 # First, let's create a bounding box. We want to cover Long point to the west, Grenier lake to the north, and finally the community of Cambridge Bay
 # TOP LEFT: 69.31089124970403, -105.94228006279235
