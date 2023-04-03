@@ -1,5 +1,4 @@
 # Process data from collection efforts in Cambridge Bay
-# The previous script was used to prepare the data for recombination
 
 # OBJECTIVE:
 #  - Recombine tsv files into singular tsv files
