@@ -1,5 +1,6 @@
 # Generate a distance boxplot to the nearest links elsewhere in Canada
 
+# 
 library(tidyverse)
 library(geosphere)
 library(measurements)
@@ -80,7 +81,7 @@ cbay_linkdist_nf <- cbay_sharedbins_nf %>%
 rm(cbay_distmatrix_nf,cbay_links_nf,cbay_distm_nf,cbay_distkm_nf)
 
 # Do the same for Kugluktuk
-kugl_distmatrix_f <- distm(c(-105.0615, 69.1181), as.matrix(kugl_links_f[, -1]), fun=distGeo)
+kugl_distmatrix_f <- distm(c(-115.1006, 67.8241), as.matrix(kugl_links_f[, -1]), fun=distGeo)
 kugl_distm_f <- as.vector(kugl_distmatrix_f)
 kugl_distkm_f <- conv_unit(kugl_distm_f, "m", "km")
 
@@ -91,7 +92,7 @@ kugl_linkdist_f <- kugl_sharedbins_f %>%
 rm(kugl_distmatrix_f,kugl_links_f,kugl_distm_f,kugl_distkm_f)
 
 # Now do non-flying arthropods
-kugl_distmatrix_nf <- distm(c(-105.0615, 69.1181), as.matrix(kugl_links_nf[, -1]), fun=distGeo)
+kugl_distmatrix_nf <- distm(c(-115.1006, 67.8241), as.matrix(kugl_links_nf[, -1]), fun=distGeo)
 kugl_distm_nf <- as.vector(kugl_distmatrix_nf)
 kugl_distkm_nf <- conv_unit(kugl_distm_nf, "m", "km")
 
@@ -102,7 +103,7 @@ kugl_linkdist_nf <- kugl_sharedbins_nf %>%
 rm(kugl_distmatrix_nf,kugl_links_nf,kugl_distm_nf,kugl_distkm_nf)
 
 # Next, do the same for Gjoa Haven
-gjoa_distmatrix_f <- distm(c(-105.0615, 69.1181), as.matrix(gjoa_links_f[, -1]), fun=distGeo)
+gjoa_distmatrix_f <- distm(c(-95.8474,68.6352), as.matrix(gjoa_links_f[, -1]), fun=distGeo)
 gjoa_distm_f <- as.vector(gjoa_distmatrix_f)
 gjoa_distkm_f <- conv_unit(gjoa_distm_f, "m", "km")
 
@@ -113,7 +114,7 @@ gjoa_linkdist_f <- gjoa_sharedbins_f %>%
 rm(gjoa_distmatrix_f,gjoa_links_f,gjoa_distm_f,gjoa_distkm_f)
 
 # Now do non-flying arthropods
-gjoa_distmatrix_nf <- distm(c(-105.0615, 69.1181), as.matrix(gjoa_links_nf[, -1]), fun=distGeo)
+gjoa_distmatrix_nf <- distm(c(-95.8474,68.6352), as.matrix(gjoa_links_nf[, -1]), fun=distGeo)
 gjoa_distm_nf <- as.vector(gjoa_distmatrix_nf)
 gjoa_distkm_nf <- conv_unit(gjoa_distm_nf, "m", "km")
 
@@ -124,7 +125,7 @@ gjoa_linkdist_nf <- gjoa_sharedbins_nf %>%
 rm(gjoa_distmatrix_nf,gjoa_links_nf,gjoa_distm_nf,gjoa_distkm_nf)
 
 # Last, do it for Kugaaruk
-kuga_distmatrix_f <- distm(c(-105.0615, 69.1181), as.matrix(kuga_links_f[, -1]), fun=distGeo)
+kuga_distmatrix_f <- distm(c(-89.8174,68.5366), as.matrix(kuga_links_f[, -1]), fun=distGeo)
 kuga_distm_f <- as.vector(kuga_distmatrix_f)
 kuga_distkm_f <- conv_unit(kuga_distm_f, "m", "km")
 
@@ -135,7 +136,7 @@ kuga_linkdist_f <- kuga_sharedbins_f %>%
 rm(kuga_distmatrix_f,kuga_links_f,kuga_distm_f,kuga_distkm_f)
 
 # Now do non-flying arthropods
-kuga_distmatrix_nf <- distm(c(-105.0615, 69.1181), as.matrix(kuga_links_nf[, -1]), fun=distGeo)
+kuga_distmatrix_nf <- distm(c(-89.8174,68.5366), as.matrix(kuga_links_nf[, -1]), fun=distGeo)
 kuga_distm_nf <- as.vector(kuga_distmatrix_nf)
 kuga_distkm_nf <- conv_unit(kuga_distm_nf, "m", "km")
 
@@ -248,13 +249,6 @@ kuga_boxplot <- ggplot(kuga_distances, aes(type,
   scale_color_manual(values = col) +
   theme_nice
 
-# Let's grid arrange those
-grid.arrange(arrangeGrob(cbay_boxplot,top=textGrob("Cambridge Bay"),ncol=1),
-             arrangeGrob(kugl_boxplot,top=textGrob("Kugluktuk"),ncol=1),
-             arrangeGrob(gjoa_boxplot,top=textGrob("Gjoa Haven"),ncol=1),
-             arrangeGrob(kuga_boxplot,top=textGrob("Kugaaruk"),ncol=1),
-             ncol=2,nrow=2)
-
 # What if we made a boxplot and matched every BIN to it's nearest match only?
 # First, we need to take the unique BIN's, then match that list to the lowest possible distance.
 cbay_distances <- cbay_distances %>%
@@ -273,18 +267,19 @@ cbay_boxplot <- ggplot(cbay_distances, aes(type,distance)) +
   geom_violin(aes(type), alpha = 0.5) +
   ylab("Distance in km") +
   xlab("Type") +
-  labs(color='Order') +
+  labs(color='Order', 
+       title = "Minimum nearest BIN distance for Cambridge Bay") +
   scale_color_manual(values = col) +
   theme_nice
 cbay_boxplot
 
 # First, we need to take the unique BIN's, then match that list to the lowest possible distance.
-kugl_distances <- cbay_distances %>%
+kugl_distances <- kugl_distances %>%
   group_by(bin_uri) %>%
   slice(which.min(distance))
 
 # Let's confirm that did what we thought.
-kugl_distcount <- cbay_distances %>%
+kugl_distcount <- kugl_distances %>%
   group_by(bin_uri) %>%
   summarise(n = n())
 
@@ -295,7 +290,8 @@ kugl_boxplot <- ggplot(kugl_distances, aes(type,distance)) +
   geom_violin(aes(type), alpha = 0.5) +
   ylab("Distance in km") +
   xlab("Type") +
-  labs(color='Order') +
+  labs(color='Order',
+       title = "Minimum nearest BIN distance for Kugluktuk") +
   scale_color_manual(values = col) +
   theme_nice
 kugl_boxplot
@@ -317,7 +313,8 @@ gjoa_boxplot <- ggplot(gjoa_distances, aes(type,distance)) +
   geom_violin(aes(type), alpha = 0.5) +
   ylab("Distance in km") +
   xlab("Type") +
-  labs(color='Order') +
+  labs(color='Order',
+       title = "Minimum nearest BIN distance for Gjoa Haven") +
   scale_color_manual(values = col) +
   theme_nice
 gjoa_boxplot
@@ -339,14 +336,8 @@ kuga_boxplot <- ggplot(kuga_distances, aes(type,distance)) +
   geom_violin(aes(type), alpha = 0.5) +
   ylab("Distance in km") +
   xlab("Type") +
-  labs(color='Order') +
+  labs(color='Order',
+       title = "Minimum nearest BIN distance for Kugaaruk") +
   scale_color_manual(values = col) +
   theme_nice
 kuga_boxplot
-
-# Let's grid arrange those
-grid.arrange(arrangeGrob(cbay_boxplot,top=textGrob("Cambridge Bay"),ncol=1),
-             arrangeGrob(kugl_boxplot,top=textGrob("Kugluktuk"),ncol=1),
-             arrangeGrob(gjoa_boxplot,top=textGrob("Gjoa Haven"),ncol=1),
-             arrangeGrob(kuga_boxplot,top=textGrob("Kugaaruk"),ncol=1),
-             ncol=2,nrow=2)
