@@ -152,55 +152,10 @@ cbay2kitikmeot_mp <- mp+
        title="Exact BIN matches between Cambridge Bay and other communities")
 cbay2kitikmeot_mp
 
-# Let's map Kugluktuk community level links next
-kugl2kitikmeot_mp <- mp+
-  geom_segment(data = kugl_sharedbins,
-               aes(x = lon, y = lat,
-                   color=order_name,
-                   xend = communities$lon[2],
-                   yend = communities$lat[2]
-               )) +
-  geom_point(data = kugl_sharedbins,
-             aes(x = lon, y = lat,
-                 color=order_name), size=1) +
-  labs(x = "Longitude", y = "Latitude", color="Orders",
-       title="Exact BIN matches between Kugluktuk and other communities")
-kugl2kitikmeot_mp
-
-# Let's do Gjoa Haven next
-gjoa2kitikmeot_mp <- mp+
-  geom_segment(data = gjoa_sharedbins,
-               aes(x = lon, y = lat,
-                   color=order_name,
-                   xend = communities$lon[3],
-                   yend = communities$lat[3]
-               )) +
-  geom_point(data = gjoa_sharedbins,
-             aes(x = lon, y = lat,
-                 color=order_name), size=1) +
-  labs(x = "Longitude", y = "Latitude", color="Orders",
-       title="Exact BIN matches between Gjoa Haven and other communities")
-gjoa2kitikmeot_mp
-
-# Last, let's do Kugaaruk
-kuga2kitikmeot_mp <- mp+
-  geom_segment(data = kuga_sharedbins,
-               aes(x = lon, y = lat,
-                   color=order_name,
-                   xend = communities$lon[4],
-                   yend = communities$lat[4]
-               )) +
-  geom_point(data = kuga_sharedbins,
-             aes(x = lon, y = lat,
-                 color=order_name), size=1) +
-  labs(x = "Longitude", y = "Latitude", color="Orders",
-       title="Exact BIN matches between Kugaaruk and other communities")
-kuga2kitikmeot_mp
-
-# Right, so drawing lines from communities doesn't really accomplish the same thing it does when the GPS coordinates are more disparate.
+# Right, so drawing lines from communities doesn't really accomplish the same thing visually that it does when the GPS coordinates are more disparate.
 # Let's switch tacks and try something else instead.
 
-# To do that, we need to separate kitikmeot_bold into communities, select our BINs then go from there
+# To do that, we need to separate kitikmeot_bold into communities, and we need to select our BINs then go from there
 # Let's do all of the Kitikmeot once
 kitikmeot_diptera <- kitikmeot_bold %>%
   filter(order_name == "Diptera")
@@ -236,15 +191,20 @@ kitikmeot_trombidiformes <- kitikmeot_bold %>%
   filter(order_name == "Trombidiformes")
 kitikmeot_mesostigmata <- kitikmeot_bold %>%
   filter(order_name == "Mesostigmata")
-kitikmeot_nonflying <- rbind(kitikmeot_araneae,kitikmeot_coleoptera,kitikmeot_entomobryomorpha,kitikmeot_poduromorpha,kitikmeot_symphypleona,kitikmeot_sarcoptiformes,kitikmeot_trombidiformes,kitikmeot_mesostigmata)
-rm(kitikmeot_araneae,kitikmeot_coleoptera,kitikmeot_entomobryomorpha,kitikmeot_poduromorpha,kitikmeot_symphypleona,kitikmeot_sarcoptiformes,kitikmeot_trombidiformes,kitikmeot_mesostigmata)
+kitikmeot_siphonaptera <- kitikmeot_bold %>%
+  filter(order_name == "Siphonaptera")
+kitikmeot_nonflying <- rbind(kitikmeot_araneae,kitikmeot_coleoptera,kitikmeot_entomobryomorpha,kitikmeot_poduromorpha,kitikmeot_symphypleona,kitikmeot_sarcoptiformes,kitikmeot_trombidiformes,kitikmeot_mesostigmata,kitikmeot_siphonaptera)
+rm(kitikmeot_araneae,kitikmeot_coleoptera,kitikmeot_entomobryomorpha,kitikmeot_poduromorpha,kitikmeot_symphypleona,kitikmeot_sarcoptiformes,kitikmeot_trombidiformes,kitikmeot_mesostigmata,kitikmeot_siphonaptera)
 
 # Before we move on though, let's save our data as kitikmeot_flying.csv and kitikmeot_nonflying.csv
 write_csv(x = kitikmeot_flying, "data/kitikmeot_flying.csv")
 write_csv(x = kitikmeot_nonflying, "data/kitikmeot_nonflying.csv")
 
-# First things first, we have cambridgebay, kugluktuk, gjoahaven, and kugaaruk
-# These were parsed out from kitikmeot_bold
+# We seem to have a persistent issue with unidentified spiders.
+# Let's just omit them. They'll be identified and/or named eventually. Hopefully some really cool Entomologist gets on that soon.
+kitikmeot_bold <- kitikmeot_bold %>%
+  drop_na(order_name)
+
 # Assign our variables to a vector list variable x
 x <- kitikmeot_bold %>%
   select(sector,bin_uri) %>%
@@ -275,11 +235,6 @@ p
 # Kugluktuk: 1074 Unique BINs
 #  829+6+32+159+15+23+10=1074
 
-# Let's go ahead and create two more and put 'em side by side. One for flying, one for non-flying
-# To do that, we need to combine the four flying together
-kitikmeot_flying <- read_csv("data/kitikmeot_flying.csv")
-kitikmeot_nonflying <- read_csv("data/kitikmeot_nonflying.csv")
-
 # Let's create a plot for matching flying arthropod BINs
 fly <- kitikmeot_flying  %>%
   select(sector,bin_uri) %>%
@@ -290,7 +245,7 @@ fly <- kitikmeot_flying  %>%
   map(unique) %>%
   map(pull)
 
-# Apparently we need to fix this. The order of kitikmeot_bold is Cambridge Bay, Gjoa Haven, 
+# Apparently we need to fix this. The order of kitikmeot_bold is Cambridge Bay, Gjoa Haven, Kugaaruk, Kugluktuk.
 fly1 <- fly[1]
 fly2 <- fly[2] 
 fly3 <- fly[3]
@@ -322,7 +277,7 @@ nofly1 <- nofly[1]
 nofly2 <- nofly[2] 
 nofly3 <- nofly[3]
 nofly4 <- nofly[4]
-nofly <- c(nofly1,nofly3,nofly4,nofly2)
+nofly <- c(nofly1,nofly3,nofly2,nofly4)
 
 noflyp <- ggVennDiagram(nofly, category.names = c("Cambridge Bay","Gjoa Haven","Kugaaruk","Kugluktuk"),
                         label_alpha = 0) +
@@ -332,6 +287,3 @@ noflyp <- ggVennDiagram(nofly, category.names = c("Cambridge Bay","Gjoa Haven","
   scale_fill_distiller(palette = "RdBu") +
   labs(title = "Unique matching non-flying BINs per community")
 noflyp
-
-# Alright, let's plot 'em together
-grid.arrange(p, arrangeGrob(flyp, noflyp), ncol = 2)
