@@ -546,6 +546,12 @@ kuga <- rbind(kuga_older,kuga_old,kuga_new,kuga_newer)
 # Do some garbage collection
 rm(kuga_older,kuga_old,kuga_new,kuga_newer)
 
+# save our data ----------------------------------------------------------
+write_csv(x = cbay, "data/en_climate_monthly_CBAY_1949-2023.csv")
+write_csv(x = kugl, "data/en_climate_monthly_KUGL_1953-2023.csv")
+write_csv(x = gjoa, "data/en_climate_monthly_GJOA_1985-2023.csv")
+write_csv(x = kuga, "data/en_climate_monthly_KUGA_1957-2023.csv")
+
 # Very cool. Let's make another GGplot from 1957 to 2023
 ggplot(kuga, aes(x = date, y = maxtemp)) +
   geom_line(color = "red") +
@@ -564,10 +570,10 @@ ggplot(kuga, aes(x = date, y = maxtemp)) +
 # Create a test animation, let's start with Cambridge Bay.
 test_cbay <- cbay %>%
   mutate(year = year(cbay$date),
-    month = month(cbay$date),
-    month = month.abb[month],
-    maxtemp = cbay$maxtemp,
-    mintemp = cbay$mintemp) %>%
+         month = month(cbay$date),
+         month = month.abb[month],
+         maxtemp = cbay$maxtemp,
+         mintemp = cbay$mintemp) %>%
   select(year,month,maxtemp,mintemp) %>%
   mutate(month = factor(month, levels = month.abb))
 
@@ -1494,14 +1500,13 @@ rm(kuga_jan,kuga_feb,kuga_mar,kuga_apr,kuga_may,kuga_jun,kuga_jul,kuga_aug,kuga_
 kuga_data <- kuga_data %>%
   arrange(year,month)
 
-# Let's make some cool graphs with those differences ----------------------------------------------------------
+# Cambridge Bay Temperature Anomaly GIF  ----------------------------------------------------------
 t_data <- cbay_data %>%
   mutate(
     month = factor(month, levels = month.abb)
-    ) %>%
+  ) %>%
   group_by(year) %>%
-  ungroup() %>%
-  mutate(maxavg = if_else(year == 2023, max(abs(maxavg)), maxavg))
+  ungroup()
 
 # Let's try an odd graph
 p <- t_data %>%
@@ -1512,6 +1517,58 @@ p <- t_data %>%
   scale_x_discrete(expand = c(0,0)) +
   labs(x = NULL, y = NULL, title="Cambridge Bay temperature anomalies (\u00B0C)",
        subtitle = "(Difference from 1949 to 2015 annual mean max temperature)") +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_line(color = "gray", linetype = "dotted", linewidth=0.25),
+    plot.title.position = "plot",
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(color = "gray", size = 10),
+    plot.margin = margin(t = 10, r = 15, b = 10, l = 10)
+  )
+
+# Let's grab the last month of data from 2023
+annotation <- t_data %>%
+  slice_tail(n = 1)
+p
+
+# Now let's try it with gganimate, first let's see if we can annotate March 2023
+p +
+  geom_point(data = annotation, aes(x = month, y = maxtemp), size = 2) +
+  geom_text(data = annotation, aes(x = 3, y = -20),
+            label = "March 2023", hjust = 1)
+
+# Odd. I am not sure that this is being done right. But heck it. Let's see what happens.
+p +
+  geom_label(aes(x = 7, y = 0, label=year), fontface = "bold", label.size = 0) +
+  transition_manual(year, cumulative = TRUE)
+
+# Create the animation
+a <- p +
+  geom_label(aes(x = 7, y = 0, label=year), fontface= "bold", label.size=0) +
+  transition_manual(year, cumulative = TRUE) # Will reveal, then fade out with new years
+
+# Save the animated GIF
+anim_save("fig/CambridgeBay_MonthlyAnomalies.gif", a, fps=1)
+
+# Kugluktuk Temperature anomaly GIF ----------------------------------------------------------
+t_data <- kugl_data %>%
+  mutate(
+    month = factor(month, levels = month.abb)
+  ) %>%
+  group_by(year) %>%
+  ungroup()
+
+# Let's try an odd graph
+p <- t_data %>%
+  ggplot(aes(x=month, y=maxtemp, group=year, color = maxavg)) +
+  geom_line() +
+  scale_color_gradient2(low = "darkblue", mid="grey", high="darkred", midpoint = 0, guide = "none") +
+  scale_y_continuous(breaks = seq(-45, 20, 5)) +
+  scale_x_discrete(expand = c(0,0)) +
+  labs(x = NULL, y = NULL, title="Kugluktuk temperature anomalies (\u00B0C)",
+       subtitle = "(Difference from 1953 to 2015 annual mean max temperature)") +
   theme(
     panel.background = element_blank(),
     panel.grid.minor = element_blank(),
@@ -1546,4 +1603,110 @@ a <- p +
   transition_manual(year, cumulative = TRUE) # Will reveal, then fade out with new years
 
 # Save the animated GIF
-anim_save("fig/monthly_anomaly.gif", a, fps=1)
+anim_save("fig/Kugluktuk_MonthlyAnomalies.gif", a, fps=1)
+
+# Gjoa Haven temperatuer anomaly GIF ----------------------------------------------------------
+t_data <- gjoa_data %>%
+  mutate(
+    month = factor(month, levels = month.abb)
+  ) %>%
+  group_by(year) %>%
+  ungroup()
+
+# Let's try an odd graph
+p <- t_data %>%
+  ggplot(aes(x=month, y=maxtemp, group=year, color = maxavg)) +
+  geom_line() +
+  scale_color_gradient2(low = "darkblue", mid="grey", high="darkred", midpoint = 0, guide = "none") +
+  scale_y_continuous(breaks = seq(-45, 20, 5)) +
+  scale_x_discrete(expand = c(0,0)) +
+  labs(x = NULL, y = NULL, title="Gjoa Haven temperature anomalies (\u00B0C)",
+       subtitle = "(Difference from 1984 to 2015 annual mean max temperature)") +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_line(color = "gray", linetype = "dotted", linewidth=0.25),
+    plot.title.position = "plot",
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(color = "gray", size = 10),
+    plot.margin = margin(t = 10, r = 15, b = 10, l = 10)
+  )
+
+# Let's grab the last month of data from 2023
+annotation <- t_data %>%
+  slice_tail(n = 1)
+
+p
+
+# Now let's try it with gganimate, first let's see if we can annotate March 2023
+p +
+  geom_point(data = annotation, aes(x = month, y = maxtemp), size = 2) +
+  geom_text(data = annotation, aes(x = 3, y = -20),
+            label = "March 2023", hjust = 1)
+
+# Odd. I am not sure that this is being done right. But heck it. Let's see what happens.
+p +
+  geom_label(aes(x = 7, y = 0, label=year), fontface = "bold", label.size = 0) +
+  transition_manual(year, cumulative = TRUE)
+
+# Create the animation
+a <- p +
+  geom_label(aes(x = 7, y = 0, label=year), fontface= "bold", label.size=0) +
+  transition_manual(year, cumulative = TRUE) # Will reveal, then fade out with new years
+
+# Save the animated GIF
+anim_save("fig/GjoaHaven_MonthlyAnomalies.gif", a, fps=1)
+
+# Kugaaruk Temperature anomaly GIF ----------------------------------------------------------
+t_data <- kuga_data %>%
+  mutate(
+    month = factor(month, levels = month.abb)
+  )
+
+# Let's try an odd graph
+p <- t_data %>%
+  ggplot(aes(x=month, y=maxtemp, group=year, color = maxavg)) +
+  geom_line() +
+  scale_color_gradient2(low = "darkblue", mid="grey", high="darkred", midpoint = 0, guide = "none") +
+  scale_y_continuous(breaks = seq(-45, 20, 5)) +
+  scale_x_discrete(expand = c(0,0)) +
+  labs(x = NULL, y = NULL, title="Kugaaruk temperature anomalies (\u00B0C)",
+       subtitle = "(Difference from 1957 to 2015 annual mean max temperature)") +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_line(color = "gray", linetype = "dotted", linewidth=0.25),
+    plot.title.position = "plot",
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(color = "gray", size = 10),
+    plot.margin = margin(t = 10, r = 15, b = 10, l = 10)
+  )
+
+# Let's grab the last month of data from 2023
+annotation <- t_data %>%
+  slice_tail(n = 1)
+
+p
+
+# Now let's try it with gganimate, first let's see if we can annotate March 2023
+p +
+  geom_point(data = annotation, aes(x = month, y = maxtemp), size = 2) +
+  geom_text(data = annotation, aes(x = 3, y = -20),
+            label = "March 2023", hjust = 1)
+
+# Odd. I am not sure that this is being done right. But heck it. Let's see what happens.
+p +
+  geom_label(aes(x = 7, y = 0, label=year), fontface = "bold", label.size = 0) +
+  transition_manual(year, cumulative = TRUE)
+
+# Create the animation
+a <- p +
+  geom_label(aes(x = 7, y = 0, label=year), fontface= "bold", label.size=0) +
+  transition_manual(year, cumulative = TRUE) # Will reveal, then fade out with new years
+
+# Save the animated GIF
+anim_save("fig/Kugaaruk_MonthlyAnomalies.gif", a, fps=1)
+
+# Before we stop however, let's save our data.
