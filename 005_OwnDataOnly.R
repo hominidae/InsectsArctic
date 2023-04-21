@@ -145,11 +145,7 @@ kugaaruk <- workingdata %>%
 # Let's do a little mapping. We want a figure to represent our sampling sites in Cambridge Bay.
 # register_google(key = "YOURKEYHERE")
 
-# First, let's create a bounding box. We want to cover Long point to the west, Grenier lake to the north, and finally the community of Cambridge Bay
-# TOP LEFT: 69.31089124970403, -105.94228006279235
-# BOTTOM LEFT: 68.94906967503036, -106.04705283742544
-# TOP RIGHT: 69.26995125854796, -104.3769681462788
-# BOTTOM RIGHT: 68.92102600323088, -104.75315578392745
+# Let's start with mapping Cambridge Bay specimens.
 cbay_map <- get_map(
   location = c(-105.060,69.116),
   scale = "auto",
