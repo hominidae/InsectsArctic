@@ -3,10 +3,11 @@
 # Load libraries
 library(tidyverse)
 library(ggmap)
+library(RColorBrewer)
 
 # Load the data
 kitikmeot_bold <- read_tsv("data/kitikmeot_bold.tsv")
-canada_bold <- read_tsv("data/Canada_data_clean_december.tsv")
+canada_bold <- read_tsv("data/canada_data_clean.tsv")
 
 # We need to remove aquatic invertabrates and aquatic insects since that's not really what we're looking for.
 kitikmeot_arachnida <- kitikmeot_bold %>%
@@ -154,6 +155,31 @@ gjoahaven <- kitikmeot_bold %>%
   filter(sector == "Gjoa Haven")
 rm(kitikmeot_bold)
 
+# Remove me later, cbay down to order
+cbay_mesostigmata <- cambridgebay %>%
+  filter(Order == "Mesostigmata")
+
+# Let's get some BIN counts
+cambridgebay %>%
+  group_by(bin_uri) %>%
+  summarise(n = n()) %>%
+  arrange(-n)
+
+kugluktuk %>%
+  group_by(bin_uri) %>%
+  summarise(n = n()) %>%
+  arrange(-n)
+
+gjoahaven %>%
+  group_by(bin_uri) %>%
+  summarise(n = n()) %>%
+  arrange(-n)
+
+kugaaruk %>%
+  group_by(bin_uri) %>%
+  summarise(n = n()) %>%
+  arrange(-n)
+
 # Right, now that we have the communities separated let's extract unique bin's from each and save as a vector
 cbay_bins <- unique(cambridgebay$bin_uri)
 kugl_bins <- unique(kugluktuk$bin_uri)
@@ -194,7 +220,7 @@ canada_bold <- canada_bold %>%
   filter(!region == "Kitikmeot Region")
 
 # Let's save that too. Remember, "Kitikmeot" and "Kitikmeot Region" have been removed.
-write_tsv(x = canada_bold, "data/Canada_data_clean_december_gps.tsv")
+write_tsv(x = canada_bold, "data/canada_data_clean_gps.tsv")
 
 # Reload in case that's needed
 #canada_bold <- read_tsv("D:/R/InsectsArctic/data/Canada_data_clean_october_gps.tsv")
@@ -220,7 +246,7 @@ write_tsv(x = gjoa_sharedbins, "data/gjoa_sharedBOLDbins.tsv")
 write_tsv(x = kuga_sharedbins, "data/kuga_sharedBOLDbins.tsv")
 
 # Register Goggle Maps API
-register_google(key = "YOURKEYHERE")
+#register_google(key = "YOURKEYHERE")
 
 # Setup ggmap
 map_bold <- get_map(
@@ -237,7 +263,7 @@ mp <- ggmap(map_bold, extent = "panel") +
   scale_y_continuous(limits = c(42,79), expand=c(0,0)) +
   scale_x_continuous(limits = c(-140,-50), expand=c(0,0))
 
-# Create a data frame containing our lat's and lon's for the center of each communitiy
+# Create a data frame containing our lat's and lon's for the center of each community
 communities <- data.frame(
   community = c("Cambridge Bay", "Kugluktuk","Gjoa Haven","Kugaaruk"),
   lat = c(69.1181,67.8241,68.6352,68.5366),
@@ -272,6 +298,7 @@ gjoa_links <- data.frame(
   lon = c(-64.0224,-64.3780,-77.9357)
 )
 
+# Draw for Kugaaruk
 kuga_links <- data.frame(
   community = c("Pond Inlet"),
   lat = c(72.7097),
@@ -628,12 +655,96 @@ kitikmeotnonflying_mp <- mp+
        title="Exact BOLD BIN matches shared with the Kitikmeot")
 kitikmeotnonflying_mp
 
-# Let's do some clean-up before we move forward.
-rm(kuglorder_mp,kugl_sharedbins,kugl_nonflying,kugl_flying,kugl_bins)
-rm(kugaorder_mp,kuga_sharedbins,kuga_nonflying,kuga_flying,kuga_bins)
-rm(kitikmeotorder_mp,kitikmeotflying_mp,kitikmeotnonflying_mp,kitikmeot_bins)
-rm(gjoaorder_mp,gjoa_sharedbins,gjoa_nonflying,gjoa_flying,gjoa_bins)
-rm(cbayorder_mp,cbay_sharedbins,cbay_nonflying,cbay_flying,cbay_bins)
-rm(canada_bold,canada_bold_bins)
+# Right, now that we have that done. Let's do something else on top of that too.
+# Let's return to mapping our collection sites in those communities and draw a heat map overlay for specimens too.
 
-# Let's perform a different kind of map.
+# Let's use some colorblind safe colours
+col = c("#999999", "#d95f02", "#E69F00", "#56B4E9", "#1b1e77", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#7570b3", "#FAA442", "green", "#F0AAAA","blue")
+
+# Let's start by creating a list of collection sites for Cambridge Bay.
+# Water Lake 69.13066, -105.05773
+# Field Camp 69.21766, -104.92646
+# Longpoint 69.12349, -105.43739
+cbay_sites <- data.frame(
+  sites = c("Water Lake","CHARS Field Camp","Longpoint"),
+  lat = c(69.13066,69.21766,69.12349),
+  lon = c(-105.05773,-104.92646,-105.43739)  
+)
+
+# We'll redraw our maps for each community.
+cbay_map <- get_map(
+  location = c(-105.060,69.116),
+  scale = "auto",
+  zoom = 10,
+  source = "google",
+  force = TRUE)
+# Setup map
+mp <- ggmap(cbay_map)
+
+# Remove NA's. In this case a lot of unidentified spiders
+cbay_map <- cambridgebay %>%
+  drop_na(Order)
+kugl_map <- kugluktuk %>%
+  drop_na(Order)
+gjoa_map <- gjoahaven %>%
+  drop_na(Order)
+kuga_map <- kugaaruk %>%
+  drop_na(Order)
+
+# Draw map
+cbaymap <- mp +
+  geom_point(data = cbay_map, aes(x = Lon, y = Lat, color=Order), alpha=0.5, size=4) +
+  geom_point(data = cbay_sites,aes(x = lon, y = lat)) +
+  geom_text(data = cbay_sites, aes(label = sites),vjust = -1.5, hjust = 0.5, size=6) +
+  scale_color_manual(values = col) +
+  labs(x = "Longitude", y = "Latitide", color = "Orders",
+       title="Sampling site map of Cambridge Bay")
+cbaymap
+
+# Map Kugluktuk
+# 67.825433738975, -115.0979912275245
+kuglmap <- get_map(
+  location = c(-115.0979,67.8254),
+  scale = "auto",
+  zoom = 10,
+  source = "google",
+  force = TRUE)
+mp <- ggmap(kuglmap)
+kuglmap <- mp +
+  geom_point(data = kugl_map, aes(x = Lon, y = Lat, color=Order), alpha=0.1, size=4) +
+  scale_color_manual(values = col) +
+  labs(x = "Longitude", y = "Latitide", color = "Orders",
+       title="Sampling site map of Kuglutuk")
+kuglmap
+
+# Map Gjoa Haven
+# 68.63577789587174, -95.85026693927082
+gjoamap <- get_map(
+  location = c(-95.8502,68.6357),
+  scale = "auto",
+  zoom = 10,
+  source = "google",
+  force = TRUE)
+mp <- ggmap(gjoamap)
+gjoamap <- mp +
+  geom_point(data = gjoa_map, aes(x = Lon, y = Lat, color=Order), alpha=0.1, size=4) +
+  scale_color_manual(values = col) +
+  labs(x = "Longitude", y = "Latitide", color = "Orders",
+       title="Sampling site map of Gjoa Haven")
+gjoamap
+
+# Map Kugaaruk
+# 68.53463953708601, -89.82512154873845
+kugamap <- get_map(
+  location = c(-89.8251,68.5346),
+  scale = "auto",
+  zoom = 10,
+  source = "google",
+  force = TRUE)
+mp <- ggmap(kugamap)
+kugamap <- mp +
+  geom_point(data = kuga_map, aes(x = Lon, y = Lat, color=Order), alpha=0.1, size=4) +
+  scale_color_manual(values = col) +
+  labs(x = "Longitude", y = "Latitide", color = "Orders",
+       title="Sampling site map of Kugaaryuk")
+kugamap
