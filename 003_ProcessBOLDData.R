@@ -30,6 +30,8 @@ canada_data_bc <- canada_data %>%
   filter(province_state == "British Columbia")
 canada_data_manitoba <- canada_data %>%
   filter(province_state == "Manitoba")
+canada_data_sk <- canada_data %>%
+  filter(province_state == "Saskatchewan")
 canada_data_nb <- canada_data %>%
   filter(province_state == "New Brunswick")
 canada_data_nf <- canada_data %>%
@@ -48,10 +50,10 @@ canada_data_yk <- canada_data %>%
   filter(province_state == "Yukon Territory")
 
 # Great, we've got 'em isolated. Now put 'em all back together.
-canada_data <- bind_rows(canada_data_alberta,canada_data_bc,canada_data_manitoba,canada_data_nb,canada_data_nf,canada_data_nwt,canada_data_ns,canada_data_nt,canada_data_on,canada_data_qc,canada_data_yk)
+canada_data <- bind_rows(canada_data_alberta,canada_data_bc,canada_data_manitoba,canada_data_sk,canada_data_nb,canada_data_nf,canada_data_nwt,canada_data_ns,canada_data_nt,canada_data_on,canada_data_qc,canada_data_yk)
 
 # Garbage clean-up
-rm(canada_data_alberta,canada_data_bc,canada_data_manitoba,canada_data_nb,canada_data_nf,canada_data_ns,canada_data_nt,canada_data_nwt,canada_data_on,canada_data_qc,canada_data_yk)
+rm(canada_data_alberta,canada_data_bc,canada_data_manitoba,canada_data_sk,canada_data_nb,canada_data_nf,canada_data_ns,canada_data_nt,canada_data_nwt,canada_data_on,canada_data_qc,canada_data_yk)
 
 # Let's check that we've effectively cleaned up our data.
 table(canada_data$province_state)
@@ -59,7 +61,7 @@ table(canada_data$province_state)
 
 # Before we move on however, we need to trim some of this data. To do that, we'll use a select statement.
 canada_truncated <- canada_data %>%
-  select(processid,sampleid,recordID,catalognum,fieldnum,bin_uri,phylum_name,class_name,order_name,family_name,subfamily_name,genus_name,species_name,subspecies_name,identification_provided_by,identification_method,identification_reference,voucher_status,tissue_type,collectors,collection_note,site_code,sampling_protocol,lifestage,sex,reproduction,habitat,notes,lat,lon,coord_source,province_state,region,sector,exactsite,sequenceID,markercode,nucleotides)
+  select(processid,sampleid,recordID,catalognum,fieldnum,bin_uri,phylum_name,class_name,order_name,family_name,subfamily_name,genus_name,species_name,subspecies_name,identification_provided_by,identification_method,identification_reference,voucher_status,tissue_type,collectors,collection_note,site_code,sampling_protocol,lifestage,sex,reproduction,habitat,notes,lat,lon,coord_source,province_state,region,sector,exactsite,sequenceID,markercode,nucleotides,run_dates)
 
 # You can check over the data, but let's just rename canada_truncated to canada_data and save it.
 canada_data <- canada_truncated
@@ -93,15 +95,19 @@ canada_data_arthropoda <- canada_data_arthropoda %>%
 write_tsv(x = canada_data_arthropoda, "data/canada_data_clean_arthropoda.tsv")
 
 # Load in case it's needed.
-#canada_data_arthropoda <- read_tsv("data/Canada_data_clean_arthropoda_december.tsv")
+#canada_data_arthropoda <- read_tsv("data/Canada_data_clean_arthropoda.tsv")
+
+# Load viridus
+library(viridis)
 
 # This plot simply details the major arthropod orders and sorts them by province.
 ggplot(canada_data_arthropoda, aes(y = province_state)) +
   geom_bar(aes(fill = order_name), position = position_stack(reverse = TRUE)) +
-  labs(x = "# of Specimens", y = "Province", fill = "Order") +
+  labs(x = "# of Specimens", y = "Province/Territory", fill = "Order") +
   theme(legend.position = "top", plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(labels = comma) +
-  geom_text(stat='count', aes(label=after_stat(count))) +
+  scale_fill_viridis(discrete=TRUE) +
+  geom_label(nudge_x = 30000, stat='count', aes(label=after_stat(count))) +
   ggtitle("Sequenced specimens in Public DNA Barcoding Data from Canada")
 
 # Let's generate a plot detailing the number of collected specimens vs the number of unique BIN's detected.
@@ -129,5 +135,6 @@ ggplot(uniquebins, aes(y = province_state)) +
   labs(x = "# of unique BINs", y = "Province", fill = "Order") +
   theme(legend.position = "top", plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(labels = comma) +
+  scale_fill_viridis(discrete=TRUE) +
   geom_text(stat='count', aes(label=after_stat(count))) +
   ggtitle("Unique BINs in Public DNA Barcoding Data from Canada")
