@@ -13,6 +13,7 @@ library(tidyverse)
 library(dplyr)
 library(ggplot2)
 library(scales)
+library(viridis)
 
 # Load the data set containing publicly available BOLD data, warning uses about 4.61GB of memory
 # This data was stitched together from across Canada using code from my other ProcessBOLDPublicData code
@@ -96,9 +97,6 @@ write_tsv(x = canada_data_arthropoda, "data/canada_data_clean_arthropoda.tsv")
 
 # Load in case it's needed.
 #canada_data_arthropoda <- read_tsv("data/Canada_data_clean_arthropoda.tsv")
-
-# Load viridus
-library(viridis)
 
 # This plot simply details the major arthropod orders and sorts them by province.
 ggplot(canada_data_arthropoda, aes(y = province_state)) +
