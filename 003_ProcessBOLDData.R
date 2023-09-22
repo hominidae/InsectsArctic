@@ -134,5 +134,5 @@ ggplot(uniquebins, aes(y = province_state)) +
   theme(legend.position = "top", plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(labels = comma) +
   scale_fill_viridis(discrete=TRUE) +
-  geom_text(stat='count', aes(label=after_stat(count))) +
+  geom_label(nudge_x = 1500, stat='count', aes(label=after_stat(count))) +
   ggtitle("Unique BINs in Public DNA Barcoding Data from Canada")
