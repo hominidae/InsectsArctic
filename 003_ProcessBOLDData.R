@@ -130,7 +130,7 @@ uniquebins <- uniquebins %>% distinct(bin_uri, .keep_all = TRUE)
 # Make a plot with just the unique bins per province
 ggplot(uniquebins, aes(y = province_state)) +
   geom_bar(aes(fill = order_name), position = position_stack(reverse = TRUE)) +
-  labs(x = "# of unique BINs", y = "Province", fill = "Order") +
+  labs(x = "# of unique BINs", y = "Province/Territory", fill = "Order") +
   theme(legend.position = "top", plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(labels = comma) +
   scale_fill_viridis(discrete=TRUE) +
