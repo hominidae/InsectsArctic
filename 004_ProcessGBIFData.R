@@ -9,6 +9,7 @@
 library(tidyverse)
 library(ggplot2)
 library(scales)
+library(viridis)
 
 # Load the GBIF data set containing only human observations from iNaturalist
 gbif_data <- read_tsv("data/GBIF_Canada_Arthropod_2022_10_15.csv")
@@ -45,14 +46,21 @@ gbif_datacol <- gbif_data %>%
 ######################### Left off here. Continue to repair the research grade observations?
 # Not so sure that all Entomobryidae are Entomobryomoprha. Something funky is going on.
 
+# Before we move ahead, we need to remove NA's because that's causing a problem with our graphs.
+gbif_data <- gbif_data %>%
+  drop_na(stateProvince)
+gbif_data <- gbif_data %>%
+  drop_na(order)
+
 # Let's generate a plot of the data
 ggplot(gbif_data, aes(y = stateProvince)) +
   geom_bar(aes(fill = order), position = position_stack(reverse = TRUE)) +
-  labs(x = "# of Specimens", y = "Province", fill = "Order") +
+  labs(x = "# of Specimens", y = "Province/Territory", fill = "Order") +
   theme(legend.position = "top", plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(labels = comma) +
-  geom_text(stat='count', aes(label=after_stat(count))) +
-  ggtitle("GBIF Research Grade Observations via iNaturalist by Seek")
+  scale_fill_viridis(discrete=TRUE) +
+  geom_label(nudge_x = 20000, stat='count', aes(label=after_stat(count))) +
+  ggtitle("GBIF Research Grade Observations via iNaturalist")
 
 # Unique identifications from GBIF
 uniquespecies <- gbif_data %>%
@@ -65,11 +73,12 @@ uniquespecies <- uniquespecies %>% distinct(species, .keep_all = TRUE)
 # Plot those unique identifications by province
 ggplot(uniquespecies, aes(y = stateProvince)) +
   geom_bar(aes(fill = order), position = position_stack(reverse = TRUE)) +
-  labs(x = "# of Unique identifications", y = "Province", fill = "Order") +
+  labs(x = "# of Unique identifications", y = "Province/Territory", fill = "Order") +
   theme(legend.position = "top", plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(labels = comma) +
-  geom_text(stat='count', aes(label=after_stat(count))) +
-  ggtitle("Unique GBIF Research Grade Observations via iNaturalist by Seek")
+  scale_fill_viridis(discrete=TRUE) +
+  geom_label(nudge_x = 100, stat='count', aes(label=after_stat(count))) +
+  ggtitle("Unique GBIF Research Grade Observations via iNaturalist")
 
 gbif_rgo_data <- gbif_data
 rm(gbif_data)
@@ -369,14 +378,19 @@ gbif_data <- gbif_data %>%
 gbif_data <- gbif_data %>%
   drop_na(species)
 
+# Let's remove NA's for order as well
+gbif_data <- gbif_data %>%
+  drop_na(order)
+
 # Let's generate a plot of the data
 ggplot(gbif_data, aes(y = stateProvince)) +
   geom_bar(aes(fill = order), position = position_stack(reverse = TRUE)) +
-  labs(x = "# of Specimens", y = "Province", fill = "Order") +
+  labs(x = "# of Specimens", y = "Province/Territory", fill = "Order") +
   theme(legend.position = "top", plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(labels = comma) +
-  geom_text(stat='count', aes(label=after_stat(count))) +
-  ggtitle("GBIF Observations via iNaturalist by Seek")
+  scale_fill_viridis(discrete=TRUE) +
+  geom_label(nudge_x = 28000, stat='count', aes(label=after_stat(count))) +
+  ggtitle("GBIF Observations via iNaturalist")
 
 # Unique identifications from GBIF
 uniquespecies <- gbif_data %>%
@@ -389,8 +403,9 @@ uniquespecies <- uniquespecies %>% distinct(species, .keep_all = TRUE)
 # Plot those unique identifications by province
 ggplot(uniquespecies, aes(y = stateProvince)) +
   geom_bar(aes(fill = order), position = position_stack(reverse = TRUE)) +
-  labs(x = "# of Unique identifications", y = "Province", fill = "Order") +
+  labs(x = "# of Unique identifications", y = "Province/Territory", fill = "Order") +
   theme(legend.position = "top", plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(labels = comma) +
-  geom_text(stat='count', aes(label=after_stat(count))) +
-  ggtitle("Unique GBIF Observations via iNaturalist by Seek")
+  scale_fill_viridis(discrete=TRUE) +
+  geom_label(nudge_x = 80, stat='count', aes(label=after_stat(count))) +
+  ggtitle("Unique GBIF Observations via iNaturalist")
