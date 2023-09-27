@@ -1,6 +1,7 @@
 # Process own data from Cambridge Bay
 # Objective:
 #  Characterize data collected in Kitikmeot region of Nunavut
+#  Generate a map of the sampled locations for each community
 
 # The data sets involved:
 # BCHAR - Malaise Trap Samples 2018
@@ -29,6 +30,7 @@ library(dplyr)
 library(scales)
 library(ggmap)
 library(osmdata)
+library(viridis)
 
 # Load our working data set
 workingdata <- read_tsv("data/kitikmeot_data_arth.tsv")
@@ -90,6 +92,7 @@ lookatme <- canada_data_arthropoda %>%
 # Take a quick peek
 table(lookatme$sector)
 # Fascinating eh?
+
 # That specific BIN found on Northern Victoria Island is present not just on Ellesmere Island, but Cambridge Bay, Gjoa Haven, Kugaaruk, Qikiqtarjuaq, Resolute Bay, and Bylot Island.
 # Nonetheless, let's put it aside for now.
 rm(lookatme,canada_data)
@@ -122,12 +125,35 @@ names(workingdata)[names(workingdata) == "Collection Date"] <- "CollectionDate"
 workingdata <- workingdata %>%
   mutate(CollectionDate = as.Date(CollectionDate, format = "%d-%b-%Y"))
 
+# Perform a search for diptera
+diptera <- workingdata %>%
+  filter(Order == "Diptera")
+
+# Break down to families
+table(diptera$Family)
+
+# Select Syrphidae
+syrphidae <- diptera %>%
+  filter(Family == "Syrphidae")
+
+# Remove NA's
+clean_syrphidae <- syrphidae %>%
+  drop_na(Species)
+
+# Collected in the Kitikmeot
+table(clean_syrphidae$Species)
+
+# Let's remove some NA's
+workingdata <- workingdata %>%
+  drop_na(Order)
+
 # Let's create a graph showing what we've got by order. We'll remove NA's and narrow it down to arthropoda we're interested in the next few scripts.
 ggplot(workingdata, aes(y = Sector)) +
   geom_bar(aes(fill = Order)) +
   labs(x = "# of Specimens", y = "Community", title = "Specimens prior to filtering out all aquatic invertebrates") +
   theme(legend.position = "top") +
-  geom_text(stat='count', aes(label=after_stat(count)))
+  scale_fill_viridis(discrete=TRUE) +
+  geom_label(stat='count', aes(label=after_stat(count)))
 
 # Save our state
 write_tsv(x = workingdata, "data/workingdata_2022_12_20.tsv")
@@ -149,7 +175,7 @@ kugaaruk <- workingdata %>%
 cbay_map <- get_map(
   location = c(-105.060,69.116),
   scale = "auto",
-  zoom = 10,
+  zoom = 9,
   source = "google",
   force = TRUE)
 
@@ -170,7 +196,7 @@ cbaymap
 kugl_map <- get_map(
   location = c(-115.0979,67.8254),
   scale = "auto",
-  zoom = 10,
+  zoom = 9,
   source = "google",
   force = TRUE)
 mp <- ggmap(kugl_map)
@@ -186,7 +212,7 @@ kuglmap
 gjoa_map <- get_map(
   location = c(-95.8502,68.6357),
   scale = "auto",
-  zoom = 10,
+  zoom = 9,
   source = "google",
   force = TRUE)
 mp <- ggmap(gjoa_map)
@@ -202,7 +228,7 @@ gjoamap
 kuga_map <- get_map(
   location = c(-89.8251,68.5346),
   scale = "auto",
-  zoom = 10,
+  zoom = 9,
   source = "google",
   force = TRUE)
 mp <- ggmap(kuga_map)
@@ -213,3 +239,27 @@ kugamap <- mp +
 kugamap
 # Lovely, we have even more aquatic inverts. No worries, we won't be using them.
 # That's it for now, we'll return to this mapping later once we've done more processing.
+
+# Let's do something fun. Let's use the alluvial package to plot some things.
+# Namely, arrange the year along the X Axis, with species arranged by family in the Y Axis
+
+# First though, we need a BIN_URI count
+workingdata_boldcount <- workingdata %>%
+  select(Sector,bin.uri,Class,Order,Family,Species) %>%
+  group_by(bin.uri,Sector,Class,Order,Family,Species) %>%
+  summarise(Freq = n()) %>%
+  arrange(-Freq)
+ 
+# Here's the code to do that
+library(ggalluvial)
+ggplot(data = workingdata_boldcount,
+       aes(axis1 = Order, axis2 = Sector,
+           y = Freq)) +
+  scale_x_discrete(limits = c("Order","Sector"), expand = c(.2, .05)) +
+  xlab("Phylogeny") +
+  geom_alluvium(aes(fill = bin.uri), show.legend = FALSE) +
+  geom_stratum() +
+  geom_text(stat = "stratum", aes(label = after_stat(stratum))) +
+  theme_minimal() +
+  ggtitle("Test plot")
+  
