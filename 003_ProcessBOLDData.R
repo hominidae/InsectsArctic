@@ -3,9 +3,9 @@
 #  - Take public BOLD data and prepare it for comparison against own collected data
 
 # Note:
-#  This code takes advantage of code from ProcessBOLDPublicData code from this github link:
+#  This code uses ProcessBOLDPublicData available via github:
 #  https://github.com/hominidae/ProcessBOLDPublicData
-#  "canada_data.tsv" is that resukt of that data
+#  "canada_data.tsv" is the result of combining provincial and territorial barcodes in Canada
 #  "nunavut_data.tsv" is also the result of that code, but we'll use that later in another script.
 
 # Load libraries
@@ -96,7 +96,7 @@ canada_data_arthropoda <- canada_data_arthropoda %>%
 write_tsv(x = canada_data_arthropoda, "data/canada_data_clean_arthropoda.tsv")
 
 # Load in case it's needed.
-#canada_data_arthropoda <- read_tsv("data/Canada_data_clean_arthropoda.tsv")
+# canada_data_arthropoda <- read_tsv("data/Canada_data_clean_arthropoda.tsv")
 
 # This plot simply details the major arthropod orders and sorts them by province.
 ggplot(canada_data_arthropoda, aes(y = province_state)) +
@@ -136,3 +136,6 @@ ggplot(uniquebins, aes(y = province_state)) +
   scale_fill_viridis(discrete=TRUE) +
   geom_label(nudge_x = 1500, stat='count', aes(label=after_stat(count))) +
   ggtitle("Unique BINs in Public DNA Barcoding Data from Canada")
+
+# Let's do some garbage collection
+rm(canada_data_arthropoda,uniquebins)
