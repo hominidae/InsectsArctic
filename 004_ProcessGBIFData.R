@@ -409,3 +409,6 @@ ggplot(uniquespecies, aes(y = stateProvince)) +
   scale_fill_viridis(discrete=TRUE) +
   geom_label(nudge_x = 80, stat='count', aes(label=after_stat(count))) +
   ggtitle("Unique GBIF Observations via iNaturalist")
+
+# Do some garbage collection
+rm(gbif_data,gbif_datacol,gbif_datana,gbif_rgo_data,uniquespecies)
