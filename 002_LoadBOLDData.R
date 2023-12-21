@@ -48,6 +48,22 @@ gjoa7 <- read_tsv("data/GJOA/gjoa-sequencedata.tsv")
 kugl1 <- read_tsv("data/KUGL/collection_data.tsv")
 kugl5 <- read_tsv("data/KUGL/taxonomy.tsv")
 kugl7 <- read_tsv("data/KUGL/kugl-sequencedata.tsv")
+# ARCBA 2018 - Biodiversity Survey 2018
+arcba1 <- read_tsv("data/ARCBA/collection_data.tsv")
+arcba5 <- read_tsv("data/ARCBA/taxonomy.tsv")
+arcba7 <- read_tsv("data/ARCBA/arcba-sequencedata.tsv")
+# ARCBB 2018 - Biodiversity Survey 2018
+arcbb1 <- read_tsv("data/ARCBB/collection_data.tsv")
+arcbb5 <- read_tsv("data/ARCBB/taxonomy.tsv")
+arcbb7 <- read_tsv("data/ARCBB/arcbb-sequencedata.tsv")
+# ARCBIOY5 - Arctic BIOSCAN Year 5 (2022)
+ARCBIOY51 <- read_tsv("data/ARCBIOY5/collection_data.tsv")
+ARCBIOY55 <- read_tsv("data/ARCBIOY5/taxonomy.tsv")
+ARCBIOY57 <- read_tsv("data/ARCBIOY5/ARCBIOY5-sequencedata.tsv")
+# ARCBIOY6 - Arctic BIOSCAN Year 6 (2023)
+ARCBIOY61 <- read_tsv("data/ARCBIOY6/collection_data.tsv")
+ARCBIOY65 <- read_tsv("data/ARCBIOY6/taxonomy.tsv")
+ARCBIOY67 <- read_tsv("data/ARCBIOY6/ARCBIOY6-sequencedata.tsv")
 
 # Let's separate out all arthropods.
 bchar_arth <- bchar5 %>%
@@ -69,6 +85,14 @@ kuga_arth <- kuga5 %>%
 gjoa_arth <- gjoa5 %>%
   filter(Phylum == "Arthropoda")
 kugl_arth <- kugl5 %>%
+  filter(Phylum == "Arthropoda")
+arcba_arth <- arcba5 %>%
+  filter(Phylum == "Arthropoda")
+arcbb_arth <- arcbb5 %>%
+  filter(Phylum == "Arthropoda")
+ARCBIOY5_arth <- ARCBIOY55 %>%
+  filter(Phylum == "Arthropoda")
+ARCBIOY6_arth <- ARCBIOY65 %>%
   filter(Phylum == "Arthropoda")
 
 # Rename/Join columns ####
@@ -202,6 +226,58 @@ kugl_arth <- test2
 rm(temp,test,test1,test2)
 rm(kugl1,kugl5,kugl7)
 
+########## ARCBA
+names(arcba7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
+test <- inner_join(arcba5, arcba7, by="Sample ID")
+test1 <- inner_join(test, arcba1, by="Sample ID")
+temp <- data.frame(arcba_arth$"Sample ID")
+names(temp) <- c("Sample ID")
+test2 <- inner_join(test1, temp, by="Sample ID")
+
+arcba_final <- test1
+arcba_arth <- test2
+rm(temp,test,test1,test2)
+rm(arcba1,arcba5,arcba7)
+
+########## ARCBA
+names(arcbb7) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
+test <- inner_join(arcbb5, arcbb7, by="Sample ID")
+test1 <- inner_join(test, arcbb1, by="Sample ID")
+temp <- data.frame(arcbb_arth$"Sample ID")
+names(temp) <- c("Sample ID")
+test2 <- inner_join(test1, temp, by="Sample ID")
+
+arcbb_final <- test1
+arcbb_arth <- test2
+rm(temp,test,test1,test2)
+rm(arcbb1,arcbb5,arcbb7)
+
+########## ARCBIOY5
+names(ARCBIOY57) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
+test <- inner_join(ARCBIOY55, ARCBIOY57, by="Sample ID")
+test1 <- inner_join(test, ARCBIOY51, by="Sample ID")
+temp <- data.frame(ARCBIOY5_arth$"Sample ID")
+names(temp) <- c("Sample ID")
+test2 <- inner_join(test1, temp, by="Sample ID")
+
+ARCBIOY5_final <- test1
+ARCBIOY5_arth <- test2
+rm(temp,test,test1,test2)
+rm(ARCBIOY51,ARCBIOY55,ARCBIOY57)
+
+########## ARCBIOY6
+names(ARCBIOY67) <- c("seq.data","seq.text","process.id","taxon","Sample ID","bin.uri")
+test <- inner_join(ARCBIOY65, ARCBIOY67, by="Sample ID")
+test1 <- inner_join(test, ARCBIOY61, by="Sample ID")
+temp <- data.frame(ARCBIOY6_arth$"Sample ID")
+names(temp) <- c("Sample ID")
+test2 <- inner_join(test1, temp, by="Sample ID")
+
+ARCBIOY6_final <- test1
+ARCBIOY6_arth <- test2
+rm(temp,test,test1,test2)
+rm(ARCBIOY61,ARCBIOY65,ARCBIOY67)
+
 # Combine all the finals together ####
 test <- rbind(bchar_final,cchar_final)
 test1 <- rbind(test,dchar_final)
@@ -212,8 +288,12 @@ test5 <- rbind(test4,cbay_final)
 test6 <- rbind(test5,kuga_final)
 test7 <- rbind(test6,gjoa_final)
 test8 <- rbind(test7,kugl_final)
-final_final <- test5
-rm(test,test1,test2,test3,test4,test5,test6,test7,test8)
+test9 <- rbind(test8,arcba_final)
+test10 <- rbind(test9,arcbb_final)
+test11 <- rbind(test10,ARCBIOY5_final)
+test12 <- rbind(test11,ARCBIOY6_final)
+final_final <- test12
+rm(test,test1,test2,test3,test4,test5,test6,test7,test8,test9,test10,test11,test12)
 
 # Combine arthropods together
 test <- rbind(bchar_arth,cchar_arth)
@@ -225,13 +305,17 @@ test5 <- rbind(test4,cbay_arth)
 test6 <- rbind(test5,kuga_final)
 test7 <- rbind(test6,gjoa_arth)
 test8 <- rbind(test7,kugl_arth)
-final_arth <- test8
-rm(test,test1,test2,test3,test4,test5,test6,test7,test8)
+test9 <- rbind(test8,arcba_arth)
+test10 <-rbind(test9,arcbb_arth)
+test11 <-rbind(test10,ARCBIOY5_arth)
+test12 <-rbind(test11,ARCBIOY6_arth)
+final_arth <- test12
+rm(test,test1,test2,test3,test4,test5,test6,test7,test8,test9,test10,test11,test12)
 
 # Write out our tsv file
 write_tsv(x = final_final, "data/kitikmeot_data.tsv")
-rm(bchar_final,cchar_final,dchar_final,fchar_final,gchar_final,hchar_final,cbay_final,kuga_final,gjoa_final,kugl_final,final_final)
+rm(bchar_final,cchar_final,dchar_final,fchar_final,gchar_final,hchar_final,cbay_final,kuga_final,gjoa_final,kugl_final,arcba_final,arcbb_final,ARCBIOY5_final,ARCBIOY6_final,final_final)
 
 # Write out another tsv containing just the arthropods
 write_tsv(x = final_arth, "data/kitikmeot_data_arth.tsv")
-rm(bchar_arth,cchar_arth,dchar_arth,fchar_arth,gchar_arth,hchar_arth,cbay_arth,kuga_arth,gjoa_arth,kugl_arth,final_arth)
+rm(bchar_arth,cchar_arth,dchar_arth,fchar_arth,gchar_arth,hchar_arth,cbay_arth,kuga_arth,gjoa_arth,kugl_arth,arcba_arth,arcbb_arth,ARCBIOY5_arth,ARCBIOY6_arth,final_arth)
